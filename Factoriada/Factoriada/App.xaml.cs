@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Factoriada.Services;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,6 +12,7 @@ namespace Factoriada
         {
             InitializeComponent();
 
+            _ = ApiService.ServiceClientInstance;
             MainPage = new AppShell();
         }
 
