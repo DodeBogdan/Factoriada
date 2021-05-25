@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Factoriada.Services
 {
@@ -27,15 +28,11 @@ namespace Factoriada.Services
         private ApiService()
         {
             _firebase = new FirebaseClient("https://factoriada-40e0f-default-rtdb.firebaseio.com/");
+
             Initialize();
         }
 
         private async void Initialize()
-        {
-            await InitializeAsync();
-        }
-
-        private async Task InitializeAsync()
         {
             var result = (await _firebase
                 .Child("User")
@@ -44,14 +41,50 @@ namespace Factoriada.Services
             if (result != null)
                 return;
 
-            await _firebase
-                .Child("User")
-                .PostAsync(
-                new User()
+            _ = await _firebase
+                 .Child("Role")
+                 .PostAsync(
+                 new Role()
+                 {
+                     RoleId = Guid.NewGuid(),
+                     RoleTypeName = "Admin"
+                 });
+
+            _ = await _firebase
+               .Child("Role")
+               .PostAsync(
+                new Role()
                 {
-                    Email = "admin",
-                    Password = "admin"
+                    RoleId = Guid.NewGuid(),
+                    RoleTypeName = "Owner"
                 });
+
+            _ = await _firebase
+              .Child("Role")
+              .PostAsync(
+              new Role()
+              {
+                  RoleTypeName = "User",
+                  RoleId = Guid.NewGuid()
+              });
+
+            var role = (await _firebase
+                   .Child("Role")
+                   .OnceAsync<Role>()).FirstOrDefault(x => x.Object.RoleTypeName == "Admin").Object;
+
+            if (role == null)
+                return;
+
+            _ = await _firebase
+               .Child("User")
+               .PostAsync(
+               new User()
+               {
+                   UserId = Guid.NewGuid(),
+                   Email = "admin",
+                   Password = "admin",
+                   Role = role
+               });
         }
     }
 }
