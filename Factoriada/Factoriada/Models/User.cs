@@ -14,8 +14,7 @@ namespace Factoriada.Models
         public string LastName { get; set; }
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
-        public ImageSource ImagesS { get; set; }
-
+        public byte[] ImagesByte { get; set; }
         public Address Address { get; set; }
         public Role Role { get; set; }
     }

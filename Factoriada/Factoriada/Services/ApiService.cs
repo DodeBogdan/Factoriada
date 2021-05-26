@@ -76,7 +76,7 @@ namespace Factoriada.Services
                 return;
 
             _ = await _firebase
-               .Child("User")
+               .Child("AdminUser")
                .PostAsync(
                new User()
                {

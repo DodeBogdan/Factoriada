@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
+             x:Class="Factoriada.Views.HomeView"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:HomeViewModel">
+    
+    
+    <RefreshView x:Name="RefreshView" RefreshColor="Red" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <ScrollView>
+            <Grid  Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Source="buyMate.png" HorizontalOptions="Start"></Image>
+
+                <!--<Button Grid.Row="0" Grid.Column="1" Text="Conectare"  Command="{Binding SingInCommand}" ></Button>
+                <Button Grid.Row="1" Grid.Column="1" Text="Inregistrare" IsVisible="{Binding UserLoggedIn}" Command="{Binding SingUpCommand}"></Button>
+
+                <Button Grid.Row="0" Grid.Column="1" Text="Contul meu" IsVisible="{Binding UserLoggedOut}" Command="{Binding MyAccountCommand}"></Button>
+
+                <Button Grid.Row="1" Grid.Column="1" Text="Deconcetare"  Command="{Binding LogOutCommand}" IsVisible="{Binding UserLoggedOut}"></Button>-->
+
+                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Bine ai venit!" HorizontalTextAlignment="Center" FontSize="24"></Label>
+                <!--<Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ActualUser}" HorizontalTextAlignment="Center" FontSize="26"></Label>-->
+
+                <Label Grid.Row="5" Grid.Column="0" Text="Anunturi:" FontSize="20"></Label>
+
+
+                <!--<Frame Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" BorderColor="Black" Margin="5" HasShadow="True">
+                    <ListView  x:Name="Announces"
+                          ItemsSource="{Binding Announces}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Announce">
+                                <ViewCell>
+                                    <Grid>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Frame>-->
+            </Grid>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>
