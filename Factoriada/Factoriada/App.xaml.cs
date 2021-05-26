@@ -1,5 +1,6 @@
 ﻿using Factoriada.Bootstrap;
 using Factoriada.Services;
+using Factoriada.Views;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -11,17 +12,17 @@ namespace Factoriada
 
         public App()
         {
-            Initialize();
-
             InitializeComponent();
-
-            MainPage = new AppShell();
+            Initialize();
         }
 
         private void Initialize()
         {
             AppContainer.RegisterDependencies();
             _ = ApiService.ServiceClientInstance;
+
+            MainPage = new AppShell();
+                //new LogInView();
         }
 
         protected override void OnStart()

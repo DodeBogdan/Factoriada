@@ -18,13 +18,18 @@ namespace Factoriada.Bootstrap
 
             //ViewModels
             builder.RegisterType<HomeViewModel>();
+            builder.RegisterType<AppShellViewModel>();
+            builder.RegisterType<LogInViewModel>();
+            builder.RegisterType<RegisterViewModel>();
 
             //services - data
             builder.RegisterType<DialogService>().As<IDialogService>();
             builder.RegisterType<NavigationService>().As<INavigationService>();
+            builder.RegisterType<UserService>().As<IUserService>();
+
 
             //General
-            
+
             _container = builder.Build();
         }
 

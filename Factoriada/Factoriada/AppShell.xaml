@@ -2,14 +2,7 @@
 <Shell xmlns="http://xamarin.com/schemas/2014/forms" 
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:local="clr-namespace:Factoriada.Views"
-       Title="Factoriada"
        x:Class="Factoriada.AppShell">
-
-    <!--
-        The overall app visual hierarchy is defined here, along with navigation.
-    
-        https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/
-    -->
 
     <Shell.Resources>
         <ResourceDictionary>
@@ -27,13 +20,10 @@
             <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
             <Style TargetType="FlyoutItem" BasedOn="{StaticResource BaseStyle}" />
 
-            <!--
-            Default Styles for all Flyout Items
-            https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/shell/flyout#flyoutitem-and-menuitem-style-classes
-            -->
             <Style Class="FlyoutItemLabelStyle" TargetType="Label">
                 <Setter Property="TextColor" Value="White"></Setter>
             </Style>
+            
             <Style Class="FlyoutItemLayoutStyle" TargetType="Layout" ApplyToDerivedTypes="True">
                 <Setter Property="BackgroundColor" Value="LightBlue"></Setter>
                 <Setter Property="VisualStateManager.VisualStateGroups">
@@ -74,16 +64,46 @@
         </ResourceDictionary>
     </Shell.Resources>
 
-    <!--<FlyoutItem Title="About" Icon="icon_about.png">
-        <ShellContent Route="AboutPage" ContentTemplate="{DataTemplate local:AboutPage}" />
+    <Shell.FlyoutHeader>
+        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="30"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="Auto"/>
+
+            </Grid.RowDefinitions>
+
+            <Image Aspect="AspectFill" Source="gradient.jpg" Grid.ColumnSpan="5" Grid.RowSpan="4" Opacity="0.6" />
+
+            <Image Source="userimage.png" HeightRequest="80" WidthRequest="80"  Grid.Column="1" Grid.Row="1" HorizontalOptions="Start" VerticalOptions="End"/>
+
+            <StackLayout VerticalOptions="CenterAndExpand" Grid.Row="1" Margin="10,0,0,0" Grid.Column="2" Grid.ColumnSpan="3" Orientation="Vertical">
+                <Label HorizontalTextAlignment="Start" VerticalTextAlignment="Center" TextColor="White" Text="{Binding ConnectedUser.LastName,StringFormat='Nume: {0}'}"/>
+
+                <Label  HorizontalTextAlignment="Start" VerticalTextAlignment="Center" TextColor="White" Text="{Binding ConnectedUser.FirstName,StringFormat='Prenume: {0}'}"/>
+            </StackLayout>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="Home" Icon="ic_account_circle.png">
+        <ShellContent Route="HomeView" ContentTemplate="{DataTemplate local:HomeView}" />
     </FlyoutItem>
     
-    <FlyoutItem Title="Browse" Icon="icon_feed.png">
-        <ShellContent Route="ItemsPage" ContentTemplate="{DataTemplate local:ItemsPage}" />
-    </FlyoutItem>-->
+    <FlyoutItem Title="LogIn" Icon="ic_account_circle.png">
+        <ShellContent Route="HomeView" ContentTemplate="{DataTemplate local:LogInView}" />
+    </FlyoutItem>
 
-    <TabBar>
-        <ShellContent Route="HomeView" ContentTemplate="{DataTemplate local:HomeView}" />
-    </TabBar>
+    <FlyoutItem Title="Register" Icon="ic_account_circle.png">
+        <ShellContent Route="HomeView" ContentTemplate="{DataTemplate local:RegisterView}" />
+    </FlyoutItem>
+
 
 </Shell>

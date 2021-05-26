@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Factoriada.Views.LogInView"
+             
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:LogInViewModel">
+
+        <Grid>
+            <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Image HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" Grid.RowSpan="4" Grid.ColumnSpan="2"/>
+
+            <Image Grid.Row="0" Grid.ColumnSpan="2" Source="factoriadaPng.png"></Image>
+
+            <Label TextColor="DarkRed" FontAttributes="Bold" Grid.Row="1" Grid.ColumnSpan="2" Text="Bine ai venit!" HorizontalOptions="Center" FontSize="30"></Label>
+
+            <StackLayout Grid.Row="2"  Grid.ColumnSpan="2"  VerticalOptions="CenterAndExpand" Padding="5">
+
+                <Label Text="Email:" HorizontalOptions="Center" FontSize="24"/>
+            <Entry Text="{Binding Email}" HorizontalTextAlignment="Center" FontSize="20"/>
+
+                <Label Text="Parola:" HorizontalOptions="Center" FontSize="24"/>
+            <Entry IsPassword="True" Text="{Binding Password}" HorizontalTextAlignment="Center" FontSize="20"/>
+
+            </StackLayout>
+
+            <Button Command="{Binding LogInCommand}" Grid.Row="3" Grid.Column="0"  Text="Log In" Margin="30" BackgroundColor="Black" BorderColor="Black" BorderWidth="1"/>
+
+            <Button Command="{Binding RegisterCommand}" Grid.Row="3"  Grid.Column="1"  Text="Register" Margin="30" BackgroundColor="Black" BorderColor="Black" BorderWidth="1" />
+
+        </Grid>
+</ContentPage>

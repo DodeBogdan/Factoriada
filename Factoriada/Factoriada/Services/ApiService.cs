@@ -1,4 +1,5 @@
-﻿using Factoriada.Models;
+﻿using Factoriada.Exceptions;
+using Factoriada.Models;
 using Firebase.Database;
 using Firebase.Database.Query;
 using System;
@@ -67,6 +68,15 @@ namespace Factoriada.Services
                   RoleTypeName = "User",
                   RoleId = Guid.NewGuid()
               });
+            
+            _ = await _firebase
+              .Child("Role")
+              .PostAsync(
+              new Role()
+              {
+                  RoleTypeName = "Default",
+                  RoleId = Guid.NewGuid()
+              });
 
             var role = (await _firebase
                    .Child("Role")
@@ -76,7 +86,7 @@ namespace Factoriada.Services
                 return;
 
             _ = await _firebase
-               .Child("AdminUser")
+               .Child("User")
                .PostAsync(
                new User()
                {
@@ -85,6 +95,39 @@ namespace Factoriada.Services
                    Password = "admin",
                    Role = role
                });
+        }
+
+        public async Task<User> Login(string email, string password)
+        {
+            var result = (await _firebase
+                .Child("User")
+                .OnceAsync<User>())
+                .FirstOrDefault(x => x.Object.Email == email);
+
+            if (result == null)
+                return null;
+
+            return result.Object;    
+        }
+
+        public async Task LogAsync(string message)
+        {
+            _ = await _firebase
+                .Child("Log")
+                .PostAsync(message);
+        }
+
+        public async Task Register(User user)
+        {
+            user.UserId = Guid.NewGuid();
+            user.Role = (await _firebase
+                .Child("Role")
+                .OnceAsync<Role>())
+                .FirstOrDefault(x => x.Object.RoleTypeName == "Default").Object;
+                
+            _ = await _firebase
+                .Child("User")
+                .PostAsync(user);
         }
     }
 }

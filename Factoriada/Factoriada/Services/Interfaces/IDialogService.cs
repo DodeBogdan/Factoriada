@@ -8,11 +8,11 @@ namespace Factoriada.Services.Interfaces
 {
     public interface IDialogService
     {
-        Task ShowDialog(string message, string title, string buttonLabel);
+        Task ShowDialog(string message, string title, string buttonLabel = "ok");
         void ShowToast(string message);
         Task<string> DisplayPromptAsync(string title, string message, string accept = "OK",
             string cancel = "Anuleaza", string placeholder = null, int maxLength = -1,
             Keyboard keyboard = default(Keyboard), string initialValue = "");
-        Task<bool> DisplayAlert(string title, string message, string accept, string cancel);
+        Task<bool> DisplayAlert(string title, string message, string accept = "Ok", string cancel = "Anuleaza");
     }
 }
