@@ -25,12 +25,12 @@
         <Image Grid.Row="0" Grid.ColumnSpan="2" Source="factoriadaPng.png"></Image>
 
         <StackLayout Grid.Row="2" Grid.ColumnSpan="2" VerticalOptions="CenterAndExpand" Padding="5">
-            
-            <Entry Placeholder="Nume:" Text="{Binding NewUser.LastName}" HorizontalTextAlignment="Center" FontSize="20" />
-            <Entry Placeholder="Prenume:" Text="{Binding NewUser.FirstName}" HorizontalTextAlignment="Center" FontSize="20"  />
-            <Entry Placeholder="Email:" Text="{Binding NewUser.Email}" HorizontalTextAlignment="Center" FontSize="20"  />
-            <Entry Placeholder="Parola:" IsPassword="True" Text="{Binding NewUser.Password}" HorizontalTextAlignment="Center" FontSize="20"  />
-            <Entry Placeholder="Confirma parola:" IsPassword="True" Text="{Binding ConfirmPassword}" HorizontalTextAlignment="Center" FontSize="20"  />
+
+            <Entry Placeholder="Nume:" Text="{Binding NewUser.LastName}" HorizontalTextAlignment="Center" FontSize="20"  PlaceholderColor="Black" />
+            <Entry Placeholder="Prenume:" Text="{Binding NewUser.FirstName}" HorizontalTextAlignment="Center" FontSize="20"  PlaceholderColor="Black" />
+            <Entry Placeholder="Email:" Text="{Binding NewUser.Email}" HorizontalTextAlignment="Center" FontSize="20" PlaceholderColor="Black"  />
+            <Entry Placeholder="Parola:" IsPassword="True" Text="{Binding NewUser.Password}" HorizontalTextAlignment="Center" FontSize="20"  PlaceholderColor="Black" />
+            <Entry Placeholder="Confirma parola:" IsPassword="True" Text="{Binding ConfirmPassword}" HorizontalTextAlignment="Center" FontSize="20" PlaceholderColor="Black"  />
         </StackLayout>
 
         <Button Command="{Binding RegisterCommand}" Grid.Row="3" Grid.Column="0"

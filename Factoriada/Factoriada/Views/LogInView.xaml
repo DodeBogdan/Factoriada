@@ -30,10 +30,10 @@
 
             <StackLayout Grid.Row="2"  Grid.ColumnSpan="2"  VerticalOptions="CenterAndExpand" Padding="5">
 
-                <Label Text="Email:" HorizontalOptions="Center" FontSize="24"/>
+                <Label Text="Email:" HorizontalOptions="Center" FontSize="24" TextColor="Black"/>
             <Entry Text="{Binding Email}" HorizontalTextAlignment="Center" FontSize="20"/>
 
-                <Label Text="Parola:" HorizontalOptions="Center" FontSize="24"/>
+            <Label Text="Parola:" HorizontalOptions="Center" FontSize="24"  TextColor="Black"/>
             <Entry IsPassword="True" Text="{Binding Password}" HorizontalTextAlignment="Center" FontSize="20"/>
 
             </StackLayout>

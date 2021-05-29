@@ -10,11 +10,17 @@ using Xamarin.Forms.Xaml;
 namespace Factoriada.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class HomeView : ContentPage
+    public partial class UserAccountView : ContentPage
     {
-        public HomeView()
+        public UserAccountView()
         {
             InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
+            RefreshView.IsRefreshing = true;
+            base.OnAppearing();
         }
     }
 }

@@ -105,5 +105,9 @@
         <ShellContent Route="HomeView" ContentTemplate="{DataTemplate local:RegisterView}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Contul Meu" Icon="ic_account_circle.png">
+        <ShellContent Route="UserAccountView" ContentTemplate="{DataTemplate local:UserAccountView}" />
+    </FlyoutItem>
+
 
 </Shell>

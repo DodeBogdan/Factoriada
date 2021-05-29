@@ -21,6 +21,7 @@ namespace Factoriada.Bootstrap
             builder.RegisterType<AppShellViewModel>();
             builder.RegisterType<LogInViewModel>();
             builder.RegisterType<RegisterViewModel>();
+            builder.RegisterType<UserAccountViewModel>();
 
             //services - data
             builder.RegisterType<DialogService>().As<IDialogService>();

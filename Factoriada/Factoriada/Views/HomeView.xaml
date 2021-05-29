@@ -8,12 +8,11 @@
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:HomeViewModel">
 
+    <Grid>
 
-    <RefreshView x:Name="RefreshView" RefreshColor="Red" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-        <ScrollView>
-            <Grid  Margin="10">
+        <Image HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg"/>
 
-            </Grid>
-        </ScrollView>
-    </RefreshView>
+        <Image Source="factoriadaPng.png"></Image>
+
+    </Grid>
 </ContentPage>

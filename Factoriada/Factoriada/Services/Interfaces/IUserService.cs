@@ -10,5 +10,7 @@ namespace Factoriada.Services.Interfaces
     {
         Task<User> LogIn(string email, string password);
         Task Register(User user);
+        Task ChangePassword(User currentUser, string newPassword);
+        Task ChangeProfile(User currentUser);
     }
 }

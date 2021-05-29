@@ -42,55 +42,71 @@ namespace Factoriada.Services
             if (result != null)
                 return;
 
-            _ = await _firebase
+            var id = Guid.NewGuid();
+
+            await _firebase
                  .Child("Role")
-                 .PostAsync(
+                 .Child(id.ToString())
+                 .PutAsync(
                  new Role()
                  {
-                     RoleId = Guid.NewGuid(),
+                     RoleId = id,
                      RoleTypeName = "Admin"
                  });
 
-            _ = await _firebase
+            id = Guid.NewGuid();
+
+            await _firebase
                .Child("Role")
-               .PostAsync(
+               .Child(id.ToString())
+               .PutAsync(
                 new Role()
                 {
-                    RoleId = Guid.NewGuid(),
+                    RoleId = id,
                     RoleTypeName = "Owner"
                 });
 
-            _ = await _firebase
+            id = Guid.NewGuid();
+
+            await _firebase
               .Child("Role")
-              .PostAsync(
+              .Child(id.ToString())
+              .PutAsync(
               new Role()
               {
                   RoleTypeName = "User",
-                  RoleId = Guid.NewGuid()
+                  RoleId = id
               });
-            
-            _ = await _firebase
+
+            id = Guid.NewGuid();
+
+            await _firebase
               .Child("Role")
-              .PostAsync(
+              .Child(id.ToString())
+              .PutAsync(
               new Role()
               {
                   RoleTypeName = "Default",
-                  RoleId = Guid.NewGuid()
+                  RoleId = id
               });
 
             var role = (await _firebase
                    .Child("Role")
-                   .OnceAsync<Role>()).FirstOrDefault(x => x.Object.RoleTypeName == "Admin").Object;
+                   .OnceAsync<Role>()).FirstOrDefault(x => x.Object.RoleTypeName == "Admin")
+                ?.Object;
 
             if (role == null)
                 return;
 
-            _ = await _firebase
+            id = Guid.NewGuid();
+
+            await _firebase
                .Child("User")
-               .PostAsync(
+               .Child(id.ToString())
+               .PutAsync(
                new User()
                {
-                   UserId = Guid.NewGuid(),
+                   UserId = id,
                    Email = "admin",
                    Password = "admin",
                    Role = role
@@ -112,22 +128,34 @@ namespace Factoriada.Services
 
         public async Task LogAsync(string message)
         {
-            _ = await _firebase
+           await _firebase
                 .Child("Log")
-                .PostAsync(message);
+                .Child(Guid.NewGuid().ToString())
+                .PutAsync(message);
         }
 
         public async Task Register(User user)
         {
             user.UserId = Guid.NewGuid();
+
             user.Role = (await _firebase
                 .Child("Role")
                 .OnceAsync<Role>())
-                .FirstOrDefault(x => x.Object.RoleTypeName == "Default").Object;
+                .FirstOrDefault(x => x.Object.RoleTypeName == "Default")
+                ?.Object;
                 
-            _ = await _firebase
+           await _firebase
                 .Child("User")
-                .PostAsync(user);
+                .Child(user.UserId.ToString())
+                .PutAsync(user);
+        }
+
+        public async Task UpdateUser(User currentUser)
+        {
+            await _firebase
+                .Child("User")
+                .Child(currentUser.UserId.ToString())
+                .PutAsync(currentUser);
         }
     }
 }
