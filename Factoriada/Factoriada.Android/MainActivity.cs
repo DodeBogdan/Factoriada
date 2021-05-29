@@ -7,7 +7,6 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Acr.UserDialogs;
-using ImageCircle.Forms.Plugin.Droid;
 
 namespace Factoriada.Droid
 {
@@ -25,7 +24,6 @@ namespace Factoriada.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
 
             UserDialogs.Init(this);
-            ImageCircleRenderer.Init();
 
             LoadApplication(new App());
         }

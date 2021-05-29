@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace Factoriada.ViewModels
@@ -31,7 +33,6 @@ namespace Factoriada.ViewModels
         private bool _startEditProfile;
         private bool _endEditProfile;
         private bool _editAddressVisible;
-        private Address _userAddress = new Address();
         private bool _isUserAddressEditable = true;
         private bool _passwordChangeVisible;
         private string _oldPassword = "";
@@ -78,7 +79,7 @@ namespace Factoriada.ViewModels
             get => _newPassword;
             set
             {
-                _newPassword = value; 
+                _newPassword = value;
                 OnPropertyChanged();
             }
         }
@@ -107,15 +108,6 @@ namespace Factoriada.ViewModels
             set
             {
                 _isUserAddressEditable = value;
-                OnPropertyChanged();
-            }
-        }
-        public Address UserAddress
-        {
-            get => _userAddress;
-            set
-            {
-                _userAddress = value;
                 OnPropertyChanged();
             }
         }
@@ -196,6 +188,8 @@ namespace Factoriada.ViewModels
         public ICommand SaveAddressCommand { get; set; }
         public ICommand SavePasswordChangeCommand { get; set; }
         public ICommand CancelPasswordChangeCommand { get; set; }
+        public ICommand CancelProfileEditCommand { get; set; }
+        public ICommand ChangeProfilePictureCommand { get; set; }
         #endregion
 
         #region Private Methods
@@ -207,27 +201,89 @@ namespace Factoriada.ViewModels
             EditProfileCommand = new Command(EditProfile);
             SaveProfileCommand = new Command(SaveProfile);
             StartEditAddressCommand = new Command(StartEditAddress);
-            CancelEditAddressCommand = new Command(CancelEditAddress);
+            CancelEditAddressCommand = new Command(Refresh);
             EditAddressCommand = new Command(EditAddress);
             SaveAddressCommand = new Command(SaveAddress);
             ChangePasswordCommand = new Command(ChangePassword);
             SavePasswordChangeCommand = new Command(SavePasswordChange);
-            CancelPasswordChangeCommand = new Command(CancelPasswordChange);
+            CancelPasswordChangeCommand = new Command(Refresh);
+            CancelProfileEditCommand = new Command(Refresh);
+            ChangeProfilePictureCommand = new Command(ChangeProfilePicture);
         }
 
         private void Refresh()
         {
-            _isProfileEditable = true;
+            IsProfileEditable = true;
             StartEditProfile = true;
             EndEditProfile = false;
-            EditAddressVisible = false;
-            IsRefreshing = false;
 
+            EditAddressVisible = false;
+            IsUserAddressEditable = true;
+            EditAddressIsVisible = true;
+            SaveAddressIsVisible = false;
+
+            PasswordChangeVisible = false;
+            OldPassword = NewPassword = RepeatNewPassword = "";
+
+            IsRefreshing = false;
             CurrentUser = GetActiveUser();
-            UserAddress = GetActiveUserAddress();
             SetUserImage();
         }
 
+        private async Task PickPicture()
+        {
+            var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions()
+            {
+                Title = "Alege o poza:"
+            });
+
+            if (result == null)
+                return;
+
+            var stream = await result.OpenReadAsync();
+            UserImage = ImageSource.FromStream(() => stream);
+
+            var bytesStream = await result.OpenReadAsync();
+
+            using (var memoryStream = new System.IO.MemoryStream())
+            {
+                await bytesStream.CopyToAsync(memoryStream);
+                CurrentUser.ImagesByte = memoryStream.ToArray();
+            }
+        }
+
+        private async Task TakePicture()
+        {
+            var result = await MediaPicker.CapturePhotoAsync();
+
+            if (result == null)
+                return;
+
+            var stream = await result.OpenReadAsync();
+
+            UserImage = ImageSource.FromStream(() => stream);
+
+            var bytesStream = await result.OpenReadAsync();
+
+            using (var memoryStream = new System.IO.MemoryStream())
+            {
+                await bytesStream.CopyToAsync(memoryStream);
+                CurrentUser.ImagesByte = memoryStream.ToArray();
+            }
+        }
+
+        private async void ChangeProfilePicture()
+        {
+            var result = await _dialogService.DisplayAlert("Schimba poza", "Cum doresti sa schimbi poza?", "Fa o poza",
+                "Alege o poza");
+
+            if (result)
+                await TakePicture();
+            else
+                await PickPicture();
+
+            await _userService.SaveProfilePicture(CurrentUser);
+        }
         private bool CheckPassword()
         {
             if (NewPassword != RepeatNewPassword)
@@ -252,18 +308,14 @@ namespace Factoriada.ViewModels
             {
                 await _userService.ChangePassword(CurrentUser, NewPassword);
 
-                CancelPasswordChange();
+                await _dialogService.ShowDialog("Parola a fost schimbata cu succes.", "Succes!");
+
+                Refresh();
             }
             catch (Exception ex)
             {
-               await _dialogService.ShowDialog(ex.Message, "Atentie!");
+                await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
-        }
-        private void CancelPasswordChange()
-        {
-            OldPassword = NewPassword = RepeatNewPassword = "";
-            PasswordChangeVisible = false;
-            StartEditProfile = true;
         }
         private void ChangePassword()
         {
@@ -276,16 +328,23 @@ namespace Factoriada.ViewModels
             EditAddressIsVisible = false;
             SaveAddressIsVisible = true;
         }
-        private void SaveAddress()
+        private async void SaveAddress()
         {
-            IsUserAddressEditable = true;
-            EditAddressIsVisible = true;
-            SaveAddressIsVisible = false;
+            try
+            {
+                await _userService.UpdateUserAddress(CurrentUser);
+
+                await _dialogService.ShowDialog("Adresa a fost schimbata cu succes.", "Succes!");
+
+                Refresh();
+            }
+            catch (Exception ex)
+            {
+                await _dialogService.ShowDialog(ex.Message, "Atentie!");
+            }
+
         }
-        private void CancelEditAddress()
-        {
-            Refresh();
-        }
+
         private void StartEditAddress()
         {
             StartEditProfile = false;
@@ -296,16 +355,17 @@ namespace Factoriada.ViewModels
         {
             try
             {
-               await _userService.ChangeProfile(CurrentUser);
+                await _userService.ChangeProfile(CurrentUser);
 
-               await _dialogService.ShowDialog("Modificarile au fost facute cu succes.", "Succes");
+                await _dialogService.ShowDialog("Modificarile au fost facute cu succes.", "Succes");
+
+                Refresh();
             }
             catch (Exception ex)
             {
-               await _dialogService.ShowDialog(ex.Message, "Atentie!");
+                await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
 
-            Refresh();
         }
         private void EditProfile()
         {
@@ -317,15 +377,6 @@ namespace Factoriada.ViewModels
         {
             return ActiveUser.User ?? new User();
         }
-
-        private static Address GetActiveUserAddress()
-        {
-            if (ActiveUser.User == null)
-                return new Address();
-
-            return ActiveUser.User.Address ?? new Address();
-        }
-
         private void SetUserImage()
         {
             if (ActiveUser.User == null)

@@ -77,7 +77,13 @@ namespace Factoriada.ViewModels
             {
                 await _userService.Register(NewUser);
 
-                NewUser = new User();
+                NewUser = new User
+                {
+                    Address = new Address()
+                    {
+                        AddressId = Guid.NewGuid()
+                    }
+                };
                 ConfirmPassword = "";
 
                 await _dialogService.ShowDialog("Te-ai inregistrat cu succes.", "Succes");

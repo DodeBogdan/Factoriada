@@ -29,6 +29,11 @@ namespace Factoriada.Services
         {
             TestUser(user);
 
+            user.Address = new Address()
+            {
+                AddressId = Guid.NewGuid()
+            };
+
             await ApiService.ServiceClientInstance.Register(user);
         }
 
@@ -115,6 +120,38 @@ namespace Factoriada.Services
                 throw new UserException("Email-ul este invalid.");
 
             TestPassword(user.Password);
+        }
+
+
+
+        public async Task UpdateUserAddress(User currentUser)
+        {
+            TestAddress(currentUser.Address);
+
+            await ApiService.ServiceClientInstance.UpdateUser(currentUser);
+        }
+
+        public async Task SaveProfilePicture(User currentUser)
+        {
+            await ApiService.ServiceClientInstance.UpdateUser(currentUser);
+        }
+
+        private static void TestAddress(Address userAddress)
+        {
+            if (userAddress.Country == null) throw new AddressException("Tara trebuie sa fie completat.");
+
+            if (userAddress.Country.Length < 3 || userAddress.Country.Length > 50)
+                throw new AddressException("Tara trebuie sa aiba minim 3 caractere sau maxim 50.");
+
+            if (userAddress.City == null) throw new AddressException("Orasul trebuie sa fie completat.");
+
+            if (userAddress.City.Length < 3 || userAddress.City.Length > 50)
+                throw new AddressException("Orasul trebuie sa aiba minim 3 caractere sau maxim 50.");
+
+            if (userAddress.Street == null) throw new AddressException("Strada trebuie sa fie completat.");
+
+            if (userAddress.Street.Length < 3 || userAddress.Street.Length > 50)
+                throw new AddressException("Strada trebuie sa aiba minim 3 caractere sau maxim 50.");
         }
     }
 }

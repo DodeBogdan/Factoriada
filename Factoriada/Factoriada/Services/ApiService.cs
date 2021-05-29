@@ -143,8 +143,8 @@ namespace Factoriada.Services
                 .OnceAsync<Role>())
                 .FirstOrDefault(x => x.Object.RoleTypeName == "Default")
                 ?.Object;
-                
-           await _firebase
+
+            await _firebase
                 .Child("User")
                 .Child(user.UserId.ToString())
                 .PutAsync(user);

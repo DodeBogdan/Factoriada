@@ -2,6 +2,7 @@
 using Factoriada.Services;
 using Factoriada.Views;
 using System;
+using Factoriada.Utility;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

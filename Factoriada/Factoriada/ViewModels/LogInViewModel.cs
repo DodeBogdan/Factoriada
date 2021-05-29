@@ -75,7 +75,7 @@ namespace Factoriada.ViewModels
             }
             catch(Exception ex)
             {
-                await _dialogService.ShowDialog(ex.Message, "Eroare");
+                await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
         }
 
