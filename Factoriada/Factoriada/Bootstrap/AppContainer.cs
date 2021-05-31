@@ -22,11 +22,13 @@ namespace Factoriada.Bootstrap
             builder.RegisterType<LogInViewModel>();
             builder.RegisterType<RegisterViewModel>();
             builder.RegisterType<UserAccountViewModel>();
+            builder.RegisterType<CreateApartmentViewModel>();
 
             //services - data
             builder.RegisterType<DialogService>().As<IDialogService>();
             builder.RegisterType<NavigationService>().As<INavigationService>();
             builder.RegisterType<UserService>().As<IUserService>();
+            builder.RegisterType<ApartmentService>().As<IApartmentService>();
 
 
             //General

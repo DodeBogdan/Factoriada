@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Factoriada.Views.CreateApartmentView"
+
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:CreateApartmentViewModel">
+
+    <RefreshView x:Name="RefreshView" RefreshColor="Red" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="250"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Image HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" Grid.RowSpan="6" Grid.ColumnSpan="3"/>
+
+            <Entry Margin="50,0,50,0" Placeholder="Numele apartamentului:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" HorizontalTextAlignment="Center" Text="{Binding CurrentApartment.ApartmentName}"></Entry>
+
+            <Button BackgroundColor="Black" Margin="0,0,0,5" Text="Adauga/Editeaza adresa" Grid.Column="1" Grid.Row="5" FontSize="13" HeightRequest="60" Command="{Binding StartEditAddressCommand}" IsVisible="{Binding StartEditAddressIsVisible}"/>
+
+            <Button BackgroundColor="Black" Margin="0,0,5,5" Grid.Column="2" Grid.Row="5" Text="Salveaza" FontSize="13" Command="{Binding SaveApartmentCommand}"></Button>
+
+            <Grid IsVisible="{Binding EditAddressIsVisible}" Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Image HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" Grid.RowSpan="13" Grid.ColumnSpan="3"/>
+
+                <Entry Margin="50,0,50,0" Placeholder="Tara:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" HorizontalTextAlignment="Center" Text="{Binding CurrentApartment.ApartmentAddress.Country}"></Entry>
+
+                <Entry Margin="50,0,50,0" Placeholder="Oras:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" HorizontalTextAlignment="Center"  Text="{Binding CurrentApartment.ApartmentAddress.City}"></Entry>
+
+                <Entry Margin="50,0,50,0" Placeholder="Strada:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" HorizontalTextAlignment="Center"  Text="{Binding CurrentApartment.ApartmentAddress.Street}"></Entry>
+
+                <Entry Margin="50,0,50,0" Placeholder="Numar:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5" HorizontalTextAlignment="Center" Text="{Binding CurrentApartment.ApartmentAddress.Number}"></Entry>
+
+                <Entry Margin="50,0,50,0" Placeholder="Bloc:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="6" HorizontalTextAlignment="Center" Text="{Binding CurrentApartment.ApartmentAddress.Building}"></Entry>
+
+                <Entry Margin="50,0,50,0" Placeholder="Scara:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" HorizontalTextAlignment="Center" Text="{Binding CurrentApartment.ApartmentAddress.Staircase}"></Entry>
+
+                <Entry Margin="50,0,50,0" Placeholder="Etaj:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="8" HorizontalTextAlignment="Center" Text="{Binding CurrentApartment.ApartmentAddress.Floor}"></Entry>
+
+                <Entry Margin="50,0,50,0" Placeholder="Apartament:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="9" HorizontalTextAlignment="Center" Text="{Binding CurrentApartment.ApartmentAddress.Apartment}"></Entry>
+
+                <Button BackgroundColor="Black" Margin="5,0,0,0" Text="Anuleaza" Grid.Column="1" Grid.Row="11" FontSize="13" HeightRequest="55"  Command="{Binding RefreshCommand}"></Button>
+
+                <Button BackgroundColor="Black" Margin="0,0,5,0" Grid.Column="2" Grid.Row="11" Text="Salveaza" FontSize="13" Command="{Binding SaveAddressCommand}"></Button>
+            </Grid>
+        </Grid>
+    </RefreshView>
+
+</ContentPage>

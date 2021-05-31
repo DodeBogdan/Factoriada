@@ -157,5 +157,13 @@ namespace Factoriada.Services
                 .Child(currentUser.UserId.ToString())
                 .PutAsync(currentUser);
         }
+
+        public async Task SaveApartment(ApartmentDetail currentApartment)
+        {
+            await _firebase
+                .Child("ApartmentDetail")
+                .Child(currentApartment.ApartmentDetailId.ToString)
+                .PutAsync(currentApartment);
+        }
     }
 }

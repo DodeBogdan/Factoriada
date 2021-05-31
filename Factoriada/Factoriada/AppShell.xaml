@@ -108,6 +108,10 @@
     <FlyoutItem Title="Contul Meu" Icon="ic_account_circle.png">
         <ShellContent Route="UserAccountView" ContentTemplate="{DataTemplate local:UserAccountView}" />
     </FlyoutItem>
+    
+    <FlyoutItem Title="Creeaza Apartament" Icon="ic_account_circle.png">
+        <ShellContent Route="CreateApartmentView" ContentTemplate="{DataTemplate local:CreateApartmentView}" />
+    </FlyoutItem>
 
 
 </Shell>
