@@ -7,7 +7,9 @@
              xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
              xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
              utility:ViewModelLocator.AutoWireViewModel="True" 
-             x:DataType="viewModels:LogInViewModel">
+             x:DataType="viewModels:LogInViewModel"
+             
+             Shell.NavBarIsVisible="False">
 
         <Grid>
             <Grid.RowDefinitions>

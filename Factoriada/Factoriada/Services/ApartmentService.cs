@@ -44,5 +44,22 @@ namespace Factoriada.Services
 
             await ApiService.ServiceClientInstance.SaveApartment(currentApartment);
         }
+
+        public async Task JoinApartment(User connectedUser, string result)
+        {
+            var apartmentDetail = await ApiService.ServiceClientInstance.GetApartmentByToken(result);
+
+            if (apartmentDetail == null)
+                throw new Exception("Codul nu apartine nici unui apartament.");
+
+            var apartment = new Apartment()
+            {
+                ApartmentDetail = apartmentDetail,
+                ApartmentId = Guid.NewGuid(),
+                User = connectedUser
+            };
+
+            ApiService.ServiceClientInstance.JoinApartment(apartment);
+        }
     }
 }

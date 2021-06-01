@@ -12,7 +12,7 @@
 
         <Image HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg"/>
 
-        <Image Source="factoriadaPng.png"></Image>
+        <Image Source="factoriadaPng.png" Opacity="0.5"></Image>
 
     </Grid>
 </ContentPage>

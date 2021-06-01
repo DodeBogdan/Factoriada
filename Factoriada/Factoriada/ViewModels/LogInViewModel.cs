@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Input;
+using Factoriada.Services;
 using Xamarin.Forms;
 
 namespace Factoriada.ViewModels
@@ -67,11 +68,11 @@ namespace Factoriada.ViewModels
 
                 ActiveUser.User = result;
 
-                ((App.Current.MainPage as AppShell).BindingContext as AppShellViewModel).ConnectedUser = result;
-
                 Email = Password = "";
 
                 await _dialogService.ShowDialog("Ai fost autentificat cu succes.", "Success");
+
+                App.Current.MainPage = new AppShell();
             }
             catch(Exception ex)
             {

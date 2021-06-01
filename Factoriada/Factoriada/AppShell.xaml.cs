@@ -11,7 +11,7 @@ namespace Factoriada
     {
         public AppShell()
         {
-            BindingContext = new AppShellViewModel(AppContainer.Resolve<IDialogService>(), AppContainer.Resolve<INavigationService>());
+            BindingContext = new AppShellViewModel(AppContainer.Resolve<IDialogService>(), AppContainer.Resolve<INavigationService>(), AppContainer.Resolve<IApartmentService>());
 
             InitializeComponent();
         }

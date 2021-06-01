@@ -22,8 +22,7 @@ namespace Factoriada
             AppContainer.RegisterDependencies();
             _ = ApiService.ServiceClientInstance;
 
-            MainPage = new AppShell();
-                //new LogInView();
+            MainPage = new NavigationPage(new LogInView());
         }
 
         protected override void OnStart()

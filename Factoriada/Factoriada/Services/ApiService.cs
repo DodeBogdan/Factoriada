@@ -113,25 +113,14 @@ namespace Factoriada.Services
                });
         }
 
-        public async Task<User> Login(string email, string password)
+        public async Task<User> Login(string email)
         {
             var result = (await _firebase
                 .Child("User")
                 .OnceAsync<User>())
                 .FirstOrDefault(x => x.Object.Email == email);
 
-            if (result == null)
-                return null;
-
-            return result.Object;    
-        }
-
-        public async Task LogAsync(string message)
-        {
-           await _firebase
-                .Child("Log")
-                .Child(Guid.NewGuid().ToString())
-                .PutAsync(message);
+            return result?.Object;    
         }
 
         public async Task Register(User user)
@@ -160,10 +149,56 @@ namespace Factoriada.Services
 
         public async Task SaveApartment(ApartmentDetail currentApartment)
         {
+            await ChangeUserRoleTo(currentApartment.Owner, "Owner");
+
+            currentApartment.Owner = await _firebase
+                .Child("User")
+                .Child(currentApartment.Owner.UserId.ToString())
+                .OnceSingleAsync<User>();
+
             await _firebase
                 .Child("ApartmentDetail")
                 .Child(currentApartment.ApartmentDetailId.ToString)
                 .PutAsync(currentApartment);
+        }
+
+        private async Task ChangeUserRoleTo(User user, string role)
+        {
+            var result = (await _firebase
+                .Child("Role")
+                .OnceAsync<Role>()).FirstOrDefault(x
+                => x.Object.RoleTypeName == role)
+                ?.Object;
+
+            user.Role = result;
+
+            await _firebase.Child("User")
+                .Child(user.UserId.ToString())
+                .PutAsync(user);
+        }
+
+        public async Task<ApartmentDetail> GetApartmentByToken(string result)
+        {
+            return (await _firebase
+                .Child("ApartmentDetail")
+                .OnceAsync<ApartmentDetail>())
+                .FirstOrDefault(x => x.Object.Token == result)
+                ?.Object;
+        }
+
+        public async void JoinApartment(Apartment apartment)
+        {
+            await ChangeUserRoleTo(apartment.User, "User");
+
+            apartment.User = await _firebase
+                .Child("User")
+                .Child(apartment.User.UserId.ToString())
+                .OnceSingleAsync<User>();
+
+            await _firebase
+                .Child("Apartment")
+                .Child(apartment.ApartmentId.ToString())
+                .PutAsync(apartment);
         }
     }
 }

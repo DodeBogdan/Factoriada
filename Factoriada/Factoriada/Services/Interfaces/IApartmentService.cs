@@ -10,5 +10,6 @@ namespace Factoriada.Services.Interfaces
     {
         void TestAddress(Address apartmentAddress);
         Task SaveApartment(ApartmentDetail currentApartment);
+        Task JoinApartment(User connectedUser, string result);
     }
 }

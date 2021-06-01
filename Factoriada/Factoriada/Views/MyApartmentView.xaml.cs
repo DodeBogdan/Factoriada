@@ -10,16 +10,11 @@ using Xamarin.Forms.Xaml;
 namespace Factoriada.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LogInView : ContentPage
+    public partial class MyApartmentView : ContentView
     {
-        public LogInView()
+        public MyApartmentView()
         {
             InitializeComponent();
-        }
-
-        protected override bool OnBackButtonPressed()
-        {
-            return false;
         }
     }
 }

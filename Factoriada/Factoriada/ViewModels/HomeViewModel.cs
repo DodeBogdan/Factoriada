@@ -9,12 +9,13 @@ using Xamarin.Forms;
 
 namespace Factoriada.ViewModels
 {
-    class HomeViewModel : ViewModelBase
+    internal class HomeViewModel : ViewModelBase
     {
         #region Constructor
         public HomeViewModel(INavigationService navigationService, IDialogService dialogService) : base(dialogService, navigationService)
         {
             InitializeCommands();
+
         }
 
         private void InitializeCommands()

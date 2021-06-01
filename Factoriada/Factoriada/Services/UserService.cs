@@ -14,7 +14,7 @@ namespace Factoriada.Services
     {
         public async Task<User> LogIn(string email, string password)
         {
-            var result =  await ApiService.ServiceClientInstance.Login(email, password);
+            var result =  await ApiService.ServiceClientInstance.Login(email);
 
             if (result == null)
                 throw new UserException("Nu exista nici un user cu acest email.");
@@ -28,6 +28,11 @@ namespace Factoriada.Services
         public async Task Register(User user)
         {
             TestUser(user);
+
+            var result = await ApiService.ServiceClientInstance.Login(user.Email);
+
+            if (result != null)
+                throw new UserException("Exista deja un utilizator cu acest email.");
 
             user.Address = new Address()
             {
@@ -87,6 +92,9 @@ namespace Factoriada.Services
             if (!user.LastName.All(a => char.IsLetter(a) || char.IsWhiteSpace(a) || a == '-'))
                 throw new UserException("Numele nu trebuie sa aiba caractere invalide.");
 
+            if (user.Email == null)
+                 throw new UserException("Email-ul este invalid.");
+
             if (user.Email == "admin")
                 return;
 
@@ -114,6 +122,9 @@ namespace Factoriada.Services
             if (!user.LastName.All(a => char.IsLetter(a) || char.IsWhiteSpace(a) || a == '-'))
                 throw new UserException("Numele nu trebuie sa aiba caractere invalide.");
 
+            if (user.Email == null)
+                throw new UserException("Email-ul este invalid.");
+
             var regex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w)+)+)$");
 
             if (regex.Match(user.Email) == Match.Empty || user.Email.Length < 4 || user.Email.Length > 50)
@@ -121,8 +132,6 @@ namespace Factoriada.Services
 
             TestPassword(user.Password);
         }
-
-
 
         public async Task UpdateUserAddress(User currentUser)
         {
