@@ -216,7 +216,10 @@ namespace Factoriada.Services
                 .OnceAsync<Apartment>()).FirstOrDefault(x => x.Object.User.UserId == userUserId);
 
             if (apartment != null)
-                return apartment.Object.ApartmentDetail;
+                return await _firebase
+                    .Child("ApartmentDetail")
+                    .Child(apartment.Object.ApartmentDetail.ApartmentDetailId.ToString())
+                    .OnceSingleAsync<ApartmentDetail>();
 
             return new ApartmentDetail();
         }
@@ -279,6 +282,32 @@ namespace Factoriada.Services
                 .Child("Announce")
                 .Child(currentAnnounce.AnnounceId.ToString())
                 .PutAsync(currentAnnounce);
+        }
+
+        public async Task<List<BudgetHistory>> GetBugetHistoryByApartment(Guid apartmentDetailId)
+        {
+            return (await _firebase
+                    .Child("BudgetHistory")
+                    .OnceAsync<BudgetHistory>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentDetailId)
+                .ToList();
+        }
+
+        public async Task AddMoney(BudgetHistory money)
+        {
+            await _firebase
+                .Child("BudgetHistory")
+                .Child(money.BudgetHistoryId.ToString())
+                .PutAsync(money);
+        }
+
+        public async Task UpdateApartment(ApartmentDetail currentApartment)
+        {
+            await _firebase
+                .Child("ApartmentDetail")
+                .Child(currentApartment.ApartmentDetailId.ToString())
+                .PutAsync(currentApartment);
         }
     }
 }

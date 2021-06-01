@@ -57,7 +57,7 @@ namespace Factoriada.ViewModels
         }
         private async void InitializeAddress()
         {
-            ApartmentAddress = await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId);
+            ApartmentAddress = await _apartmentService.GetApartmentAddressByUser(ActiveUser.User.UserId);
         }
 
 

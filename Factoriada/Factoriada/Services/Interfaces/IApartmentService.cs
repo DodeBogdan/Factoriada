@@ -11,7 +11,7 @@ namespace Factoriada.Services.Interfaces
         void TestAddress(Address apartmentAddress);
         Task SaveApartment(ApartmentDetail currentApartment);
         Task JoinApartment(User connectedUser, string result);
-        Task<string> GetApartmentByUser(Guid userUserId);
+        Task<string> GetApartmentAddressByUser(Guid userUserId);
         Task<Guid> GetApartmentIdByUser(Guid userUserId);
         Task<List<Rule>> GetRulesByApartmentId(Guid apartmentId);
         Task AddRuleToApartment(Rule rule, Guid apartmentId);
@@ -21,5 +21,9 @@ namespace Factoriada.Services.Interfaces
         Task DeleteAnnounce(Announce currentAnnounce);
         Task EditAnnounceFromApartment(Announce currentAnnounce);
         Task AddAnnounceToApartment(Announce announce, Guid apartmentId);
+        Task<ApartmentDetail> GetApartmentByUser(Guid userId);
+        Task<List<BudgetHistory>> GetBudgetHistoryByApartmentId(Guid apartmentDetailId);
+        Task AddMoneyToApartment(BudgetHistory money);
+        Task UpdateApartment(ApartmentDetail currentApartment);
     }
 }

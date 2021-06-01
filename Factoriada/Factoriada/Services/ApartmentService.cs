@@ -11,6 +11,7 @@ namespace Factoriada.Services
 {
     internal class ApartmentService : IApartmentService
     {
+        #region CreateApartment
         public void TestAddress(Address apartmentAddress)
         {
             if (apartmentAddress.Country == null) throw new AddressException("Tara trebuie sa fie completat.");
@@ -38,12 +39,14 @@ namespace Factoriada.Services
 
             currentApartment.Owner = ActiveUser.User;
             currentApartment.ApartmentDetailId = Guid.NewGuid();
-            currentApartment.Token = currentApartment.ApartmentDetailId.ToString().Substring(0,8);
+            currentApartment.Token = currentApartment.ApartmentDetailId.ToString().Substring(0, 8);
 
             currentApartment.UnspentMoney = 0.0f;
 
             await ApiService.ServiceClientInstance.SaveApartment(currentApartment);
         }
+        #endregion
+
 
         public async Task JoinApartment(User connectedUser, string result)
         {
@@ -62,25 +65,7 @@ namespace Factoriada.Services
             ApiService.ServiceClientInstance.JoinApartment(apartment);
         }
 
-        public async Task<string> GetApartmentByUser(Guid userUserId)
-        {
-            var apartment = await ApiService.ServiceClientInstance.GetApartmentByUserId(userUserId);
-
-            return "Oras: " + apartment.ApartmentAddress.City + ", Strada: " + apartment.ApartmentAddress.Street +
-                   ", Numar: " + apartment.ApartmentAddress.Number + ", Bloc" + apartment.ApartmentAddress.Building +
-                   ", Scara: " + apartment.ApartmentAddress.Staircase + ", Etaj: " + apartment.ApartmentAddress.Floor +
-                   ", Apartament: " + apartment.ApartmentAddress.Apartment;
-        }
-
-        public async Task<Guid> GetApartmentIdByUser(Guid userUserId)
-        {
-            var result = await ApiService.ServiceClientInstance.GetApartmentByUserId(userUserId);
-
-            if(result != null)
-                return result.ApartmentDetailId;
-            return new Guid();
-        }
-
+        #region ApartmentRules
         public async Task<List<Rule>> GetRulesByApartmentId(Guid apartmentId)
         {
             return await ApiService.ServiceClientInstance.GetRulesByApartment(apartmentId);
@@ -102,7 +87,9 @@ namespace Factoriada.Services
         {
             await ApiService.ServiceClientInstance.DeleteRule(currentRule);
         }
+        #endregion
 
+        #region ApartmentAnnounces
         public async Task<List<Announce>> GetAnnouncesByApartmentId(Guid apartmentId)
         {
             return await ApiService.ServiceClientInstance.GetAnnouncesByApartmentId(apartmentId);
@@ -124,5 +111,50 @@ namespace Factoriada.Services
 
             await ApiService.ServiceClientInstance.UpdateAnnounce(announce);
         }
+        #endregion
+
+        public async Task<string> GetApartmentAddressByUser(Guid userUserId)
+        {
+            var apartment = await ApiService.ServiceClientInstance.GetApartmentByUserId(userUserId);
+
+            return "Oras: " + apartment.ApartmentAddress.City + ", Strada: " + apartment.ApartmentAddress.Street +
+                   ", Numar: " + apartment.ApartmentAddress.Number + ", Bloc" + apartment.ApartmentAddress.Building +
+                   ", Scara: " + apartment.ApartmentAddress.Staircase + ", Etaj: " + apartment.ApartmentAddress.Floor +
+                   ", Apartament: " + apartment.ApartmentAddress.Apartment;
+        }
+
+        public async Task<Guid> GetApartmentIdByUser(Guid userUserId)
+        {
+            var result = await ApiService.ServiceClientInstance.GetApartmentByUserId(userUserId);
+
+            if(result != null)
+                return result.ApartmentDetailId;
+            return new Guid();
+        }
+
+        #region ApartmentBudget
+        public async Task<ApartmentDetail> GetApartmentByUser(Guid userId)
+        {
+            return await ApiService.ServiceClientInstance.GetApartmentByUserId(userId);
+        }
+
+        public async Task<List<BudgetHistory>> GetBudgetHistoryByApartmentId(Guid apartmentDetailId)
+        {
+            return await ApiService.ServiceClientInstance.GetBugetHistoryByApartment(apartmentDetailId);
+        }
+
+        public async Task AddMoneyToApartment(BudgetHistory money)
+        {
+            await ApiService.ServiceClientInstance.AddMoney(money);
+        }
+
+        public async Task UpdateApartment(ApartmentDetail currentApartment)
+        {
+            await ApiService.ServiceClientInstance.UpdateApartment(currentApartment);
+        }
+
+        #endregion
+
+
     }
 }

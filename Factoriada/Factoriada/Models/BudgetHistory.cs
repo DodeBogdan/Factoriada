@@ -9,5 +9,14 @@ namespace Factoriada.Models
         public Guid BudgetHistoryId { get; set;}
         public User User { get; set; }
         public float Amount { get; set; }
+        public ApartmentDetail ApartmentDetail { get; set; }
+        public string ShowBudget
+        {
+            get
+            {
+                return ($"{User.LastName} {User.FirstName} a adaugat {Amount}Lei");
+            }
+        }
+
     }
 }

@@ -10,11 +10,40 @@
              x:DataType="viewModels:BudgetViewModel"
              
              Title="Bugetul apartamentului">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Image Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" />
+
+        <Image Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Source="factoriadaPng.png" Opacity="0.5"/>
+
+
+        <ListView Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0"  x:Name="Rules" Margin="10"
+                  ItemsSource="{Binding BudgetHistoryList}" >
+
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:BudgetHistory">
+                    <ViewCell>
+                        <Grid>
+                            <Label Text="{Binding ShowBudget, StringFormat='{0,N}'}" FontSize="20" TextColor="Black"></Label>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Text="{Binding CurrentApartment.UnspentMoney, StringFormat='Bugetul actual este de: {0} Ron'}" FontSize="20" TextColor="Black"></Label>
+
+        <Button Grid.Column="0" Grid.Row="2" Text="Adauga" Command="{Binding AddMoneyCommand}" BackgroundColor="Black" Margin="5"></Button>
+    </Grid>
 </ContentPage>
