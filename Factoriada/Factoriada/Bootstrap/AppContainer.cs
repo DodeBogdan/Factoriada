@@ -23,6 +23,13 @@ namespace Factoriada.Bootstrap
             builder.RegisterType<RegisterViewModel>();
             builder.RegisterType<UserAccountViewModel>();
             builder.RegisterType<CreateApartmentViewModel>();
+            builder.RegisterType<MyApartmentViewModel>();
+            builder.RegisterType<AnnounceViewModel>();
+            builder.RegisterType<BillViewModel>();
+            builder.RegisterType<BudgetViewModel>();
+            builder.RegisterType<BuyListViewModel>();
+            builder.RegisterType<ChatViewModel>();
+            builder.RegisterType<RulesViewModel>();
 
             //services - data
             builder.RegisterType<DialogService>().As<IDialogService>();

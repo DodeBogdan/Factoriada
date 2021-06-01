@@ -1,10 +1,51 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Factoriada.Views.MyApartmentView">
-  <ContentView.Content>
-      <StackLayout>
-          <Label Text="Hello Xamarin.Forms!" />
-      </StackLayout>
-  </ContentView.Content>
-</ContentView>
+             x:Class="Factoriada.Views.MyApartmentView"
+             
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:MyApartmentViewModel"
+             
+             Title="Apartamentul meu">
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Image Grid.ColumnSpan="5" Grid.RowSpan="9" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" />
+        <Image Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="9" Source="factoriadaPng.png" Opacity="0.5"/>
+
+        <Label Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0"  HorizontalTextAlignment="Center" Padding="5"  FontSize="20" TextColor="Black" Text="{Binding ApartmentAddress}"/>
+
+        <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0" Text="Reguli" BackgroundColor="Black" Command="{Binding GoToRulesCommand}"/>
+        <Button Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,0,10,0" Text="Anunturi" BackgroundColor="Black" Command="{Binding GoToAnnouncementsCommand}"/>
+
+        <Button Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0" Text="Facturi" BackgroundColor="Black" Command="{Binding GoToBillsCommand}"/>
+        <Button Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,0,10,0" Text="Cumparaturi" BackgroundColor="Black" Command="{Binding GoToBuyListCommand}"/>
+
+        <Button Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0" Text="Curatenie" BackgroundColor="Black" Command="{Binding GoToCleanCommand}"/>
+        <Button Grid.Row="5" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,0,10,0" Text="Buget" BackgroundColor="Black" Command="{Binding GoToBudgetCommand}"/>
+
+        <Button Grid.Row="7" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,0,10,0" Text="Chat" BackgroundColor="Black" Command="{Binding GoToChatCommand}"/>
+
+    </Grid>
+</ContentPage>

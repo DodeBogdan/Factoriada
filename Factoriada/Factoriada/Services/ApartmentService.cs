@@ -61,5 +61,68 @@ namespace Factoriada.Services
 
             ApiService.ServiceClientInstance.JoinApartment(apartment);
         }
+
+        public async Task<string> GetApartmentByUser(Guid userUserId)
+        {
+            var apartment = await ApiService.ServiceClientInstance.GetApartmentByUserId(userUserId);
+
+            return "Oras: " + apartment.ApartmentAddress.City + ", Strada: " + apartment.ApartmentAddress.Street +
+                   ", Numar: " + apartment.ApartmentAddress.Number + ", Bloc" + apartment.ApartmentAddress.Building +
+                   ", Scara: " + apartment.ApartmentAddress.Staircase + ", Etaj: " + apartment.ApartmentAddress.Floor +
+                   ", Apartament: " + apartment.ApartmentAddress.Apartment;
+        }
+
+        public async Task<Guid> GetApartmentIdByUser(Guid userUserId)
+        {
+            var result = await ApiService.ServiceClientInstance.GetApartmentByUserId(userUserId);
+
+            if(result != null)
+                return result.ApartmentDetailId;
+            return new Guid();
+        }
+
+        public async Task<List<Rule>> GetRulesByApartmentId(Guid apartmentId)
+        {
+            return await ApiService.ServiceClientInstance.GetRulesByApartment(apartmentId);
+        }
+
+        public async Task AddRuleToApartment(Rule rule, Guid apartmentId)
+        {
+            rule.ApartmentDetail = await ApiService.ServiceClientInstance.GetApartmentById(apartmentId);
+
+            await ApiService.ServiceClientInstance.UpdateRule(rule);
+        }
+
+        public async Task EditRuleFromApartment(Rule currentRule)
+        {
+            await ApiService.ServiceClientInstance.UpdateRule(currentRule);
+        }
+
+        public async Task DeleteRule(Rule currentRule)
+        {
+            await ApiService.ServiceClientInstance.DeleteRule(currentRule);
+        }
+
+        public async Task<List<Announce>> GetAnnouncesByApartmentId(Guid apartmentId)
+        {
+            return await ApiService.ServiceClientInstance.GetAnnouncesByApartmentId(apartmentId);
+        }
+
+        public async Task DeleteAnnounce(Announce currentAnnounce)
+        {
+            await ApiService.ServiceClientInstance.DeleteAnnounce(currentAnnounce);
+        }
+
+        public async Task EditAnnounceFromApartment(Announce currentAnnounce)
+        {
+            await ApiService.ServiceClientInstance.UpdateAnnounce(currentAnnounce);
+        }
+
+        public async Task AddAnnounceToApartment(Announce announce, Guid apartmentId)
+        {
+            announce.ApartmentDetails = await ApiService.ServiceClientInstance.GetApartmentById(apartmentId);
+
+            await ApiService.ServiceClientInstance.UpdateAnnounce(announce);
+        }
     }
 }

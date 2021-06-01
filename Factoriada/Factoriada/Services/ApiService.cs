@@ -5,6 +5,7 @@ using Firebase.Database.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -14,7 +15,7 @@ namespace Factoriada.Services
     public class ApiService
     {
         private static ApiService _ServiceClientInstance;
-        readonly FirebaseClient _firebase;
+        private readonly FirebaseClient _firebase;
         public static ApiService ServiceClientInstance
         {
             get
@@ -199,6 +200,85 @@ namespace Factoriada.Services
                 .Child("Apartment")
                 .Child(apartment.ApartmentId.ToString())
                 .PutAsync(apartment);
+        }
+
+        public async Task<ApartmentDetail> GetApartmentByUserId(Guid userUserId)
+        {
+            var apartmentDetail = (await _firebase
+                .Child("ApartmentDetail")
+                .OnceAsync<ApartmentDetail>()).FirstOrDefault(x => x.Object.Owner.UserId == userUserId);
+
+            if (apartmentDetail != null)
+                return apartmentDetail.Object;
+
+            var apartment = (await _firebase
+                .Child("Apartment")
+                .OnceAsync<Apartment>()).FirstOrDefault(x => x.Object.User.UserId == userUserId);
+
+            if (apartment != null)
+                return apartment.Object.ApartmentDetail;
+
+            return new ApartmentDetail();
+        }
+
+        public async Task<List<Rule>> GetRulesByApartment(Guid apartmentId)
+        {
+            return (await _firebase
+                    .Child("Rule")
+                    .OnceAsync<Rule>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentId)
+                .ToList();
+        }
+
+        public async Task<ApartmentDetail> GetApartmentById(Guid apartmentId)
+        {
+            return await _firebase
+                .Child("ApartmentDetail")
+                .Child(apartmentId.ToString())
+                .OnceSingleAsync<ApartmentDetail>();
+        }
+
+        public async Task UpdateRule(Rule currentRule)
+        {
+            await _firebase
+                .Child("Rule")
+                .Child(currentRule.RuleId.ToString())
+                .PutAsync(currentRule);
+        }
+        
+        public async Task DeleteRule(Rule currentRule)
+        {
+            await _firebase
+                .Child("Rule")
+                .Child(currentRule.RuleId.ToString())
+                .DeleteAsync();
+        }
+
+        public async Task<List<Announce>> GetAnnouncesByApartmentId(Guid apartmentId)
+        {
+            return (await _firebase
+                    .Child("Announce")
+                    .OnceAsync<Announce>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentDetails.ApartmentDetailId == apartmentId)
+                .ToList();
+        }
+
+        public async Task DeleteAnnounce(Announce currentAnnounce)
+        {
+            await _firebase
+                .Child("Announce")
+                .Child(currentAnnounce.AnnounceId.ToString())
+                .DeleteAsync();
+        }
+
+        public async Task UpdateAnnounce(Announce currentAnnounce)
+        {
+            await _firebase
+                .Child("Announce")
+                .Child(currentAnnounce.AnnounceId.ToString())
+                .PutAsync(currentAnnounce);
         }
     }
 }

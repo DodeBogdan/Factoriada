@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace Factoriada.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MyApartmentView : ContentPage
+    public partial class BudgetView : ContentPage
     {
-        public MyApartmentView()
+        public BudgetView()
         {
             InitializeComponent();
         }

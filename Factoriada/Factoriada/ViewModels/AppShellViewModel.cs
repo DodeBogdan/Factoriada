@@ -67,8 +67,10 @@ namespace Factoriada.ViewModels
                 if (value.ImagesByte != null)
                 {
                     var stream = new MemoryStream(value.ImagesByte);
-                    CurrentUserImage = ImageSource.FromStream(() => stream);
+                    if(stream.CanRead)
+                        CurrentUserImage = ImageSource.FromStream(() => stream);
                 }
+                
                 else CurrentUserImage = ImageSource.FromFile("userimage.png");
                 OnPropertyChanged();
             }
@@ -105,7 +107,7 @@ namespace Factoriada.ViewModels
         private void LogOut()
         {
             ActiveUser.User = new User();
-            App.Current.MainPage = new LogInView();
+            App.Current.MainPage = new NavigationPage(new LogInView());
         }
 
 

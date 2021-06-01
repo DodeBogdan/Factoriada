@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Factoriada.Views.AnnounceView"
+             
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:AnnounceViewModel"
+             
+             Title="Anunturi">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Image Grid.ColumnSpan="3" Grid.RowSpan="2" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" />
+
+        <Image Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Source="factoriadaPng.png" Opacity="0.5"/>
+
+
+        <ListView Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0"  x:Name="Announces" Margin="10"
+                  ItemsSource="{Binding AnnounceList}" SelectedItem="{Binding CurrentAnnounce}" >
+
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:Announce">
+                    <ViewCell>
+                        <Grid>
+                            <Label Text="{Binding  AnnounceMessage, StringFormat='{0:N}'}" FontSize="20" ></Label>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Button Grid.Column="0" Grid.Row="1" Text="Adauga" Command="{Binding AddAnnounceCommand}" BackgroundColor="Black" Margin="5"></Button>
+
+        <Button Grid.Column="1" Grid.Row="1" Text="Editeaza" Command="{Binding EditAnnounceCommand}" IsVisible="{Binding UserIsOwnerOrCreator}" BackgroundColor="Black" Margin="5"></Button>
+
+        <Button Grid.Column="2" Grid.Row="1" Text="Sterge" Command="{Binding DeleteAnnounceCommand}" IsVisible="{Binding UserIsOwnerOrCreator}" BackgroundColor="Black" Margin="5"></Button>
+
+    </Grid>
+</ContentPage>
