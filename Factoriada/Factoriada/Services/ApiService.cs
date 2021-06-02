@@ -309,5 +309,27 @@ namespace Factoriada.Services
                 .Child(currentApartment.ApartmentDetailId.ToString())
                 .PutAsync(currentApartment);
         }
+
+        public async Task<List<Chat>> GetChatByApartment(Guid currentApartment)
+        {
+            var list = (await _firebase
+                    .Child("Chat")
+                    .OnceAsync<Chat>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentId == currentApartment)
+                .ToList();
+
+            list.Sort((x, y) => DateTime.Compare(x.DateTime, y.DateTime));
+
+            return list;
+        }
+
+        public async Task SendMessage(Chat chat)
+        {
+            await _firebase
+                .Child("Chat")
+                .Child(chat.ChatId.ToString())
+                .PutAsync(chat);
+        }
     }
 }

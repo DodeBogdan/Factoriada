@@ -127,7 +127,7 @@ namespace Factoriada.Services
         {
             var result = await ApiService.ServiceClientInstance.GetApartmentByUserId(userUserId);
 
-            if(result != null)
+            if (result != null)
                 return result.ApartmentDetailId;
             return new Guid();
         }
@@ -151,6 +151,18 @@ namespace Factoriada.Services
         public async Task UpdateApartment(ApartmentDetail currentApartment)
         {
             await ApiService.ServiceClientInstance.UpdateApartment(currentApartment);
+        }
+        #endregion
+
+        #region ApartmentChat   
+        public async Task<List<Chat>> GetChatByApartmentId(Guid currentApartment)
+        {
+            return await ApiService.ServiceClientInstance.GetChatByApartment(currentApartment);
+        }
+
+        public async Task SendMessage(Chat chat)
+        {
+            await ApiService.ServiceClientInstance.SendMessage(chat);
         }
 
         #endregion
