@@ -20,7 +20,8 @@ namespace Factoriada
         private void Initialize()
         {
             AppContainer.RegisterDependencies();
-            _ = ApiService.ServiceClientInstance;
+            _ = ApiDatabaseService.ServiceClientInstance;
+            _ = ApiStorageService.ServiceClientInstance;
 
             MainPage = new NavigationPage(new LogInView());
         }

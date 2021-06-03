@@ -43,14 +43,14 @@ namespace Factoriada.Services
 
             currentApartment.UnspentMoney = 0.0f;
 
-            await ApiService.ServiceClientInstance.SaveApartment(currentApartment);
+            await ApiDatabaseService.ServiceClientInstance.SaveApartment(currentApartment);
         }
         #endregion
 
 
         public async Task JoinApartment(User connectedUser, string result)
         {
-            var apartmentDetail = await ApiService.ServiceClientInstance.GetApartmentByToken(result);
+            var apartmentDetail = await ApiDatabaseService.ServiceClientInstance.GetApartmentByToken(result);
 
             if (apartmentDetail == null)
                 throw new Exception("Codul nu apartine nici unui apartament.");
@@ -62,60 +62,60 @@ namespace Factoriada.Services
                 User = connectedUser
             };
 
-            ApiService.ServiceClientInstance.JoinApartment(apartment);
+            ApiDatabaseService.ServiceClientInstance.JoinApartment(apartment);
         }
 
         #region ApartmentRules
         public async Task<List<Rule>> GetRulesByApartmentId(Guid apartmentId)
         {
-            return await ApiService.ServiceClientInstance.GetRulesByApartment(apartmentId);
+            return await ApiDatabaseService.ServiceClientInstance.GetRulesByApartment(apartmentId);
         }
 
         public async Task AddRuleToApartment(Rule rule, Guid apartmentId)
         {
-            rule.ApartmentDetail = await ApiService.ServiceClientInstance.GetApartmentById(apartmentId);
+            rule.ApartmentDetail = await ApiDatabaseService.ServiceClientInstance.GetApartmentById(apartmentId);
 
-            await ApiService.ServiceClientInstance.UpdateRule(rule);
+            await ApiDatabaseService.ServiceClientInstance.UpdateRule(rule);
         }
 
         public async Task EditRuleFromApartment(Rule currentRule)
         {
-            await ApiService.ServiceClientInstance.UpdateRule(currentRule);
+            await ApiDatabaseService.ServiceClientInstance.UpdateRule(currentRule);
         }
 
         public async Task DeleteRule(Rule currentRule)
         {
-            await ApiService.ServiceClientInstance.DeleteRule(currentRule);
+            await ApiDatabaseService.ServiceClientInstance.DeleteRule(currentRule);
         }
         #endregion
 
         #region ApartmentAnnounces
         public async Task<List<Announce>> GetAnnouncesByApartmentId(Guid apartmentId)
         {
-            return await ApiService.ServiceClientInstance.GetAnnouncesByApartmentId(apartmentId);
+            return await ApiDatabaseService.ServiceClientInstance.GetAnnouncesByApartmentId(apartmentId);
         }
 
         public async Task DeleteAnnounce(Announce currentAnnounce)
         {
-            await ApiService.ServiceClientInstance.DeleteAnnounce(currentAnnounce);
+            await ApiDatabaseService.ServiceClientInstance.DeleteAnnounce(currentAnnounce);
         }
 
         public async Task EditAnnounceFromApartment(Announce currentAnnounce)
         {
-            await ApiService.ServiceClientInstance.UpdateAnnounce(currentAnnounce);
+            await ApiDatabaseService.ServiceClientInstance.UpdateAnnounce(currentAnnounce);
         }
 
         public async Task AddAnnounceToApartment(Announce announce, Guid apartmentId)
         {
-            announce.ApartmentDetails = await ApiService.ServiceClientInstance.GetApartmentById(apartmentId);
+            announce.ApartmentDetails = await ApiDatabaseService.ServiceClientInstance.GetApartmentById(apartmentId);
 
-            await ApiService.ServiceClientInstance.UpdateAnnounce(announce);
+            await ApiDatabaseService.ServiceClientInstance.UpdateAnnounce(announce);
         }
         #endregion
 
         public async Task<string> GetApartmentAddressByUser(Guid userUserId)
         {
-            var apartment = await ApiService.ServiceClientInstance.GetApartmentByUserId(userUserId);
+            var apartment = await ApiDatabaseService.ServiceClientInstance.GetApartmentByUserId(userUserId);
 
             return "Oras: " + apartment.ApartmentAddress.City + ", Strada: " + apartment.ApartmentAddress.Street +
                    ", Numar: " + apartment.ApartmentAddress.Number + ", Bloc" + apartment.ApartmentAddress.Building +
@@ -125,7 +125,7 @@ namespace Factoriada.Services
 
         public async Task<Guid> GetApartmentIdByUser(Guid userUserId)
         {
-            var result = await ApiService.ServiceClientInstance.GetApartmentByUserId(userUserId);
+            var result = await ApiDatabaseService.ServiceClientInstance.GetApartmentByUserId(userUserId);
 
             if (result != null)
                 return result.ApartmentDetailId;
@@ -135,34 +135,34 @@ namespace Factoriada.Services
         #region ApartmentBudget
         public async Task<ApartmentDetail> GetApartmentByUser(Guid userId)
         {
-            return await ApiService.ServiceClientInstance.GetApartmentByUserId(userId);
+            return await ApiDatabaseService.ServiceClientInstance.GetApartmentByUserId(userId);
         }
 
         public async Task<List<BudgetHistory>> GetBudgetHistoryByApartmentId(Guid apartmentDetailId)
         {
-            return await ApiService.ServiceClientInstance.GetBugetHistoryByApartment(apartmentDetailId);
+            return await ApiDatabaseService.ServiceClientInstance.GetBugetHistoryByApartment(apartmentDetailId);
         }
 
         public async Task AddMoneyToApartment(BudgetHistory money)
         {
-            await ApiService.ServiceClientInstance.AddMoney(money);
+            await ApiDatabaseService.ServiceClientInstance.AddMoney(money);
         }
 
         public async Task UpdateApartment(ApartmentDetail currentApartment)
         {
-            await ApiService.ServiceClientInstance.UpdateApartment(currentApartment);
+            await ApiDatabaseService.ServiceClientInstance.UpdateApartment(currentApartment);
         }
         #endregion
 
         #region ApartmentChat   
         public async Task<List<Chat>> GetChatByApartmentId(Guid currentApartment)
         {
-            return await ApiService.ServiceClientInstance.GetChatByApartment(currentApartment);
+            return await ApiDatabaseService.ServiceClientInstance.GetChatByApartment(currentApartment);
         }
 
         public async Task SendMessage(Chat chat)
         {
-            await ApiService.ServiceClientInstance.SendMessage(chat);
+            await ApiDatabaseService.ServiceClientInstance.SendMessage(chat);
         }
 
         #endregion

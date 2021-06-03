@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Factoriada.Services;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -244,6 +245,7 @@ namespace Factoriada.ViewModels
             UserImage = ImageSource.FromStream(() => stream);
 
             var bytesStream = await result.OpenReadAsync();
+            var picStream = await result.OpenReadAsync();
 
             using (var memoryStream = new System.IO.MemoryStream())
             {

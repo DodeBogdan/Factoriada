@@ -12,22 +12,22 @@ using Xamarin.Forms;
 
 namespace Factoriada.Services
 {
-    public class ApiService
+    public class ApiDatabaseService
     {
-        private static ApiService _ServiceClientInstance;
+        private static ApiDatabaseService _ServiceClientInstance;
         private readonly FirebaseClient _firebase;
-        public static ApiService ServiceClientInstance
+        public static ApiDatabaseService ServiceClientInstance
         {
             get
             {
                 if (_ServiceClientInstance == null)
-                    _ServiceClientInstance = new ApiService();
+                    _ServiceClientInstance = new ApiDatabaseService();
 
                 return _ServiceClientInstance;
             }
         }
 
-        private ApiService()
+        private ApiDatabaseService()
         {
             _firebase = new FirebaseClient("https://factoriada-40e0f-default-rtdb.firebaseio.com/");
 

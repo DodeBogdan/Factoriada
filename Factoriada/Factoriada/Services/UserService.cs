@@ -14,7 +14,7 @@ namespace Factoriada.Services
     {
         public async Task<User> LogIn(string email, string password)
         {
-            var result =  await ApiService.ServiceClientInstance.Login(email);
+            var result =  await ApiDatabaseService.ServiceClientInstance.Login(email);
 
             if (result == null)
                 throw new UserException("Nu exista nici un user cu acest email.");
@@ -29,7 +29,7 @@ namespace Factoriada.Services
         {
             TestUser(user);
 
-            var result = await ApiService.ServiceClientInstance.Login(user.Email);
+            var result = await ApiDatabaseService.ServiceClientInstance.Login(user.Email);
 
             if (result != null)
                 throw new UserException("Exista deja un utilizator cu acest email.");
@@ -39,7 +39,7 @@ namespace Factoriada.Services
                 AddressId = Guid.NewGuid()
             };
 
-            await ApiService.ServiceClientInstance.Register(user);
+            await ApiDatabaseService.ServiceClientInstance.Register(user);
         }
 
         public async Task ChangePassword(User currentUser, string newPassword)
@@ -48,7 +48,7 @@ namespace Factoriada.Services
 
             currentUser.Password = newPassword;
 
-            await ApiService.ServiceClientInstance.UpdateUser(currentUser);
+            await ApiDatabaseService.ServiceClientInstance.UpdateUser(currentUser);
         }
 
         public async Task ChangeProfile(User currentUser)
@@ -56,7 +56,7 @@ namespace Factoriada.Services
             TestEditUser(currentUser);
             TestPhone(currentUser.PhoneNumber);
 
-            await ApiService.ServiceClientInstance.UpdateUser(currentUser);
+            await ApiDatabaseService.ServiceClientInstance.UpdateUser(currentUser);
         }
 
         private static void TestPhone(string phone)
@@ -137,12 +137,12 @@ namespace Factoriada.Services
         {
             TestAddress(currentUser.Address);
 
-            await ApiService.ServiceClientInstance.UpdateUser(currentUser);
+            await ApiDatabaseService.ServiceClientInstance.UpdateUser(currentUser);
         }
 
         public async Task SaveProfilePicture(User currentUser)
         {
-            await ApiService.ServiceClientInstance.UpdateUser(currentUser);
+            await ApiDatabaseService.ServiceClientInstance.UpdateUser(currentUser);
         }
 
         private static void TestAddress(Address userAddress)

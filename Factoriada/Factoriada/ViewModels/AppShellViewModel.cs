@@ -90,6 +90,13 @@ namespace Factoriada.ViewModels
 
         private async void JoinApartment()
         {
+            if (ActiveUser.User.Role.RoleTypeName != "Default")
+            {
+                await _dialogService.ShowDialog("Nu te poti conecta la mai multe apartamente.", "Atentie!");
+                return;
+            }
+
+
             var result = await _dialogService.DisplayPromptAsync("Apartament", "Introdu codul apartamentului.");
 
             try
