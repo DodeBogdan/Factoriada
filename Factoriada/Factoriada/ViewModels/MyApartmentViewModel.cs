@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using Factoriada.Models;
 using Factoriada.Services.Interfaces;
 using Factoriada.Utility;
 using Factoriada.Views;
@@ -24,6 +25,18 @@ namespace Factoriada.ViewModels
         #endregion
 
         #region Proprieties
+        private string _token = "";
+
+        public string Token
+        {
+            get => _token;
+            set
+            {
+                _token = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string ApartmentAddress
         {
             get => _apartmentAddress;
@@ -58,6 +71,7 @@ namespace Factoriada.ViewModels
         private async void InitializeAddress()
         {
             ApartmentAddress = await _apartmentService.GetApartmentAddressByUser(ActiveUser.User.UserId);
+            Token = (await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId)).Token;
         }
 
 

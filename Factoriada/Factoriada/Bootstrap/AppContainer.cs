@@ -30,6 +30,8 @@ namespace Factoriada.Bootstrap
             builder.RegisterType<BuyListViewModel>();
             builder.RegisterType<ChatViewModel>();
             builder.RegisterType<RulesViewModel>();
+            builder.RegisterType<AddBillViewModel>();
+            builder.RegisterType<SeeBillsViewModel>();
 
             //services - data
             builder.RegisterType<DialogService>().As<IDialogService>();

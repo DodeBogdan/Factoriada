@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Factoriada.Views.AddBillView"
+             
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:AddBillViewModel"
+             
+             Title="Adauga factura">
+
+    <Grid>
+        <Image HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" />
+
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="1" Grid.Column="1" Text="Nume factura:" TextColor="Black" HorizontalTextAlignment="Center" FontSize="18"/>
+            <Picker Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" TextColor="Black" HorizontalTextAlignment="Center" FontSize="18" Margin="50,0,50,0" ItemsSource="{Binding BillTypes}" SelectedItem="{Binding SelectedBillType}"/>
+
+            <Label Grid.Row="4" Grid.Column="1" Text="Cost factura:" TextColor="Black" HorizontalTextAlignment="Center" FontSize="18"/>
+            <Entry Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3"  TextColor="Black" HorizontalTextAlignment="Center" FontSize="18" Margin="50,0,50,0" Keyboard="Numeric" Text="{Binding BillPrice}"/>
+
+            <Label Grid.Row="7" Grid.Column="1" Text="Data scadenta:" TextColor="Black" HorizontalTextAlignment="Center" FontSize="18"/>
+            <DatePicker Grid.Row="8" Grid.Column="1" TextColor="Black" FontSize="18" HorizontalOptions="Center" Date="{Binding BillDateOfIssue}"/>
+
+            <Label Grid.Row="10" Grid.Column="0" Text="Data inceput:" TextColor="Black" HorizontalTextAlignment="Center"  FontSize="18"/>
+            <DatePicker Grid.Row="11" Grid.Column="0" TextColor="Black" FontSize="18" HorizontalOptions="Center" Date="{Binding BillStartDate}"/>
+
+            <Label Grid.Row="10" Grid.Column="2" Text="Data final:" TextColor="Black" HorizontalTextAlignment="Center" FontSize="17"/>
+            <DatePicker Grid.Row="11" Grid.Column="2" TextColor="Black" FontSize="18" HorizontalOptions="Center" Date="{Binding BillDueDate}"/>
+
+            <Label Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="2" Text="Factura a fost platita?:" TextColor="Black" HorizontalTextAlignment="Start" FontSize="17"/>
+            <CheckBox Grid.Row="13" Grid.Column="2" Color="Black" FlowDirection="RightToLeft"  HorizontalOptions="Center" IsChecked="{Binding BillIsPaid}"/>
+
+            <Button Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="3" Text="Adauga factura" BackgroundColor="Black" Margin="5,0,5,5" Command="{Binding AddBillCommand}"></Button>
+        </Grid>
+    </Grid>
+</ContentPage>

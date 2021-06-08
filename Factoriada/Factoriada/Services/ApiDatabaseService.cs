@@ -331,5 +331,13 @@ namespace Factoriada.Services
                 .Child(chat.ChatId.ToString())
                 .PutAsync(chat);
         }
+
+        public async Task AddBill(Bill bill)
+        {
+            await _firebase
+                .Child("Bill")
+                .Child(bill.BillId.ToString())
+                .PutAsync(bill);
+        }
     }
 }

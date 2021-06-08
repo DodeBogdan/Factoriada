@@ -165,7 +165,43 @@ namespace Factoriada.Services
             await ApiDatabaseService.ServiceClientInstance.SendMessage(chat);
         }
 
+        public Task<List<Reminder>> GetRemindersByApartmentId(Guid apartmentId)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
+
+        #region Bill
+
+        public async Task AddBill(Bill bill)
+        {
+            TestBill(bill);
+
+            await ApiDatabaseService.ServiceClientInstance.AddBill(bill);
+
+        }
+
+        private void TestBill(Bill bill)
+        {
+            if (bill.StartDate >= DateTime.Now)
+                throw new InvalidBillException("Data de inceput nu poate fii mai noua decat data curenta.");
+
+            if (bill.StartDate >= bill.DueDate)
+                throw new InvalidBillException("Data de inceput nu poate fii mai mare decat cea de final.");
+
+            if (bill.StartDate.AddMonths(1).AddDays(10) < bill.DueDate)
+                throw new InvalidBillException(
+                    "Timpul dintre cele 2 dati nu poate fii mai lung decat o luna si 10 zile.");
+
+            if (bill.DueDate >= bill.DateOfIssue)
+                throw new InvalidBillException("Data scadenta nu poate fii mai mica decat data de final.");
+
+            if (bill.DueDate.AddMonths(1) < bill.DateOfIssue)
+                throw new InvalidBillException("Data scadenta nu poate fii mai tarzie de o luna dupa data de final.");
+        }
+
+        #endregion
+
 
 
     }

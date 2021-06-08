@@ -27,5 +27,7 @@ namespace Factoriada.Services.Interfaces
         Task UpdateApartment(ApartmentDetail currentApartment);
         Task<List<Chat>> GetChatByApartmentId(Guid currentApartment);
         Task SendMessage(Chat chat);
+        Task<List<Reminder>> GetRemindersByApartmentId(Guid apartmentId);
+        Task AddBill(Bill bill);
     }
 }
