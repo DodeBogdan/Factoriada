@@ -339,5 +339,24 @@ namespace Factoriada.Services
                 .Child(bill.BillId.ToString())
                 .PutAsync(bill);
         }
+
+        public async Task<List<Bill>> GetBills(Guid apartmentDetailApartmentDetailId)
+        {
+            return (await _firebase
+                    .Child("Bill")
+                    .OnceAsync<Bill>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentDetailApartmentDetailId)
+                .ToList();
+
+        }
+
+        public async Task DeleteBill(Bill selectedBill)
+        {
+            await _firebase
+                .Child("Bill")
+                .Child(selectedBill.BillId.ToString())
+                .DeleteAsync();
+        }
     }
 }

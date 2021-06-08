@@ -1,12 +1,77 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Factoriada.Views.SeeBillsView">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+             x:Class="Factoriada.Views.SeeBillsView"
+
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:SeeBillsViewModel"
+
+             Title ="Vezi facturi"
+             BackgroundImageSource="background.jpg">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Row="0" Grid.Column="0" Margin="5" Text="Platite" BackgroundColor="Black"></Button>
+        <Button Grid.Row="0" Grid.Column="1" Margin="5" Text="Luna" BackgroundColor="Black"></Button>
+        <Button Grid.Row="0" Grid.Column="2" Margin="5" Text="Cost" BackgroundColor="Black"></Button>
+
+        <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
+        <ListView  
+            x:Name="BillList"
+            ItemsSource="{Binding BillList}"
+            HasUnevenRows="True"
+            SeparatorColor="Black"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedBill}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:Bill">
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="5"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Text="{Binding Type}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="Black"></Label>
+                                <Label Grid.Row="2" Grid.Column="0" Text="Data scadenta" HorizontalTextAlignment="Center" TextColor="Black"></Label>
+                                <Label Grid.Row="3" Grid.Column="0" Text="{Binding DateOfIssue, StringFormat='{}{0:dd MMMM yyyy}'}" HorizontalTextAlignment="Center" TextColor="Black"></Label>
+
+                            <BoxView Grid.Row="0" Grid.RowSpan="4" Grid.Column="1" Style="{StaticResource Separator}"></BoxView>
+
+                                <Label Grid.Row="0" Grid.Column="2" Text="{Binding StartDate , StringFormat='{}{0:dd MMMM yyyy}'}" HorizontalTextAlignment="Center" TextColor="Black"></Label>
+                                <Label Grid.Row="1" Grid.Column="2" Text="{Binding DueDate , StringFormat='{}{0:dd MMMM yyyy}'}" HorizontalTextAlignment="Center" TextColor="Black"/>
+
+                                <Label Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" Text="{Binding StartDate , StringFormat='{0:MMMM}'}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" TextColor="Black"></Label>
+
+                                <Label Grid.Row="2" Grid.Column="2" Text="Factura a fost platita" TextColor="Black"/>
+                            <CheckBox Grid.Row="3" Grid.Column="2" IsChecked="{Binding Paid}" IsEnabled="False" HorizontalOptions="Center" Color="Black"/>
+
+                                <Label Grid.Row="2" Grid.Column="3" Text="Cost" HorizontalTextAlignment="Center" TextColor="Black"></Label>
+                                <Label Grid.Row="3" Grid.Column="3" Text="{Binding BillPrice, StringFormat='{0} Ron'}" HorizontalTextAlignment="Center" TextColor="Black"></Label>
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        </Frame>
+    </Grid>
 </ContentPage>

@@ -1,0 +1,25 @@
+﻿<xct:Popup
+    xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             x:Class="Factoriada.Popups.BillPopup"
+            x:TypeArguments="x:String"
+             Size="300,300"
+             Color="Transparent">
+
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button x:Name="PayBillButton" Grid.Row="0" Text="Plateste factura" Margin="10" BackgroundColor="Black" Clicked="PayBill"></Button>
+        <Button Grid.Row="1" Text="Sterge factura" Margin="10" BackgroundColor="Black" Clicked="DeleteBill"></Button>
+        <Button Grid.Row="2" Text="Anuleaza" Margin="10" BackgroundColor="Black"
+          Clicked="CancelBill"></Button>
+
+    </Grid>
+
+</xct:Popup>

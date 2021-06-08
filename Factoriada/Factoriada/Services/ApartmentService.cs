@@ -181,6 +181,16 @@ namespace Factoriada.Services
 
         }
 
+        public async Task<List<Bill>> GetBillsByApartment(Guid apartmentDetailApartmentDetailId)
+        {
+            return await ApiDatabaseService.ServiceClientInstance.GetBills(apartmentDetailApartmentDetailId);
+        }
+
+        public async Task DeleteBill(Bill selectedBill)
+        {
+            await ApiDatabaseService.ServiceClientInstance.DeleteBill(selectedBill);
+        }
+
         private void TestBill(Bill bill)
         {
             if (bill.StartDate >= DateTime.Now)

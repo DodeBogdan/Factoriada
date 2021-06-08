@@ -51,7 +51,6 @@ namespace Factoriada.ViewModels
 
         public ICommand AddBillCommand { get; set; }
         public ICommand SeeBillsCommand { get; set; }
-        public ICommand SetReminderCommand { get; set; }
         #endregion
 
         #region Private Methods
@@ -59,7 +58,6 @@ namespace Factoriada.ViewModels
         {
             AddBillCommand = new Command(AddBill);
             SeeBillsCommand = new Command(SeeBills);
-            SetReminderCommand = new Command(SetReminder);
         }
 
         private async void Initialize()
@@ -76,10 +74,6 @@ namespace Factoriada.ViewModels
         private async void SeeBills()
         {
             await _navigationService.PushAsync(new SeeBillsView());
-        }
-
-        private async void SetReminder()
-        {
         }
         #endregion
     }
