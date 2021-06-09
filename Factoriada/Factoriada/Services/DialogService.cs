@@ -20,6 +20,16 @@ namespace Factoriada.Services
             UserDialogs.Instance.Toast(message);
         }
 
+        public void ShowLoading()
+        {
+            UserDialogs.Instance.ShowLoading("Se incarca.");
+        }
+
+        public void HideLoading()
+        {
+            UserDialogs.Instance.HideLoading();
+        }
+
         private Page MainPage
         {
             get { return Application.Current.MainPage; }

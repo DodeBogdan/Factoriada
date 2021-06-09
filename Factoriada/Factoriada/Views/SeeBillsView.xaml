@@ -6,12 +6,16 @@
              xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
              xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
              xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
+             xmlns:views="clr-namespace:Factoriada.Views;assembly=Factoriada"
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:SeeBillsViewModel"
 
              Title ="Vezi facturi"
              BackgroundImageSource="background.jpg">
     <Grid>
+        <views:PayBillView IsVisible="{Binding StartedToPay}"></views:PayBillView>
+
+        <Grid IsVisible="{Binding NotStartedToPay}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -73,5 +77,6 @@
             </ListView.ItemTemplate>
         </ListView>
         </Frame>
+        </Grid>
     </Grid>
 </ContentPage>

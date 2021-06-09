@@ -5,6 +5,7 @@
              
              xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
              xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             xmlns:views="clr-namespace:Factoriada.Views;assembly=Factoriada"
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:AddBillViewModel"
              
@@ -58,5 +59,8 @@
 
             <Button Grid.Row="15" Grid.Column="0" Grid.ColumnSpan="3" Text="Adauga factura" BackgroundColor="Black" Margin="5,0,5,5" Command="{Binding AddBillCommand}"></Button>
         </Grid>
+
+        
+
     </Grid>
 </ContentPage>

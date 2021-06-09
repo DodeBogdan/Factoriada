@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Factoriada.Views.TimeAwayView"
+             
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
+             xmlns:views="clr-namespace:Factoriada.Views;assembly=Factoriada"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:TimeAwayViewModel"
+
+             Title ="Timp plecat"
+             BackgroundImageSource="background.jpg">
+    <Grid Margin="10">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Column="1" Grid.Row="0" Text="Data plecare:" TextColor="Black" HorizontalTextAlignment="Center" FontSize="20"></Label>
+            <DatePicker Grid.Row="1" Grid.Column="1" MinimumDate="{Binding MinimumDateTime}" MaximumDate="{Binding MaximumDateTime}" Date="{Binding StartDateTime}" HorizontalOptions="Center" FontSize="20"></DatePicker>
+
+            <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+
+            <Label Grid.Column="1" Grid.Row="3" Text="Data venire:" TextColor="Black" HorizontalTextAlignment="Center" FontSize="20"/>
+            <DatePicker Grid.Row="4" Grid.Column="1" MinimumDate="{Binding MinimDateForMaximumDateTime}" MaximumDate="{Binding MaximumDateTime}" Date="{Binding EndDateTime}" HorizontalOptions="Center" FontSize="20"/>
+
+            <BoxView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+
+            <Frame Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
+                <ListView  
+            x:Name="TimeAwayList"
+            ItemsSource="{Binding TimeAwayList}"
+            HasUnevenRows="True"
+            SeparatorColor="Black"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedTimeAway}">
+                    <ListView.Header>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Text="Data plecare:" FontSize="20" TextColor="Black" HorizontalTextAlignment="Center"></Label>
+                            <Label Grid.Row="0" Grid.Column="1" Text="Data venire:" FontSize="20" TextColor="Black" HorizontalTextAlignment="Center"></Label>
+                            <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource Separator}"></BoxView>
+                        </Grid>
+                    </ListView.Header>
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:TimeAway">
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Label Grid.Column="0" Text="{Binding  LeaveFrom, StringFormat='{0:dd MMMM yyyy}'}" HorizontalTextAlignment="Center" FontSize="20" TextColor="Black"></Label>
+                                    <Label Grid.Column="1" Text="{Binding  LeaveTo, StringFormat='{0:dd MMMM yyyy}'}" HorizontalTextAlignment="Center" FontSize="20" TextColor="Black"></Label>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Frame>
+
+            <Button Grid.Column="0" Grid.Row="7" Text="Adauga" BackgroundColor="Black" Margin="5" Command="{Binding AddTimeAwayCommand}"></Button>
+            <Button Grid.Column="1" Grid.Row="7" Text="Editeaza"  BackgroundColor="Black" Margin="5" Command="{Binding EditTimeAwayCommand}" IsVisible="{Binding IsSelectedTimeAwayToEdit}"></Button>
+            <Button Grid.Column="2" Grid.Row="7" Text="Sterge"  BackgroundColor="Black" Margin="5" Command="{Binding DeleteTimeAwayCommand}" IsVisible="{Binding IsSelectedTimeAwayToDelete}"></Button>
+        </Grid>
+    </Grid>
+</ContentPage>

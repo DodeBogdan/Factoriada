@@ -191,6 +191,40 @@ namespace Factoriada.Services
             await ApiDatabaseService.ServiceClientInstance.DeleteBill(selectedBill);
         }
 
+        public async Task<List<BillPaidPersons>> GenerateBillPaidPersons(Bill selectedBill, Guid apartmentId)
+        {
+            var userList = await ApiDatabaseService.ServiceClientInstance.GetUserListByApartment(apartmentId);
+            var totalPrice = selectedBill.BillPrice / userList.Count;
+            var daysOnMouth = (selectedBill.DueDate - selectedBill.StartDate).Days;
+            float pricePerDay;
+            if (totalPrice != 0)
+                pricePerDay = totalPrice / daysOnMouth;
+            else
+            {
+                pricePerDay = 0;
+            }
+
+            var billPaidPersonList = new List<BillPaidPersons>();
+
+            foreach (var user in userList)
+            {
+                var billPaidPersons = new BillPaidPersons
+                {
+                    BillUserPaid = user,
+                    BillPaidId = Guid.NewGuid(),
+                    BillPaidBillId = selectedBill.BillId
+                };
+
+                var daysOff = await ApiDatabaseService.ServiceClientInstance.GetTimeAwayOfUserByInterval(user.UserId);
+
+                billPaidPersons.MoneyPaid = pricePerDay * daysOnMouth;
+
+                billPaidPersonList.Add(billPaidPersons);
+            }
+
+            return billPaidPersonList;
+        }
+        
         private void TestBill(Bill bill)
         {
             if (bill.StartDate >= DateTime.Now)
@@ -212,7 +246,42 @@ namespace Factoriada.Services
 
         #endregion
 
+        #region TimeAway
+        public async Task<List<TimeAway>> GetTimeAwayByUser(Guid userId)
+        {
+            return await ApiDatabaseService.ServiceClientInstance.GetTimeAwayByUser(userId);
+        }
 
+        public async Task AddOrUpdateTimeAway(TimeAway timeAway)
+        {
+            await TestTimeAway(timeAway);
+
+            await ApiDatabaseService.ServiceClientInstance.AddOrUpdateTimeAway(timeAway);
+        }
+
+        public async Task DeleteTimeAway(TimeAway timeAway)
+        {
+            await ApiDatabaseService.ServiceClientInstance.DeleteTimeAway(timeAway);
+        }
+        private async Task TestTimeAway(TimeAway timeAway)
+        {
+            var list = await ApiDatabaseService.ServiceClientInstance.GetTimeAwayByUser(timeAway.User.UserId);
+            foreach (var away in list)
+            {
+                if(timeAway.TimeAwayId == away.TimeAwayId)
+                    continue;
+
+                if (timeAway.LeaveFrom >= away.LeaveFrom && timeAway.LeaveFrom <= away.LeaveTo)
+                    throw new Exception("Data de plecare deja a fost aleasa odata.");
+                
+                if (timeAway.LeaveTo >= away.LeaveFrom && timeAway.LeaveTo <= away.LeaveTo)
+                    throw new Exception("Data de plecare deja a fost aleasa odata.");
+
+                if(timeAway.LeaveFrom < away.LeaveFrom && timeAway.LeaveTo > away.LeaveFrom)
+                    throw new Exception("Data de plecare deja a fost aleasa odata.");
+            }
+        }
+        #endregion
 
     }
 }

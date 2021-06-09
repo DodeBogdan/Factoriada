@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Factoriada.Views.PayBillView"
+             
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:SeeBillsViewModel">
+    <Grid >
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Text="Cost"/>
+            <Label Grid.Row="1" Grid.Column="0" Text="{Binding SelectedBill.BillPrice}"/>
+
+            <Label Grid.Row="0" Grid.Column="1" Text="Data scadenta"></Label>
+            <Label Grid.Row="1" Grid.Column="1" Text="{Binding SelectedBill.DateOfIssue , StringFormat='{}{0:dd MMMM yyyy}'}"></Label>
+
+            <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource Separator}"></BoxView>
+
+            <Label Grid.Row="3" Grid.Column="0" Text="Data Inceput"/>
+            <Label Grid.Row="4" Grid.Column="0" Text="{Binding SelectedBill.StartDate , StringFormat='{}{0:dd MMMM yyyy}'}"/>
+
+            <Label Grid.Row="3" Grid.Column="1" Text="Data Final"></Label>
+            <Label Grid.Row="4" Grid.Column="1" Text="{Binding SelectedBill.DueDate , StringFormat='{}{0:dd MMMM yyyy}'}"></Label>
+
+            <BoxView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource Separator}"></BoxView>
+
+            <Frame Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
+                <ListView  x:Name="BillList"
+                           ItemsSource="{Binding BillPaidPersonsList}"
+                           HasUnevenRows="True"
+                           SeparatorColor="Black">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:BillPaidPersons">
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Text="{Binding BillUserPaid.FirstName}"></Label>
+                                        <Label Grid.Column="1" Text="{Binding MoneyPaid}"></Label>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                </ListView>
+            </Frame>
+
+            <Button Grid.Row="7" Grid.Column="0" Text="Plateste"></Button>
+            <Button Grid.Row="7" Grid.Column="1" Text="Anuleaza"></Button>
+
+        </Grid>
+    </Grid>
+</ContentView>

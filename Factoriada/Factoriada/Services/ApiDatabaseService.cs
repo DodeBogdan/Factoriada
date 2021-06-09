@@ -121,7 +121,7 @@ namespace Factoriada.Services
                 .OnceAsync<User>())
                 .FirstOrDefault(x => x.Object.Email == email);
 
-            return result?.Object;    
+            return result?.Object;
         }
 
         public async Task Register(User user)
@@ -249,7 +249,7 @@ namespace Factoriada.Services
                 .Child(currentRule.RuleId.ToString())
                 .PutAsync(currentRule);
         }
-        
+
         public async Task DeleteRule(Rule currentRule)
         {
             await _firebase
@@ -357,6 +357,68 @@ namespace Factoriada.Services
                 .Child("Bill")
                 .Child(selectedBill.BillId.ToString())
                 .DeleteAsync();
+        }
+
+        public async Task<List<User>> GetUserListByApartment(Guid apartmentId)
+        {
+            var userList = new List<User>();
+
+            var owner = (await _firebase
+                    .Child("ApartmentDetail")
+                    .OnceAsync<ApartmentDetail>())
+                .Select(x => x.Object)
+                .FirstOrDefault(x => x.ApartmentDetailId == apartmentId)
+                ?.Owner;
+
+            userList.Add(owner);
+
+            var list = (await _firebase
+                    .Child("Apartment")
+                    .OnceAsync<Apartment>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentId)
+                .Select(x => x.User)
+                .ToList();
+
+            userList.AddRange(list);
+
+            return userList;
+        }
+
+        public async Task<List<TimeAway>> GetTimeAwayOfUserByInterval(Guid userUserId)
+        {
+           return (await _firebase
+                    .Child("TimeAway")
+                    .OnceAsync<TimeAway>())
+                .Select(x => x.Object)
+                .Where(x => x.User.UserId == userUserId)
+                .ToList();
+        }
+
+        public async Task<List<TimeAway>> GetTimeAwayByUser(Guid userId)
+        {
+            return (await _firebase
+                    .Child("TimeAway")
+                    .OnceAsync<TimeAway>())
+                .Select(x => x.Object)
+                .Where(x => x.User.UserId == userId)
+                .ToList();
+        }
+
+        public async Task DeleteTimeAway(TimeAway timeAway)
+        {
+            await _firebase
+                .Child("TimeAway")
+                .Child(timeAway.TimeAwayId.ToString())
+                .DeleteAsync();
+        }
+
+        public async Task AddOrUpdateTimeAway(TimeAway timeAway)
+        {
+            await _firebase
+                .Child("TimeAway")
+                .Child(timeAway.TimeAwayId.ToString())
+                .PutAsync(timeAway);
         }
     }
 }

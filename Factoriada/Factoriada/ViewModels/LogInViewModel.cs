@@ -64,15 +64,19 @@ namespace Factoriada.ViewModels
         {
             try
             {
+                _dialogService.ShowLoading();
+
                 var result = await _userService.LogIn(Email, Password);
 
                 ActiveUser.User = result;
 
                 Email = Password = "";
 
-                await _dialogService.ShowDialog("Ai fost autentificat cu succes.", "Success");
-
                 App.Current.MainPage = new AppShell();
+
+                _dialogService.HideLoading();
+                
+                await _dialogService.ShowDialog("Ai fost autentificat cu succes.", "Success");
             }
             catch(Exception ex)
             {

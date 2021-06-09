@@ -54,6 +54,7 @@ namespace Factoriada.ViewModels
         public ICommand GoToCleanCommand { get; set; }
         public ICommand GoToBudgetCommand { get; set; }
         public ICommand GoToChatCommand { get; set; }
+        public ICommand GoToTimeAwayCommand { get; set; }
         #endregion
 
         #region Private Methods
@@ -67,6 +68,7 @@ namespace Factoriada.ViewModels
             GoToCleanCommand = new Command(async () => await _dialogService.ShowDialog("Nu este implementat.", ""));
             GoToBudgetCommand = new Command(async () => await _navigationService.PushAsync(new BudgetView()));
             GoToChatCommand = new Command(async () => await _navigationService.PushAsync(new ChatView()));
+            GoToTimeAwayCommand = new Command(async () => await _navigationService.PushAsync(new TimeAwayView()));
         }
         private async void InitializeAddress()
         {

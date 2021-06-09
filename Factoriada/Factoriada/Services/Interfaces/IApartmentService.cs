@@ -31,5 +31,9 @@ namespace Factoriada.Services.Interfaces
         Task AddBill(Bill bill);
         Task<List<Bill>> GetBillsByApartment(Guid apartmentDetailApartmentDetailId);
         Task DeleteBill(Bill selectedBill);
+        Task<List<BillPaidPersons>> GenerateBillPaidPersons(Bill selectedBill, Guid apartmentId);
+        Task<List<TimeAway>> GetTimeAwayByUser(Guid userId);
+        Task AddOrUpdateTimeAway(TimeAway timeAway);
+        Task DeleteTimeAway(TimeAway timeAway);
     }
 }

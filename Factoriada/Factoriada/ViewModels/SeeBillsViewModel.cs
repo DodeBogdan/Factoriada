@@ -25,11 +25,44 @@ namespace Factoriada.ViewModels
 
         private List<Bill> _billList;
         private ApartmentDetail _apartmentDetail;
+        private bool _notStartedToPay = true;
+        private Bill _selectedBill;
+        private bool _startedToPay;
 
         #endregion
 
         #region Proprieties
-        private Bill _selectedBill;
+        private List<BillPaidPersons> _billPaidPersonsList;
+
+        public List<BillPaidPersons> BillPaidPersonsList
+        {
+            get => _billPaidPersonsList;
+            set
+            {
+                _billPaidPersonsList = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool StartedToPay
+        {
+            get => _startedToPay;
+            set
+            {
+                _startedToPay = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool NotStartedToPay
+        {
+            get => _notStartedToPay;
+            set
+            {
+                _notStartedToPay = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Bill SelectedBill
         {
@@ -95,7 +128,11 @@ namespace Factoriada.ViewModels
 
                 if (result == "Pay")
                 {
-                    await _dialogService.ShowDialog("Plateste factura:", "");
+                    NotStartedToPay = false;
+                    StartedToPay = true;
+                    BillPaidPersonsList =
+                        await _apartmentService.GenerateBillPaidPersons(SelectedBill,
+                            _apartmentDetail.ApartmentDetailId);
                 }
 
                 if (result == "Delete")

@@ -48,6 +48,8 @@
         <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0" Text="Curatenie" BackgroundColor="Black" Command="{Binding GoToCleanCommand}"/>
         <Button Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,0,10,0" Text="Buget" BackgroundColor="Black" Command="{Binding GoToBudgetCommand}"/>
 
+        <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0" Text="Plecat" BackgroundColor="Black" Command="{Binding GoToTimeAwayCommand}"/>
+
         <Button Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,0,10,0" Text="Chat" BackgroundColor="Black" Command="{Binding GoToChatCommand}"/>
 
     </Grid>
