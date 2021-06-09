@@ -6,11 +6,10 @@ namespace Factoriada.Models
     public class BuyList
     {
         public Guid BuyListId { get; set; }
-        public ToBuy ToBuy { get; set; }
+        public string Product { get; set; }
+        public int Count { get; set; }
         public bool Hidden { get; set; }
-
         public User Owner { get; set; }
-
         public ApartmentDetail ApartmentDetail { get; set; }
     }
 }

@@ -117,7 +117,7 @@ namespace Factoriada.Services
         public async Task<User> Login(string email)
         {
             var result = (await _firebase
-                .Child("User")
+                .Child(nameof(User))
                 .OnceAsync<User>())
                 .FirstOrDefault(x => x.Object.Email == email);
 
@@ -143,7 +143,7 @@ namespace Factoriada.Services
         public async Task UpdateUser(User currentUser)
         {
             await _firebase
-                .Child("User")
+                .Child(nameof(User))
                 .Child(currentUser.UserId.ToString())
                 .PutAsync(currentUser);
         }
@@ -205,19 +205,19 @@ namespace Factoriada.Services
         public async Task<ApartmentDetail> GetApartmentDetailByUserId(Guid userUserId)
         {
             var apartmentDetail = (await _firebase
-                .Child("ApartmentDetail")
+                .Child(nameof(ApartmentDetail))
                 .OnceAsync<ApartmentDetail>()).FirstOrDefault(x => x.Object.Owner.UserId == userUserId);
 
             if (apartmentDetail != null)
                 return apartmentDetail.Object;
 
             var apartment = (await _firebase
-                .Child("Apartment")
+                .Child(nameof(Apartment))
                 .OnceAsync<Apartment>()).FirstOrDefault(x => x.Object.User.UserId == userUserId);
 
             if (apartment != null)
                 return await _firebase
-                    .Child("ApartmentDetail")
+                    .Child(nameof(ApartmentDetail))
                     .Child(apartment.Object.ApartmentDetail.ApartmentDetailId.ToString())
                     .OnceSingleAsync<ApartmentDetail>();
 
@@ -227,7 +227,7 @@ namespace Factoriada.Services
         public async Task<List<Rule>> GetRulesByApartment(Guid apartmentId)
         {
             return (await _firebase
-                    .Child("Rule")
+                    .Child(nameof(Rule))
                     .OnceAsync<Rule>())
                 .Select(x => x.Object)
                 .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentId)
@@ -237,7 +237,7 @@ namespace Factoriada.Services
         public async Task<ApartmentDetail> GetApartmentById(Guid apartmentId)
         {
             return await _firebase
-                .Child("ApartmentDetail")
+                .Child(nameof(ApartmentDetail))
                 .Child(apartmentId.ToString())
                 .OnceSingleAsync<ApartmentDetail>();
         }
@@ -245,7 +245,7 @@ namespace Factoriada.Services
         public async Task UpdateRule(Rule currentRule)
         {
             await _firebase
-                .Child("Rule")
+                .Child(nameof(Rule))
                 .Child(currentRule.RuleId.ToString())
                 .PutAsync(currentRule);
         }
@@ -253,7 +253,7 @@ namespace Factoriada.Services
         public async Task DeleteRule(Rule currentRule)
         {
             await _firebase
-                .Child("Rule")
+                .Child(nameof(Rule))
                 .Child(currentRule.RuleId.ToString())
                 .DeleteAsync();
         }
@@ -261,7 +261,7 @@ namespace Factoriada.Services
         public async Task<List<Announce>> GetAnnouncesByApartmentId(Guid apartmentId)
         {
             return (await _firebase
-                    .Child("Announce")
+                    .Child(nameof(Announce))
                     .OnceAsync<Announce>())
                 .Select(x => x.Object)
                 .Where(x => x.ApartmentDetails.ApartmentDetailId == apartmentId)
@@ -271,7 +271,7 @@ namespace Factoriada.Services
         public async Task DeleteAnnounce(Announce currentAnnounce)
         {
             await _firebase
-                .Child("Announce")
+                .Child(nameof(Announce))
                 .Child(currentAnnounce.AnnounceId.ToString())
                 .DeleteAsync();
         }
@@ -279,7 +279,7 @@ namespace Factoriada.Services
         public async Task UpdateAnnounce(Announce currentAnnounce)
         {
             await _firebase
-                .Child("Announce")
+                .Child(nameof(Announce))
                 .Child(currentAnnounce.AnnounceId.ToString())
                 .PutAsync(currentAnnounce);
         }
@@ -287,7 +287,7 @@ namespace Factoriada.Services
         public async Task<List<BudgetHistory>> GetBugetHistoryByApartment(Guid apartmentDetailId)
         {
             return (await _firebase
-                    .Child("BudgetHistory")
+                    .Child(nameof(BudgetHistory))
                     .OnceAsync<BudgetHistory>())
                 .Select(x => x.Object)
                 .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentDetailId)
@@ -297,7 +297,7 @@ namespace Factoriada.Services
         public async Task AddMoney(BudgetHistory money)
         {
             await _firebase
-                .Child("BudgetHistory")
+                .Child(nameof(BudgetHistory))
                 .Child(money.BudgetHistoryId.ToString())
                 .PutAsync(money);
         }
@@ -305,7 +305,7 @@ namespace Factoriada.Services
         public async Task UpdateApartment(ApartmentDetail currentApartment)
         {
             await _firebase
-                .Child("ApartmentDetail")
+                .Child(nameof(ApartmentDetail))
                 .Child(currentApartment.ApartmentDetailId.ToString())
                 .PutAsync(currentApartment);
         }
@@ -313,7 +313,7 @@ namespace Factoriada.Services
         public async Task<List<Chat>> GetChatByApartment(Guid currentApartment)
         {
             var list = (await _firebase
-                    .Child("Chat")
+                    .Child(nameof(Chat))
                     .OnceAsync<Chat>())
                 .Select(x => x.Object)
                 .Where(x => x.ApartmentId == currentApartment)
@@ -327,7 +327,7 @@ namespace Factoriada.Services
         public async Task SendMessage(Chat chat)
         {
             await _firebase
-                .Child("Chat")
+                .Child(nameof(Chat))
                 .Child(chat.ChatId.ToString())
                 .PutAsync(chat);
         }
@@ -335,7 +335,7 @@ namespace Factoriada.Services
         public async Task AddBill(Bill bill)
         {
             await _firebase
-                .Child("Bill")
+                .Child(nameof(Bill))
                 .Child(bill.BillId.ToString())
                 .PutAsync(bill);
         }
@@ -343,7 +343,7 @@ namespace Factoriada.Services
         public async Task<List<Bill>> GetBills(Guid apartmentDetailApartmentDetailId)
         {
             return (await _firebase
-                    .Child("Bill")
+                    .Child(nameof(Bill))
                     .OnceAsync<Bill>())
                 .Select(x => x.Object)
                 .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentDetailApartmentDetailId)
@@ -354,7 +354,7 @@ namespace Factoriada.Services
         public async Task DeleteBill(Bill selectedBill)
         {
             await _firebase
-                .Child("Bill")
+                .Child(nameof(Bill))
                 .Child(selectedBill.BillId.ToString())
                 .DeleteAsync();
         }
@@ -364,7 +364,7 @@ namespace Factoriada.Services
             var userList = new List<User>();
 
             var owner = (await _firebase
-                    .Child("ApartmentDetail")
+                    .Child(nameof(ApartmentDetail))
                     .OnceAsync<ApartmentDetail>())
                 .Select(x => x.Object)
                 .FirstOrDefault(x => x.ApartmentDetailId == apartmentId)
@@ -373,7 +373,7 @@ namespace Factoriada.Services
             userList.Add(owner);
 
             var list = (await _firebase
-                    .Child("Apartment")
+                    .Child(nameof(Apartment))
                     .OnceAsync<Apartment>())
                 .Select(x => x.Object)
                 .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentId)
@@ -388,7 +388,7 @@ namespace Factoriada.Services
         public async Task<List<TimeAway>> GetTimeAwayOfUserByInterval(Guid userUserId)
         {
            return (await _firebase
-                    .Child("TimeAway")
+                    .Child(nameof(TimeAway))
                     .OnceAsync<TimeAway>())
                 .Select(x => x.Object)
                 .Where(x => x.User.UserId == userUserId)
@@ -398,7 +398,7 @@ namespace Factoriada.Services
         public async Task<List<TimeAway>> GetTimeAwayByUser(Guid userId)
         {
             return (await _firebase
-                    .Child("TimeAway")
+                    .Child(nameof(TimeAway))
                     .OnceAsync<TimeAway>())
                 .Select(x => x.Object)
                 .Where(x => x.User.UserId == userId)
@@ -408,7 +408,7 @@ namespace Factoriada.Services
         public async Task DeleteTimeAway(TimeAway timeAway)
         {
             await _firebase
-                .Child("TimeAway")
+                .Child(nameof(TimeAway))
                 .Child(timeAway.TimeAwayId.ToString())
                 .DeleteAsync();
         }
@@ -416,7 +416,7 @@ namespace Factoriada.Services
         public async Task AddOrUpdateTimeAway(TimeAway timeAway)
         {
             await _firebase
-                .Child("TimeAway")
+                .Child(nameof(TimeAway))
                 .Child(timeAway.TimeAwayId.ToString())
                 .PutAsync(timeAway);
         }
@@ -424,7 +424,7 @@ namespace Factoriada.Services
         public async Task<User> GetUserByEmail(string email)
         {
             return (await _firebase
-                    .Child("User")
+                    .Child(nameof(User))
                     .OnceAsync<User>())
                 .Select(x => x.Object)
                 .FirstOrDefault(x => x.Email == email);
@@ -433,7 +433,7 @@ namespace Factoriada.Services
         public async Task<Apartment> GetApartmentByUserId(Guid userId)
         {
             return (await _firebase
-                    .Child("Apartment")
+                    .Child(nameof(Apartment))
                     .OnceAsync<Apartment>())
                 .Select(x => x.Object)
                 .FirstOrDefault(x => x.User.UserId == userId);
@@ -442,7 +442,7 @@ namespace Factoriada.Services
         public async Task DeleteApartment(Apartment apartment)
         {
             await _firebase
-                .Child("Apartment")
+                .Child(nameof(Apartment))
                 .Child(apartment.ApartmentId.ToString())
                 .DeleteAsync();
         }
@@ -450,7 +450,7 @@ namespace Factoriada.Services
         public async Task<List<Apartment>> GetApartmentsByApartmentDetail(ApartmentDetail apartment)
         {
             return (await _firebase
-                    .Child("Apartment")
+                    .Child(nameof(Apartment))
                     .OnceAsync<Apartment>())
                 .Select(x => x.Object)
                 .Where(x => x.ApartmentDetail.ApartmentDetailId == apartment.ApartmentDetailId)
@@ -460,8 +460,34 @@ namespace Factoriada.Services
         public async Task DeleteApartmentDetail(ApartmentDetail apartment)
         {
             await _firebase
-                .Child("ApartmentDetail")
+                .Child(nameof(ApartmentDetail))
                 .Child(apartment.ApartmentDetailId.ToString())
+                .DeleteAsync();
+        }
+
+        public async Task<List<BuyList>> GetBuyListFromApartment(Guid apartmentId)
+        {
+            return (await _firebase
+                    .Child(nameof(BuyList))
+                    .OnceAsync<BuyList>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentId)
+                .ToList();
+        }
+
+        public async Task AddOrEditProduct(BuyList toBuy)
+        {
+            await _firebase
+                .Child(nameof(BuyList))
+                .Child(toBuy.BuyListId.ToString())
+                .PutAsync(toBuy);
+        }
+
+        public async Task DeleteBuyList(BuyList selectedProduct)
+        {
+            await _firebase
+                .Child(nameof(BuyList))
+                .Child(selectedProduct.BuyListId.ToString())
                 .DeleteAsync();
         }
     }

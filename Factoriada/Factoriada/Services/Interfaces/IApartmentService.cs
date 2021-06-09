@@ -39,5 +39,8 @@ namespace Factoriada.Services.Interfaces
         Task RemoveUserFromApartment(User selectedUser);
         Task<User> GetUserByEmail(string email);
         Task DeleteApartment(ApartmentDetail apartment);
+        Task<List<BuyList>> GetBuyListFromApartment(Guid apartmentId);
+        Task AddOrUpdateProductToBuy(BuyList toBuy);
+        Task DeleteToBuy(BuyList selectedProduct);
     }
 }

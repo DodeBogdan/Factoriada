@@ -329,6 +329,21 @@ namespace Factoriada.Services
 
         }
 
+        public async Task<List<BuyList>> GetBuyListFromApartment(Guid apartmentId)
+        {
+            return await ApiDatabaseService.ServiceClientInstance.GetBuyListFromApartment(apartmentId);
+        }
+
+        public async Task AddOrUpdateProductToBuy(BuyList toBuy)
+        {
+            await ApiDatabaseService.ServiceClientInstance.AddOrEditProduct(toBuy);
+        }
+
+        public async Task DeleteToBuy(BuyList selectedProduct)
+        {
+            await ApiDatabaseService.ServiceClientInstance.DeleteBuyList(selectedProduct);
+        }
+
         #endregion
 
     }

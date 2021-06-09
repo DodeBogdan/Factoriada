@@ -136,7 +136,7 @@ namespace Factoriada.ViewModels
 
         private void Reset()
         {
-            BillDateOfIssue = BillDueDate = BillStartDate = DateTime.Parse("01.01.2000");
+            BillDateOfIssue = BillDueDate = BillStartDate = DateTime.Parse("01.01.2021");
             BillIsPaid = false;
             BillPrice = 0.0f;
             SelectedBillType = BillType.None;
@@ -146,7 +146,7 @@ namespace Factoriada.ViewModels
         {
             BillTypes = Bill.GetBillTypes();
             SelectedBillType = BillType.Curent;
-            BillDateOfIssue = BillDueDate = BillStartDate = DateTime.Parse("01.01.2000");
+            BillDateOfIssue = BillDueDate = BillStartDate = DateTime.Parse("01.01.2021");
         }
         #endregion
     }

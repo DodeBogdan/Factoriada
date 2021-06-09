@@ -9,12 +9,121 @@
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:BuyListViewModel"
              
-             Title="Lista de cumparaturi">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
-    </ContentPage.Content>
+             Title="Lista de cumparaturi"
+             BackgroundImageSource="background.jpg">
+    <Grid>
+        <Grid Margin="5">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
+                    <ListView  
+                        x:Name="PublicList"
+                        ItemsSource="{Binding PublicBuyList}"
+                        HasUnevenRows="True"
+                        SeparatorColor="Black"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding PublicSelectedBuy}">
+                        <ListView.Header>
+                            <Grid Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0" Text="Denumire:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
+                                <Label Grid.Row="0" Grid.Column="1" Text="-" TextColor="Black" FontSize="Medium"/>
+                                <Label  Grid.Row="0" Grid.Column="2" Text="Cantitate:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
+                            </Grid>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:BuyList">
+                                <ViewCell>
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Text="{Binding Product}" TextColor="Black" HorizontalTextAlignment="Center" FontSize="Medium"/>
+                                        <Label Grid.Column="1" Text="-" TextColor="Black" FontSize="Medium"/>
+                                        <Label Grid.Column="2" Text="{Binding Count}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Frame>
+
+                <Frame  Grid.Row="1" Grid.Column="1" BackgroundColor="Transparent" BorderColor="Black" Padding="0" Margin="2">
+                    <ListView  
+                        x:Name="PrivateList"
+                        ItemsSource="{Binding PrivateBuyList}"
+                        HasUnevenRows="True"
+                        SeparatorColor="Black"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding PrivateSelectedBuy}">
+                        <ListView.Header>
+                            <Grid Margin="5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0" Text="Denumire:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"></Label>
+                                <Label Grid.Row="0" Grid.Column="1" Text="-" TextColor="Black" FontSize="Medium"/>
+                                <Label  Grid.Row="0" Grid.Column="2" Text="Cantitate:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"></Label>
+                            </Grid>
+                        </ListView.Header>
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:BuyList">
+                                <ViewCell>
+                                    <Grid Margin="5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Text="{Binding Product}" TextColor="Black" HorizontalTextAlignment="Center" FontSize="Medium"/>
+                                        <Label Grid.Column="1" Text="-" TextColor="Black" FontSize="Medium"/>
+                                        <Label Grid.Column="2" Text="{Binding Count}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Frame>
+            </Grid>
+
+            <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+
+            <Button Grid.Row="2" Grid.Column="0" Text="Adauga" Command="{Binding AddProductToBuyCommand}" BackgroundColor="Black" />
+
+            <Button Grid.Row="2" Grid.Column="1" Text="Editeaza" Command="{Binding EditProductCommand}" BackgroundColor="Black" />
+
+            <Button Grid.Row="2" Grid.Column="2" Text="Sterge" Command="{Binding DeleteProductCommand}" BackgroundColor="Black" />
+
+        </Grid>
+    </Grid>
 </ContentPage>
