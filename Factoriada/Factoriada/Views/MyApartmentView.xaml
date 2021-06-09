@@ -5,52 +5,76 @@
              
              xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
              xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
-             xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:MyApartmentViewModel"
              
-             Title="Apartamentul meu">
+             Title="Apartamentul meu"
+             BackgroundImageSource="background.jpg">
     <Grid>
+        <Image Source="factoriadaPng.png" Opacity="0.5"/>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="30"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+        <Grid Margin="5">
 
-        <Image Grid.ColumnSpan="5" Grid.RowSpan="10" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" />
-        <Image Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0" Grid.RowSpan="10" Source="factoriadaPng.png" Opacity="0.5"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Label Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="0"  HorizontalTextAlignment="Center" Padding="5"  FontSize="20" TextColor="Black" Text="{Binding ApartmentAddress}"/>
+            <Label Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0"  HorizontalTextAlignment="Center" Padding="5"  FontSize="20" TextColor="Black" Text="{Binding ApartmentAddress}"/>
 
-        <Label Grid.ColumnSpan="5" Grid.Column="0" Grid.Row="1"  HorizontalTextAlignment="Center" Padding="5"  FontSize="20" TextColor="Black" Text="{Binding Token, StringFormat='Codul apartamentului: {0}'}"/>
+            <Label Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="1"  HorizontalTextAlignment="Center" Padding="5"  FontSize="20" TextColor="Black" Text="{Binding Token, StringFormat='Codul apartamentului: {0}'}"/>
 
-        <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0" Text="Reguli" BackgroundColor="Black" Command="{Binding GoToRulesCommand}"/>
-        <Button Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,0,10,0" Text="Anunturi" BackgroundColor="Black" Command="{Binding GoToAnnouncementsCommand}"/>
+            <BoxView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+            <BoxView Grid.Row="3" Grid.RowSpan="11" Grid.Column="1" Style="{StaticResource Separator}" WidthRequest="1"></BoxView>
 
-        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0" Text="Facturi" BackgroundColor="Black" Command="{Binding GoToBillsCommand}"/>
-        <Button Grid.Row="4" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,0,10,0" Text="Cumparaturi" BackgroundColor="Black" Command="{Binding GoToBuyListCommand}"/>
+            <Button Grid.Row="4" Grid.Column="0" Text="Reguli" BackgroundColor="Black" Command="{Binding GoToRulesCommand}"/>
 
-        <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0" Text="Curatenie" BackgroundColor="Black" Command="{Binding GoToCleanCommand}"/>
-        <Button Grid.Row="6" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,0,10,0" Text="Buget" BackgroundColor="Black" Command="{Binding GoToBudgetCommand}"/>
+            <Button Grid.Row="4" Grid.Column="2" Text="Anunturi" BackgroundColor="Black" Command="{Binding GoToAnnouncementsCommand}"/>
 
-        <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0" Text="Plecat" BackgroundColor="Black" Command="{Binding GoToTimeAwayCommand}"/>
+            <BoxView Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
 
-        <Button Grid.Row="8" Grid.Column="3" Grid.ColumnSpan="2" Margin="0,0,10,0" Text="Chat" BackgroundColor="Black" Command="{Binding GoToChatCommand}"/>
+            <Button Grid.Row="6" Grid.Column="0" Text="Facturi" BackgroundColor="Black" Command="{Binding GoToBillsCommand}"/>
 
+            <Button Grid.Row="6" Grid.Column="2" Text="Cumparaturi" BackgroundColor="Black" Command="{Binding GoToBuyListCommand}"/>
+
+            <BoxView Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+
+            <Button Grid.Row="8" Grid.Column="0"  Text="Curatenie" BackgroundColor="Black" Command="{Binding GoToCleanCommand}"/>
+
+            <Button Grid.Row="8" Grid.Column="2"  Text="Buget" BackgroundColor="Black" Command="{Binding GoToBudgetCommand}"/>
+
+            <BoxView Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+
+            <Button Grid.Row="10" Grid.Column="0"  Text="Plecat" BackgroundColor="Black" Command="{Binding GoToTimeAwayCommand}"/>
+
+            <Button Grid.Row="10" Grid.Column="2" Text="Chat" BackgroundColor="Black" Command="{Binding GoToChatCommand}"/>
+
+            <BoxView Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+
+            <Button Grid.Row="12" Grid.Column="0"  Text="Vezi persoane" BackgroundColor="Black" Command="{Binding GoToSeePersonsFromApartmentCommand}"/>
+
+            <Button Grid.Row="12" Grid.Column="2" Text="Sterge apartament" BackgroundColor="Black" Command="{Binding GoToDeleteApartmentCommand}" IsVisible="{Binding IsOwner}"/>
+            
+            <Button Grid.Row="12" Grid.Column="2" Text="Iesi din apartament" BackgroundColor="Black" Command="{Binding GoToExitApartmentCommand}" IsVisible="{Binding IsUser}"/>
+
+            <BoxView Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+        </Grid>
     </Grid>
 </ContentPage>

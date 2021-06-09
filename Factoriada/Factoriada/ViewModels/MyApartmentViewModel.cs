@@ -22,10 +22,33 @@ namespace Factoriada.ViewModels
         #region Private Fields
         private readonly IApartmentService _apartmentService;
         private string _apartmentAddress;
+        private string _token = "";
+        private bool _isOwner;
+        private bool _isUser;
+
         #endregion
 
         #region Proprieties
-        private string _token = "";
+
+        public bool IsUser
+        {
+            get => _isUser;
+            set
+            {
+                _isUser = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsOwner
+        {
+            get => _isOwner;
+            set
+            {
+                _isOwner = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string Token
         {
@@ -55,6 +78,9 @@ namespace Factoriada.ViewModels
         public ICommand GoToBudgetCommand { get; set; }
         public ICommand GoToChatCommand { get; set; }
         public ICommand GoToTimeAwayCommand { get; set; }
+        public ICommand GoToSeePersonsFromApartmentCommand { get; set; }
+        public ICommand GoToDeleteApartmentCommand { get; set; }
+        public ICommand GoToExitApartmentCommand { get; set; }
         #endregion
 
         #region Private Methods
@@ -69,14 +95,40 @@ namespace Factoriada.ViewModels
             GoToBudgetCommand = new Command(async () => await _navigationService.PushAsync(new BudgetView()));
             GoToChatCommand = new Command(async () => await _navigationService.PushAsync(new ChatView()));
             GoToTimeAwayCommand = new Command(async () => await _navigationService.PushAsync(new TimeAwayView()));
+            GoToSeePersonsFromApartmentCommand = new Command(async () => await _navigationService.PushAsync(new SeePersonsFromApartmentView()));
+            GoToExitApartmentCommand = new Command(ExitApartment);
+            GoToDeleteApartmentCommand = new Command(DeleteApartment);
         }
         private async void InitializeAddress()
         {
             ApartmentAddress = await _apartmentService.GetApartmentAddressByUser(ActiveUser.User.UserId);
             Token = (await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId)).Token;
+            if (ActiveUser.User.Role.RoleTypeName == "Owner")
+            {
+                IsOwner = true;
+            }
+            else
+            {
+                IsUser = true;
+            }
         }
 
+        private async void ExitApartment()
+        {
+            _dialogService.ShowLoading();
+            await _apartmentService.RemoveUserFromApartment(ActiveUser.User);
+            _dialogService.HideLoading();
+            App.Current.MainPage = new AppShell();
+        }
 
+        private async void DeleteApartment()
+        {
+            _dialogService.ShowLoading();
+            var apartment = await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId);
+            await _apartmentService.DeleteApartment(apartment);
+            _dialogService.HideLoading();
+            App.Current.MainPage = new AppShell();
+        }
         #endregion
     }
 }

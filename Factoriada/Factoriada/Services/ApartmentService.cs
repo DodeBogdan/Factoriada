@@ -50,6 +50,10 @@ namespace Factoriada.Services
 
         public async Task JoinApartment(User connectedUser, string result)
         {
+
+            if (connectedUser.Role.RoleTypeName != "Default")
+                throw new UserException("Acest user este deja intr-un apartament.");
+
             var apartmentDetail = await ApiDatabaseService.ServiceClientInstance.GetApartmentByToken(result);
 
             if (apartmentDetail == null)
@@ -115,7 +119,7 @@ namespace Factoriada.Services
 
         public async Task<string> GetApartmentAddressByUser(Guid userUserId)
         {
-            var apartment = await ApiDatabaseService.ServiceClientInstance.GetApartmentByUserId(userUserId);
+            var apartment = await ApiDatabaseService.ServiceClientInstance.GetApartmentDetailByUserId(userUserId);
 
             return "Oras: " + apartment.ApartmentAddress.City + ", Strada: " + apartment.ApartmentAddress.Street +
                    ", Numar: " + apartment.ApartmentAddress.Number + ", Bloc" + apartment.ApartmentAddress.Building +
@@ -125,7 +129,7 @@ namespace Factoriada.Services
 
         public async Task<Guid> GetApartmentIdByUser(Guid userUserId)
         {
-            var result = await ApiDatabaseService.ServiceClientInstance.GetApartmentByUserId(userUserId);
+            var result = await ApiDatabaseService.ServiceClientInstance.GetApartmentDetailByUserId(userUserId);
 
             if (result != null)
                 return result.ApartmentDetailId;
@@ -135,7 +139,7 @@ namespace Factoriada.Services
         #region ApartmentBudget
         public async Task<ApartmentDetail> GetApartmentByUser(Guid userId)
         {
-            return await ApiDatabaseService.ServiceClientInstance.GetApartmentByUserId(userId);
+            return await ApiDatabaseService.ServiceClientInstance.GetApartmentDetailByUserId(userId);
         }
 
         public async Task<List<BudgetHistory>> GetBudgetHistoryByApartmentId(Guid apartmentDetailId)
@@ -263,6 +267,7 @@ namespace Factoriada.Services
         {
             await ApiDatabaseService.ServiceClientInstance.DeleteTimeAway(timeAway);
         }
+
         private async Task TestTimeAway(TimeAway timeAway)
         {
             var list = await ApiDatabaseService.ServiceClientInstance.GetTimeAwayByUser(timeAway.User.UserId);
@@ -281,6 +286,49 @@ namespace Factoriada.Services
                     throw new Exception("Data de plecare deja a fost aleasa odata.");
             }
         }
+        #endregion
+
+        #region SeePersonFromApartment
+
+        public async Task<List<User>> GetUsersByApartment(Guid apartmentId)
+        {
+           return await ApiDatabaseService.ServiceClientInstance.GetUserListByApartment(apartmentId);
+        }
+
+        public async Task RemoveUserFromApartment(User selectedUser)
+        {
+            var apartment = await ApiDatabaseService.ServiceClientInstance.GetApartmentByUserId(selectedUser.UserId);
+            await ApiDatabaseService.ServiceClientInstance.DeleteApartment(apartment);
+            await ApiDatabaseService.ServiceClientInstance.ChangeUserRoleTo(selectedUser, "Default");
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var result = await ApiDatabaseService.ServiceClientInstance.GetUserByEmail(email);
+
+            if (result == null)
+                throw new UserException("Nu exista nici un user cu acest email.");
+
+            return result;
+        }
+
+        public async Task DeleteApartment(ApartmentDetail apartment)
+        {
+            var users = await ApiDatabaseService.ServiceClientInstance.GetUserListByApartment(apartment.ApartmentDetailId);
+
+            foreach (var user in users)
+            {
+                if (user.Role.RoleTypeName != "Owner")
+                {
+                    await RemoveUserFromApartment(user);
+                }
+            }
+
+            await ApiDatabaseService.ServiceClientInstance.DeleteApartmentDetail(apartment);
+            await ApiDatabaseService.ServiceClientInstance.ChangeUserRoleTo(ActiveUser.User, "Default");
+
+        }
+
         #endregion
 
     }

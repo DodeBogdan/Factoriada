@@ -35,5 +35,9 @@ namespace Factoriada.Services.Interfaces
         Task<List<TimeAway>> GetTimeAwayByUser(Guid userId);
         Task AddOrUpdateTimeAway(TimeAway timeAway);
         Task DeleteTimeAway(TimeAway timeAway);
+        Task<List<User>> GetUsersByApartment(Guid apartmentId);
+        Task RemoveUserFromApartment(User selectedUser);
+        Task<User> GetUserByEmail(string email);
+        Task DeleteApartment(ApartmentDetail apartment);
     }
 }

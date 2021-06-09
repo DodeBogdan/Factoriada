@@ -80,6 +80,7 @@ namespace Factoriada.ViewModels
             }
             catch(Exception ex)
             {
+                _dialogService.HideLoading();
                 await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
         }

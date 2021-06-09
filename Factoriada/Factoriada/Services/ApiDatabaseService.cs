@@ -163,7 +163,7 @@ namespace Factoriada.Services
                 .PutAsync(currentApartment);
         }
 
-        private async Task ChangeUserRoleTo(User user, string role)
+        public async Task ChangeUserRoleTo(User user, string role)
         {
             var result = (await _firebase
                 .Child("Role")
@@ -202,7 +202,7 @@ namespace Factoriada.Services
                 .PutAsync(apartment);
         }
 
-        public async Task<ApartmentDetail> GetApartmentByUserId(Guid userUserId)
+        public async Task<ApartmentDetail> GetApartmentDetailByUserId(Guid userUserId)
         {
             var apartmentDetail = (await _firebase
                 .Child("ApartmentDetail")
@@ -419,6 +419,50 @@ namespace Factoriada.Services
                 .Child("TimeAway")
                 .Child(timeAway.TimeAwayId.ToString())
                 .PutAsync(timeAway);
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return (await _firebase
+                    .Child("User")
+                    .OnceAsync<User>())
+                .Select(x => x.Object)
+                .FirstOrDefault(x => x.Email == email);
+        }
+
+        public async Task<Apartment> GetApartmentByUserId(Guid userId)
+        {
+            return (await _firebase
+                    .Child("Apartment")
+                    .OnceAsync<Apartment>())
+                .Select(x => x.Object)
+                .FirstOrDefault(x => x.User.UserId == userId);
+        }
+
+        public async Task DeleteApartment(Apartment apartment)
+        {
+            await _firebase
+                .Child("Apartment")
+                .Child(apartment.ApartmentId.ToString())
+                .DeleteAsync();
+        }
+
+        public async Task<List<Apartment>> GetApartmentsByApartmentDetail(ApartmentDetail apartment)
+        {
+            return (await _firebase
+                    .Child("Apartment")
+                    .OnceAsync<Apartment>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartment.ApartmentDetailId)
+                .ToList();
+        }
+
+        public async Task DeleteApartmentDetail(ApartmentDetail apartment)
+        {
+            await _firebase
+                .Child("ApartmentDetail")
+                .Child(apartment.ApartmentDetailId.ToString())
+                .DeleteAsync();
         }
     }
 }

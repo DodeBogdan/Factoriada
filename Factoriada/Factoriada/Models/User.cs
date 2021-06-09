@@ -17,5 +17,7 @@ namespace Factoriada.Models
         public byte[] ImagesByte { get; set; }
         public Address Address { get; set; }
         public Role Role { get; set; }
+
+        public string FullName { get => $"{FirstName} {LastName}"; }
     }
 }

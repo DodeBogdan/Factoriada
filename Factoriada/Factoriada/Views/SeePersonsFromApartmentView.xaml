@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Factoriada.Views.SeePersonsFromApartmentView"
+             
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
+             xmlns:views="clr-namespace:Factoriada.Views;assembly=Factoriada"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:SeePersonsFromApartmentViewModel"
+
+             Title ="Vezi persoane din apartament"
+             BackgroundImageSource="background.jpg">
+    <Grid>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" Text="Adauga persoana" BackgroundColor="Black" Command="{Binding AddPersonCommand}" IsVisible="{Binding IsOwner}"></Button>
+
+            <BoxView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+
+            <Frame Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
+                <ListView  
+            x:Name="UserList"
+            ItemsSource="{Binding UserList}"
+            HasUnevenRows="True"
+            SeparatorColor="Black"
+            SelectedItem="{Binding SelectedUser}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="models:User">
+                            <ViewCell>
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
+                                    </Grid.RowDefinitions>
+
+                                    <Label Grid.Column="0" Grid.Row="0" HorizontalTextAlignment="Center"  Text="{Binding FullName}" TextColor="Black" />
+
+                                    <Label Grid.Column="0" Grid.Row="1" HorizontalTextAlignment="Center" Text="{Binding Role.RoleTypeName}" TextColor="Black"></Label>
+
+                                    <BoxView Grid.Row="0"  Grid.Column="1" Grid.RowSpan="2" Style="{StaticResource Separator}" WidthRequest="0.5"></BoxView>
+    
+                                    <Label Grid.Column="2" Grid.Row="0" HorizontalTextAlignment="Center" TextColor="Black" Text="{Binding PhoneNumber}"/> 
+
+                                    <Label Grid.Column="2" Grid.Row="1" HorizontalTextAlignment="Center"  TextColor="Black" Text="{Binding Email}"/>
+
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Frame>
+
+            <BoxView Grid.Row="3"  Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+
+            <Button Grid.Row="4"  Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" Text="Sterge persoana" BackgroundColor="Black" Command="{Binding DeleteUserCommand}" IsVisible="{Binding DeleteUserIsVisible}"/>
+        </Grid>
+    </Grid>
+</ContentPage>

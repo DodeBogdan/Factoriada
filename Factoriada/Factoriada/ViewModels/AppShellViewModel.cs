@@ -96,7 +96,6 @@ namespace Factoriada.ViewModels
                 return;
             }
 
-
             var result = await _dialogService.DisplayPromptAsync("Apartament", "Introdu codul apartamentului.");
 
             try
@@ -116,7 +115,6 @@ namespace Factoriada.ViewModels
             ActiveUser.User = new User();
             App.Current.MainPage = new NavigationPage(new LogInView());
         }
-
 
         #endregion
 
