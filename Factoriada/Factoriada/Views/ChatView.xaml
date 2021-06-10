@@ -2,15 +2,14 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Factoriada.Views.ChatView"
-             
              xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
              xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
              xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:ChatViewModel"
-             
-             Title="Chat">
-    <Grid>
+             Title="Chat"
+             BackgroundImageSource="background.jpg">
+    <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -21,25 +20,24 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Image Grid.ColumnSpan="3" Grid.RowSpan="2" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" />
+        <Frame Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="5" Margin="2">
+            <ListView  HasUnevenRows="True"
+                       SeparatorColor="Black"
+                       ItemsSource="{Binding ChatList}" >
 
-        <Image Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Source="factoriadaPng.png" Opacity="0.5"/>
-
-            <ListView Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0"  x:Name="Chat" Margin="10"
-                      ItemsSource="{Binding ChatList}" >
-
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:Chat">
-                    <ViewCell>
-                        <ScrollView>
-                        <Grid>
-                            <Label Text="{Binding ChatMessage}" FontSize="17" TextColor="Black"></Label>
-                        </Grid>
-                        </ScrollView>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Chat">
+                        <ViewCell>
+                            <ScrollView>
+                                <Grid>
+                                    <Label Text="{Binding ChatMessage}" FontSize="17" TextColor="Black"></Label>
+                                </Grid>
+                            </ScrollView>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Frame>
         <Entry Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ChatEntry}" TextColor="Black" FontSize="20"></Entry>
 
         <Button Grid.Column="2" Grid.Row="1" Text="Trimite" Command="{Binding SendMessageCommand}" BackgroundColor="Black" Margin="5"></Button>

@@ -59,12 +59,16 @@ namespace Factoriada.ViewModels
 
         private async void Initialize()
         {
+            _dialogService.ShowLoading();
             _currentApartment = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
             ChatList = await _apartmentService.GetChatByApartmentId(_currentApartment);
+            _dialogService.HideLoading();
         }
 
         private async void SendMessage()
         {
+            _dialogService.ShowLoading();
+
             if (string.IsNullOrEmpty(ChatEntry))
                 return;
 
@@ -81,6 +85,8 @@ namespace Factoriada.ViewModels
 
             ChatEntry = "";
             ChatList = await _apartmentService.GetChatByApartmentId(_currentApartment);
+
+            _dialogService.HideLoading();
         }
 
         #endregion

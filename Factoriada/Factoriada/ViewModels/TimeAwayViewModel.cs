@@ -33,12 +33,12 @@ namespace Factoriada.ViewModels
         private List<TimeAway> _timeAwayList;
         private TimeAway _selectedTimeAway;
         private bool _isSelectedTimeAwayToEdit;
+        private DateTime _minimDateForMaximumDateTime;
+        private bool _isSelectedTimeAwayToDelete;
 
         #endregion
 
         #region Proprieties
-        private DateTime _minimDateForMaximumDateTime;
-
         public DateTime MinimDateForMaximumDateTime
         {
             get => _minimDateForMaximumDateTime;
@@ -48,8 +48,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
-
         public bool IsSelectedTimeAwayToEdit
         {
             get => _isSelectedTimeAwayToEdit;
@@ -59,8 +57,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-        private bool _isSelectedTimeAwayToDelete;
-
         public bool IsSelectedTimeAwayToDelete
         {
             get => _isSelectedTimeAwayToDelete;
@@ -70,7 +66,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public TimeAway SelectedTimeAway
         {
             get => _selectedTimeAway;
@@ -100,7 +95,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public List<TimeAway> TimeAwayList
         {
             get => _timeAwayList;
@@ -110,7 +104,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public DateTime EndDateTime
         {
             get => _endDateTime;
@@ -120,7 +113,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public DateTime MaximumDateTime
         {
             get => _maximumDateTime;
@@ -130,7 +122,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public DateTime StartDateTime
         {
             get => _startDateTime;
@@ -141,7 +132,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public DateTime MinimumDateTime
         {
             get => _minimumDateTime;
@@ -151,7 +141,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public ICommand AddTimeAwayCommand { get; set; }
         public ICommand EditTimeAwayCommand { get; set; }
         public ICommand DeleteTimeAwayCommand { get; set; }
@@ -164,7 +153,6 @@ namespace Factoriada.ViewModels
             EditTimeAwayCommand = new Command(EditTimeAway);
             DeleteTimeAwayCommand = new Command(DeleteTimeAway);
         }
-
         private async void AddTimeAway()
         {
             var timeAway = new TimeAway()
@@ -226,12 +214,14 @@ namespace Factoriada.ViewModels
 
         private async void Initialize()
         {
+            _dialogService.ShowLoading();
+
             MinimumDateTime = DateTime.Now.Subtract(new TimeSpan(2, 0, 0, 0));
             MaximumDateTime = DateTime.Now.AddMonths(2);
             StartDateTime = DateTime.Now;
             EndDateTime = MinimDateForMaximumDateTime;
-            _dialogService.ShowLoading();
             TimeAwayList = await _apartmentService.GetTimeAwayByUser(ActiveUser.User.UserId);
+
             _dialogService.HideLoading();
         }
         #endregion

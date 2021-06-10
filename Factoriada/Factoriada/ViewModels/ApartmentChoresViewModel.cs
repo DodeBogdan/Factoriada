@@ -26,14 +26,24 @@ namespace Factoriada.ViewModels
 
         private readonly IApartmentService _apartmentService;
         private ApartmentDetail _apartmentDetail;
-
         private List<Job> _jobList;
         private List<string> _userNameList;
+        private Job _selectedJob;
 
         #endregion
 
         #region Proprieties
-        private Job _selectedJob;
+        private bool _isItemSelected;
+
+        public bool IsItemSelected
+        {
+            get => _isItemSelected;
+            set
+            {
+                _isItemSelected = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Job SelectedJob
         {
@@ -41,6 +51,7 @@ namespace Factoriada.ViewModels
             set
             {
                 _selectedJob = value;
+                IsItemSelected = value != null;
                 OnPropertyChanged();
             }
         }

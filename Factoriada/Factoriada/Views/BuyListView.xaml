@@ -2,17 +2,14 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Factoriada.Views.BuyListView"
-             
              xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
              xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
              xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:BuyListViewModel"
-             
              Title="Lista de cumparaturi"
              BackgroundImageSource="background.jpg">
-    <Grid>
-        <Grid Margin="5">
+    <Grid Margin="5">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -120,10 +117,9 @@
 
             <Button Grid.Row="2" Grid.Column="0" Text="Adauga" Command="{Binding AddProductToBuyCommand}" BackgroundColor="Black" />
 
-            <Button Grid.Row="2" Grid.Column="1" Text="Editeaza" Command="{Binding EditProductCommand}" BackgroundColor="Black" />
+            <Button Grid.Row="2" Grid.Column="1" Text="Editeaza" Command="{Binding EditProductCommand}" IsVisible="{Binding IsItemSelected}" BackgroundColor="Black" />
 
-            <Button Grid.Row="2" Grid.Column="2" Text="Sterge" Command="{Binding DeleteProductCommand}" BackgroundColor="Black" />
+        <Button Grid.Row="2" Grid.Column="2" Text="Sterge" Command="{Binding DeleteProductCommand}" IsVisible="{Binding IsItemSelected}"  BackgroundColor="Black" />
 
-        </Grid>
     </Grid>
 </ContentPage>

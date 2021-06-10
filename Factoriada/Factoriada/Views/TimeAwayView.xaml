@@ -2,20 +2,16 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Factoriada.Views.TimeAwayView"
-             
              xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
              xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
              xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
              xmlns:views="clr-namespace:Factoriada.Views;assembly=Factoriada"
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:TimeAwayViewModel"
-
              Title ="Timp plecat"
              BackgroundImageSource="background.jpg">
     <Grid Margin="10">
-
-        <Grid>
-            <Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -86,6 +82,5 @@
             <Button Grid.Column="0" Grid.Row="7" Text="Adauga" BackgroundColor="Black" Margin="5" Command="{Binding AddTimeAwayCommand}"></Button>
             <Button Grid.Column="1" Grid.Row="7" Text="Editeaza"  BackgroundColor="Black" Margin="5" Command="{Binding EditTimeAwayCommand}" IsVisible="{Binding IsSelectedTimeAwayToEdit}"></Button>
             <Button Grid.Column="2" Grid.Row="7" Text="Sterge"  BackgroundColor="Black" Margin="5" Command="{Binding DeleteTimeAwayCommand}" IsVisible="{Binding IsSelectedTimeAwayToDelete}"></Button>
-        </Grid>
     </Grid>
 </ContentPage>

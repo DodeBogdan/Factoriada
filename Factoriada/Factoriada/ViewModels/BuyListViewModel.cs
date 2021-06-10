@@ -32,15 +32,28 @@ namespace Factoriada.ViewModels
         private BuyList _publicSelectedBuy;
         private BuyList _privateSelectedBuy;
         private ApartmentDetail _apartmentDetail;
+        private bool _isItemSelected;
         #endregion
 
         #region Proprieties
+
+        public bool IsItemSelected
+        {
+            get => _isItemSelected;
+            set
+            {
+                _isItemSelected = value;
+                OnPropertyChanged();
+            }
+        }
+
         public BuyList PrivateSelectedBuy
         {
             get => _privateSelectedBuy;
             set
             {
                 _privateSelectedBuy = value;
+                IsItemSelected = value != null;
                 OnPropertyChanged();
             }
         }
@@ -51,6 +64,7 @@ namespace Factoriada.ViewModels
             set
             {
                 _publicSelectedBuy = value;
+                IsItemSelected = value != null;
                 OnPropertyChanged();
             }
         }
@@ -245,13 +259,7 @@ namespace Factoriada.ViewModels
                     return PrivateSelectedBuy;
             }
 
-            if (PublicSelectedBuy != null)
-                return PublicSelectedBuy;
-
-            if (PrivateSelectedBuy != null)
-                return PrivateSelectedBuy;
-
-            return null;
+            return PublicSelectedBuy != null ? PublicSelectedBuy : PrivateSelectedBuy ?? null;
         }
         #endregion
     }

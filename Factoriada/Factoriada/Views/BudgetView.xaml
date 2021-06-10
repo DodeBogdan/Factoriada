@@ -2,16 +2,15 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Factoriada.Views.BudgetView"
-             
              xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
              xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
              xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:BudgetViewModel"
-             
-             Title="Bugetul apartamentului">
+             Title="Bugetul apartamentului"
+             BackgroundImageSource="background.jpg">
 
-    <Grid>
+    <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
@@ -23,24 +22,23 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Image Grid.ColumnSpan="3" Grid.RowSpan="3" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" />
+        <Frame Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0"  BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="5" Margin="2">
+            <ListView 
+                HasUnevenRows="True"
+                SeparatorColor="Black"
+                ItemsSource="{Binding BudgetHistoryList}" >
 
-        <Image Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Source="factoriadaPng.png" Opacity="0.5"/>
-
-
-        <ListView Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0"  x:Name="Rules" Margin="10"
-                  ItemsSource="{Binding BudgetHistoryList}" >
-
-            <ListView.ItemTemplate>
-                <DataTemplate x:DataType="models:BudgetHistory">
-                    <ViewCell>
-                        <Grid>
-                            <Label Text="{Binding ShowBudget, StringFormat='{0,N}'}" FontSize="20" TextColor="Black"></Label>
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:BudgetHistory">
+                        <ViewCell>
+                            <Grid>
+                                <Label Text="{Binding ShowBudget, StringFormat='{0,N}'}" FontSize="20" TextColor="Black"></Label>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Frame>
 
         <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Text="{Binding CurrentApartment.UnspentMoney, StringFormat='Bugetul actual este de: {0} Ron'}" FontSize="20" TextColor="Black"></Label>
 

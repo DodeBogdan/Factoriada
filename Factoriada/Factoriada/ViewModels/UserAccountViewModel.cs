@@ -238,6 +238,8 @@ namespace Factoriada.ViewModels
                 Title = "Alege o poza:"
             });
 
+            _dialogService.ShowLoading();
+
             if (result == null)
                 return;
 
@@ -252,11 +254,15 @@ namespace Factoriada.ViewModels
                 await bytesStream.CopyToAsync(memoryStream);
                 CurrentUser.ImagesByte = memoryStream.ToArray();
             }
+
+            _dialogService.HideLoading();
         }
 
         private async Task TakePicture()
         {
             var result = await MediaPicker.CapturePhotoAsync();
+
+            _dialogService.ShowLoading();
 
             if (result == null)
                 return;
@@ -272,6 +278,8 @@ namespace Factoriada.ViewModels
                 await bytesStream.CopyToAsync(memoryStream);
                 CurrentUser.ImagesByte = memoryStream.ToArray();
             }
+
+            _dialogService.HideLoading();
         }
 
         private async void ChangeProfilePicture()
@@ -284,7 +292,11 @@ namespace Factoriada.ViewModels
             else
                 await PickPicture();
 
+            _dialogService.ShowLoading();
+
             await _userService.SaveProfilePicture(CurrentUser);
+
+            _dialogService.HideLoading();
         }
         private bool CheckPassword()
         {
@@ -308,7 +320,11 @@ namespace Factoriada.ViewModels
                 return;
             try
             {
+                _dialogService.ShowLoading();
+
                 await _userService.ChangePassword(CurrentUser, NewPassword);
+
+                _dialogService.HideLoading();
 
                 await _dialogService.ShowDialog("Parola a fost schimbata cu succes.", "Succes!");
 
@@ -316,6 +332,7 @@ namespace Factoriada.ViewModels
             }
             catch (Exception ex)
             {
+                _dialogService.HideLoading();
                 await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
         }
@@ -334,7 +351,11 @@ namespace Factoriada.ViewModels
         {
             try
             {
+                _dialogService.ShowLoading();
+
                 await _userService.UpdateUserAddress(CurrentUser);
+
+                _dialogService.HideLoading();
 
                 await _dialogService.ShowDialog("Adresa a fost schimbata cu succes.", "Succes!");
 
@@ -342,6 +363,7 @@ namespace Factoriada.ViewModels
             }
             catch (Exception ex)
             {
+                _dialogService.HideLoading();
                 await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
 

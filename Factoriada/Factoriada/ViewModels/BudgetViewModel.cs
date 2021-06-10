@@ -22,11 +22,9 @@ namespace Factoriada.ViewModels
         private readonly IApartmentService _apartmentService;
         private ApartmentDetail _currentApartment;
         private List<BudgetHistory> _budgetHistoryList;
-
         #endregion
 
         #region Proprieties
-
         public List<BudgetHistory> BudgetHistoryList
         {
             get => _budgetHistoryList;
@@ -36,7 +34,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public ApartmentDetail CurrentApartment
         {
             get => _currentApartment;
@@ -46,7 +43,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public ICommand AddMoneyCommand { get; set; }
         #endregion
 
@@ -54,13 +50,14 @@ namespace Factoriada.ViewModels
         private void InitializeCommands()
         {
             AddMoneyCommand = new Command(AddMoney);
-            
         }
 
         private async void Initialize()
         {
+            _dialogService.ShowLoading();
             CurrentApartment = await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId);
             BudgetHistoryList = await _apartmentService.GetBudgetHistoryByApartmentId(CurrentApartment.ApartmentDetailId);
+            _dialogService.HideLoading();
         }
 
         private async void AddMoney()
@@ -75,6 +72,8 @@ namespace Factoriada.ViewModels
 
             var result = await _dialogService.DisplayPromptAsync("Buget", "Introdu cati bani doresti sa adaugi.", keyboard: Keyboard.Numeric);
 
+            _dialogService.ShowLoading();
+
             if (result == null)
                 return;
 
@@ -87,8 +86,9 @@ namespace Factoriada.ViewModels
 
             BudgetHistoryList = await _apartmentService.GetBudgetHistoryByApartmentId(CurrentApartment.ApartmentDetailId);
             CurrentApartment = CurrentApartment;
-        }
 
+            _dialogService.HideLoading();
+        }
         #endregion
     }
 }

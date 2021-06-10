@@ -9,6 +9,6 @@ namespace Factoriada.Models
         public User User { get; set; }
         public string Message { get; set; }
         public Guid ApartmentId { get; set; }
-        public string ChatMessage => ($"{DateTime}-{User.LastName} {User.FirstName}:{Message}");
+        public string ChatMessage => ($"{DateTime:g}-{User.LastName} {User.FirstName}:{Message}");
     }
 }

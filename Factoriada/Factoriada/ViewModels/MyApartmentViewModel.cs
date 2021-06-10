@@ -101,6 +101,8 @@ namespace Factoriada.ViewModels
         }
         private async void InitializeAddress()
         {
+            _dialogService.ShowLoading();
+
             ApartmentAddress = await _apartmentService.GetApartmentAddressByUser(ActiveUser.User.UserId);
             Token = (await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId)).Token;
             if (ActiveUser.User.Role.RoleTypeName == "Owner")
@@ -111,6 +113,8 @@ namespace Factoriada.ViewModels
             {
                 IsUser = true;
             }
+
+            _dialogService.HideLoading();
         }
 
         private async void ExitApartment()

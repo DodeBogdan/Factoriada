@@ -8,7 +8,6 @@
              xmlns:views="clr-namespace:Factoriada.Views;assembly=Factoriada"
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:ApartmentChoresViewModel"
-
              Title ="Vezi treburi"
              BackgroundImageSource="background.jpg">
     <Grid>
@@ -38,13 +37,13 @@
                 <Label Grid.Row="0" Grid.Column="1" Text="-" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
                 <Label Grid.Row="0" Grid.Column="2" Text="Persoana:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
 
-                <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
+                <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="5" Margin="2">
                     <ListView  
                         ItemsSource="{Binding JobList}"
-            HasUnevenRows="True"
-            SeparatorColor="Black"
-            SelectionMode="Single"
-            SelectedItem="{Binding SelectedJob}">
+                        HasUnevenRows="True"
+                        SeparatorColor="Black"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedJob}">
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="models:Job">
                                 <ViewCell>
@@ -69,8 +68,8 @@
             <BoxView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
 
             <Button Grid.Row="2" Grid.Column="0" Text="Adauga" Command="{Binding AddJobCommand}" BackgroundColor="Black"/>
-            <Button Grid.Row="2" Grid.Column="1" Text="Editeaza" Command="{Binding EditJobCommand}" BackgroundColor="Black"/>
-            <Button Grid.Row="2" Grid.Column="2" Text="Sterge" Command="{Binding DeleteJobCommand}" BackgroundColor="Black"/>
+            <Button Grid.Row="2" Grid.Column="1" Text="Editeaza" Command="{Binding EditJobCommand}" IsVisible="{Binding IsItemSelected}" BackgroundColor="Black"/>
+            <Button Grid.Row="2" Grid.Column="2" Text="Sterge" Command="{Binding DeleteJobCommand}" IsVisible="{Binding IsItemSelected}" BackgroundColor="Black"/>
 
         </Grid>
     </Grid>

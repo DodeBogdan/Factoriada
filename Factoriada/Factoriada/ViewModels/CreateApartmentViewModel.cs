@@ -30,8 +30,6 @@ namespace Factoriada.ViewModels
         private ApartmentDetail _currentApartment;
         private bool _editAddressIsVisible;
         private bool _startEditAddressIsVisible;
-
-
         #endregion
 
         #region Proprieties
@@ -109,18 +107,22 @@ namespace Factoriada.ViewModels
             }
 
             EditAddressIsVisible = true;
-            
         }
         private async void SaveApartment()
         {
             try
             {
+                _dialogService.ShowLoading();
+
                 await _apartmentService.SaveApartment(CurrentApartment);
+
+                _dialogService.HideLoading();
 
                 await _dialogService.ShowDialog("Apartamentul a fost salvat cu succes.", "Succes");
             }
             catch (Exception ex)
             {
+                _dialogService.HideLoading();
                 await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
         }
@@ -129,7 +131,11 @@ namespace Factoriada.ViewModels
         {
             try
             {
+                _dialogService.ShowLoading();
+
                 _apartmentService.TestAddress(CurrentApartment.ApartmentAddress);
+
+                _dialogService.HideLoading();
 
                 _dialogService.ShowToast("Adresa a fost salvata cu succes.");
 
@@ -137,6 +143,7 @@ namespace Factoriada.ViewModels
             }
             catch (Exception ex)
             {
+                _dialogService.HideLoading();
                 await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
         }

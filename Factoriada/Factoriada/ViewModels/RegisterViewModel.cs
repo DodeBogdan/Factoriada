@@ -27,7 +27,6 @@ namespace Factoriada.ViewModels
 
         #region Private Fields
         private readonly IUserService _userService;
-
         private string _confirmPassword;
         private User _newUser = new User();
         #endregion
@@ -42,7 +41,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public string ConfirmPassword
         {
             get => _confirmPassword;
@@ -52,7 +50,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-       
         public ICommand RegisterCommand { get; set; }
         public ICommand CancelCommand { get; set; }
 
@@ -75,6 +72,8 @@ namespace Factoriada.ViewModels
 
             try
             {
+                _dialogService.ShowLoading();
+
                 await _userService.Register(NewUser);
 
                 NewUser = new User
@@ -86,12 +85,15 @@ namespace Factoriada.ViewModels
                 };
                 ConfirmPassword = "";
 
+                _dialogService.HideLoading();
+
                 await _dialogService.ShowDialog("Te-ai inregistrat cu succes.", "Succes");
 
                 await _navigationService.PopAsync();
             }
             catch (Exception ex)
             {
+                _dialogService.HideLoading();
                 await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
 

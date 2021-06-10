@@ -20,16 +20,12 @@ namespace Factoriada.ViewModels
         }
         #endregion
 
-
         #region Private Fields
         private readonly IApartmentService _apartmentService;
-
         private Guid _apartmentId = Guid.Empty;
-
         private List<Announce> _announceList;
         private Announce _currentAnnounce;
         private bool _userIsOwnerOrCreator;
-
         #endregion
 
         #region Proprieties
@@ -63,7 +59,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public ICommand AddAnnounceCommand { get; set; }
         public ICommand EditAnnounceCommand { get; set; }
         public ICommand DeleteAnnounceCommand { get; set; }
@@ -76,13 +71,15 @@ namespace Factoriada.ViewModels
             EditAnnounceCommand = new Command(EditAnnounce);
             DeleteAnnounceCommand = new Command(DeleteAnnounce);
         }
-
         private async void Initialize()
         {
+            _dialogService.ShowLoading();
+
             _apartmentId = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
             AnnounceList = await _apartmentService.GetAnnouncesByApartmentId(_apartmentId);
-        }
 
+            _dialogService.HideLoading();
+        }
         private async void AddAnnounce()
         {
             var announce = new Announce()
@@ -93,6 +90,8 @@ namespace Factoriada.ViewModels
 
             var result = await _dialogService.DisplayPromptAsync("Anunt", "Introdu noul anunt.");
 
+            _dialogService.ShowLoading();
+
             if (result == null)
                 return;
 
@@ -101,6 +100,8 @@ namespace Factoriada.ViewModels
             await _apartmentService.AddAnnounceToApartment(announce, _apartmentId);
 
             AnnounceList = await _apartmentService.GetAnnouncesByApartmentId(_apartmentId);
+            UserIsOwnerOrCreator = false;
+            _dialogService.HideLoading();
         }
 
         private async void EditAnnounce()
@@ -110,6 +111,8 @@ namespace Factoriada.ViewModels
 
             var result = await _dialogService.DisplayPromptAsync("Anunt", "Editeaza anuntul.", placeholder: CurrentAnnounce.AnnounceMessage);
 
+            _dialogService.ShowLoading();
+
             if (result == null)
                 return;
 
@@ -118,16 +121,21 @@ namespace Factoriada.ViewModels
             await _apartmentService.EditAnnounceFromApartment(CurrentAnnounce);
 
             AnnounceList = await _apartmentService.GetAnnouncesByApartmentId(_apartmentId);
+            UserIsOwnerOrCreator = false;
+            _dialogService.HideLoading();
         }
-
         private async void DeleteAnnounce()
         {
+            _dialogService.ShowLoading();
+
             if (CurrentAnnounce == null)
                 return;
 
             await _apartmentService.DeleteAnnounce(CurrentAnnounce);
 
             AnnounceList = await _apartmentService.GetAnnouncesByApartmentId(_apartmentId);
+            UserIsOwnerOrCreator = false;
+            _dialogService.HideLoading();
         }
         #endregion
     }

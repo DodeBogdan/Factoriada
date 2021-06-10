@@ -37,28 +37,18 @@ namespace Factoriada.Services
         private async void Initialize()
         {
             var result = (await _firebase
-                .Child("User")
-                .OnceAsync<User>()).FirstOrDefault(x => x.Object.Email == "admin");
+                .Child(nameof(Role))
+                .OnceAsync<Role>())
+                .Select(x => x.Object)
+                .ToList();
 
-            if (result != null)
+            if (result.Count != 0)
                 return;
 
             var id = Guid.NewGuid();
 
             await _firebase
-                 .Child("Role")
-                 .Child(id.ToString())
-                 .PutAsync(
-                 new Role()
-                 {
-                     RoleId = id,
-                     RoleTypeName = "Admin"
-                 });
-
-            id = Guid.NewGuid();
-
-            await _firebase
-               .Child("Role")
+               .Child(nameof(Role))
                .Child(id.ToString())
                .PutAsync(
                 new Role()
@@ -70,19 +60,19 @@ namespace Factoriada.Services
             id = Guid.NewGuid();
 
             await _firebase
-              .Child("Role")
+              .Child(nameof(Role))
               .Child(id.ToString())
               .PutAsync(
               new Role()
               {
-                  RoleTypeName = "User",
+                  RoleTypeName = "Chirias",
                   RoleId = id
               });
 
             id = Guid.NewGuid();
 
             await _firebase
-              .Child("Role")
+              .Child(nameof(Role))
               .Child(id.ToString())
               .PutAsync(
               new Role()
@@ -90,28 +80,6 @@ namespace Factoriada.Services
                   RoleTypeName = "Default",
                   RoleId = id
               });
-
-            var role = (await _firebase
-                   .Child("Role")
-                   .OnceAsync<Role>()).FirstOrDefault(x => x.Object.RoleTypeName == "Admin")
-                ?.Object;
-
-            if (role == null)
-                return;
-
-            id = Guid.NewGuid();
-
-            await _firebase
-               .Child("User")
-               .Child(id.ToString())
-               .PutAsync(
-               new User()
-               {
-                   UserId = id,
-                   Email = "admin",
-                   Password = "admin",
-                   Role = role
-               });
         }
 
         public async Task<User> Login(string email)
@@ -129,13 +97,13 @@ namespace Factoriada.Services
             user.UserId = Guid.NewGuid();
 
             user.Role = (await _firebase
-                .Child("Role")
+                .Child(nameof(Role))
                 .OnceAsync<Role>())
                 .FirstOrDefault(x => x.Object.RoleTypeName == "Default")
                 ?.Object;
 
             await _firebase
-                .Child("User")
+                .Child(nameof(User))
                 .Child(user.UserId.ToString())
                 .PutAsync(user);
         }
@@ -153,12 +121,12 @@ namespace Factoriada.Services
             await ChangeUserRoleTo(currentApartment.Owner, "Owner");
 
             currentApartment.Owner = await _firebase
-                .Child("User")
+                .Child(nameof(User))
                 .Child(currentApartment.Owner.UserId.ToString())
                 .OnceSingleAsync<User>();
 
             await _firebase
-                .Child("ApartmentDetail")
+                .Child(nameof(ApartmentDetail))
                 .Child(currentApartment.ApartmentDetailId.ToString)
                 .PutAsync(currentApartment);
         }
@@ -166,14 +134,14 @@ namespace Factoriada.Services
         public async Task ChangeUserRoleTo(User user, string role)
         {
             var result = (await _firebase
-                .Child("Role")
+                .Child(nameof(Role))
                 .OnceAsync<Role>()).FirstOrDefault(x
                 => x.Object.RoleTypeName == role)
                 ?.Object;
 
             user.Role = result;
 
-            await _firebase.Child("User")
+            await _firebase.Child(nameof(User))
                 .Child(user.UserId.ToString())
                 .PutAsync(user);
         }
@@ -181,7 +149,7 @@ namespace Factoriada.Services
         public async Task<ApartmentDetail> GetApartmentByToken(string result)
         {
             return (await _firebase
-                .Child("ApartmentDetail")
+                .Child(nameof(ApartmentDetail))
                 .OnceAsync<ApartmentDetail>())
                 .FirstOrDefault(x => x.Object.Token == result)
                 ?.Object;
@@ -189,15 +157,15 @@ namespace Factoriada.Services
 
         public async void JoinApartment(Apartment apartment)
         {
-            await ChangeUserRoleTo(apartment.User, "User");
+            await ChangeUserRoleTo(apartment.User, "Chirias");
 
             apartment.User = await _firebase
-                .Child("User")
+                .Child(nameof(User))
                 .Child(apartment.User.UserId.ToString())
                 .OnceSingleAsync<User>();
 
             await _firebase
-                .Child("Apartment")
+                .Child(nameof(Apartment))
                 .Child(apartment.ApartmentId.ToString())
                 .PutAsync(apartment);
         }
