@@ -33,7 +33,6 @@ namespace Factoriada.Services
 
             Initialize();
         }
-
         private async void Initialize()
         {
             var result = (await _firebase
@@ -353,7 +352,7 @@ namespace Factoriada.Services
             return userList;
         }
 
-        public async Task<List<TimeAway>> GetTimeAwayOfUserByInterval(Guid userUserId)
+        public async Task<List<TimeAway>> GetTimeAwayListOfUser(Guid userUserId)
         {
            return (await _firebase
                     .Child(nameof(TimeAway))

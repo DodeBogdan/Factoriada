@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Factoriada.Exceptions;
@@ -198,7 +199,7 @@ namespace Factoriada.Services
         public async Task<List<BillPaidPersons>> GenerateBillPaidPersons(Bill selectedBill, Guid apartmentId)
         {
             var userList = await ApiDatabaseService.ServiceClientInstance.GetUserListByApartment(apartmentId);
-            var totalPrice = selectedBill.BillPrice / userList.Count;
+            var totalPrice = selectedBill.BillPrice;
             var daysOnMouth = (selectedBill.DueDate - selectedBill.StartDate).Days;
             float pricePerDay;
             if (totalPrice != 0)
@@ -208,27 +209,84 @@ namespace Factoriada.Services
                 pricePerDay = 0;
             }
 
-            var billPaidPersonList = new List<BillPaidPersons>();
+            var test = new List<List<User>>(daysOnMouth);
+            var currentDay = selectedBill.StartDate;
+            var uninhabitedDays = 0;
+
+            var billPaidPersons = new List<BillPaidPersons>();
+            var userTimeAwayList = new Dictionary<User, List<TimeAway>>();
 
             foreach (var user in userList)
             {
-                var billPaidPersons = new BillPaidPersons
+                var timeAwayList = await ApiDatabaseService.ServiceClientInstance.GetTimeAwayListOfUser(user.UserId);
+
+                userTimeAwayList.Add(user, timeAwayList);
+
+                var billPaid = new BillPaidPersons()
                 {
-                    BillUserPaid = user,
                     BillPaidId = Guid.NewGuid(),
-                    BillPaidBillId = selectedBill.BillId
+                    BillPaidBillId = selectedBill.BillId,
+                    BillUserPaid = user,
+                    MoneyPaid = 0
                 };
 
-                var daysOff = await ApiDatabaseService.ServiceClientInstance.GetTimeAwayOfUserByInterval(user.UserId);
-
-                billPaidPersons.MoneyPaid = pricePerDay * daysOnMouth;
-
-                billPaidPersonList.Add(billPaidPersons);
+                billPaidPersons.Add(billPaid);
             }
 
-            return billPaidPersonList;
+            while (currentDay < selectedBill.DueDate)
+            {
+                var users = new List<User>();
+
+                foreach (var pair in userTimeAwayList)
+                {
+                    var ok = false;
+
+                    var timeAwayList = pair.Value;
+
+                    foreach (var timeAway in timeAwayList)
+                    {
+                        if (currentDay > timeAway.LeaveFrom && currentDay < timeAway.LeaveTo)
+                            ok = true;
+                    }
+
+                    if (ok == false)
+                        users.Add(pair.Key);
+                }
+                
+                if (users.Count == 0)
+                    uninhabitedDays++;
+
+                test.Add(users);
+                currentDay = currentDay.AddDays(1);
+            }
+
+
+            foreach (var t in test)
+            {
+                if(t.Count == 0)
+                    continue;
+                
+                var moneyPerDayPerPerson = pricePerDay / t.Count;
+
+                foreach (var user in t)
+                {
+                    var p = billPaidPersons
+                        .FirstOrDefault(x => x.BillUserPaid.UserId == user.UserId);
+
+                    p.MoneyPaid += moneyPerDayPerPerson;
+                }
+            }
+
+            var moneyLeft = (pricePerDay * uninhabitedDays) / billPaidPersons.Count;
+
+            foreach (var billPaidPerson in billPaidPersons)
+            {
+                billPaidPerson.MoneyPaid += moneyLeft;
+            }
+
+            return billPaidPersons;
         }
-        
+
         private void TestBill(Bill bill)
         {
             if (bill.StartDate >= DateTime.Now)
@@ -273,16 +331,16 @@ namespace Factoriada.Services
             var list = await ApiDatabaseService.ServiceClientInstance.GetTimeAwayByUser(timeAway.User.UserId);
             foreach (var away in list)
             {
-                if(timeAway.TimeAwayId == away.TimeAwayId)
+                if (timeAway.TimeAwayId == away.TimeAwayId)
                     continue;
 
                 if (timeAway.LeaveFrom >= away.LeaveFrom && timeAway.LeaveFrom <= away.LeaveTo)
                     throw new Exception("Data de plecare deja a fost aleasa odata.");
-                
+
                 if (timeAway.LeaveTo >= away.LeaveFrom && timeAway.LeaveTo <= away.LeaveTo)
                     throw new Exception("Data de plecare deja a fost aleasa odata.");
 
-                if(timeAway.LeaveFrom < away.LeaveFrom && timeAway.LeaveTo > away.LeaveFrom)
+                if (timeAway.LeaveFrom < away.LeaveFrom && timeAway.LeaveTo > away.LeaveFrom)
                     throw new Exception("Data de plecare deja a fost aleasa odata.");
             }
         }
@@ -292,7 +350,7 @@ namespace Factoriada.Services
 
         public async Task<List<User>> GetUsersByApartment(Guid apartmentId)
         {
-           return await ApiDatabaseService.ServiceClientInstance.GetUserListByApartment(apartmentId);
+            return await ApiDatabaseService.ServiceClientInstance.GetUserListByApartment(apartmentId);
         }
 
         public async Task RemoveUserFromApartment(User selectedUser)
