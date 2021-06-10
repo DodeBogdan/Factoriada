@@ -34,6 +34,7 @@ namespace Factoriada.Bootstrap
             builder.RegisterType<SeeBillsViewModel>();
             builder.RegisterType<TimeAwayViewModel>();
             builder.RegisterType<SeePersonsFromApartmentViewModel>();
+            builder.RegisterType<ApartmentChoresViewModel>();
 
             //services - data
             builder.RegisterType<DialogService>().As<IDialogService>();

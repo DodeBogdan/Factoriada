@@ -344,6 +344,21 @@ namespace Factoriada.Services
             await ApiDatabaseService.ServiceClientInstance.DeleteBuyList(selectedProduct);
         }
 
+        public async Task<List<Job>> GetJobsByApartment(Guid apartmentDetailId)
+        {
+            return await ApiDatabaseService.ServiceClientInstance.GetJobsByApartment(apartmentDetailId);
+        }
+
+        public async Task AddOrUpdateJob(Job job)
+        {
+            await ApiDatabaseService.ServiceClientInstance.AddOrUpdateJob(job);
+        }
+
+        public async Task DeleteJob(Job selectedJob)
+        {
+            await ApiDatabaseService.ServiceClientInstance.DeleteJob(selectedJob);
+        }
+
         #endregion
 
     }

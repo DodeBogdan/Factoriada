@@ -490,5 +490,31 @@ namespace Factoriada.Services
                 .Child(selectedProduct.BuyListId.ToString())
                 .DeleteAsync();
         }
+
+        public async Task<List<Job>> GetJobsByApartment(Guid apartmentId)
+        {
+            return (await _firebase
+                    .Child(nameof(Job))
+                    .OnceAsync<Job>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentId)
+                .ToList();
+        }
+
+        public async Task AddOrUpdateJob(Job job)
+        {
+            await _firebase
+                .Child(nameof(Job))
+                .Child(job.JobId.ToString())
+                .PutAsync(job);
+        }
+
+        public async Task DeleteJob(Job job)
+        {
+            await _firebase
+                .Child(nameof(Job))
+                .Child(job.JobId.ToString())
+                .DeleteAsync();
+        }
     }
 }

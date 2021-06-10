@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Factoriada.Views.ApartmentChoresView"
+             xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
+             xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
+             xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
+             xmlns:views="clr-namespace:Factoriada.Views;assembly=Factoriada"
+             utility:ViewModelLocator.AutoWireViewModel="True" 
+             x:DataType="viewModels:ApartmentChoresViewModel"
+
+             Title ="Vezi treburi"
+             BackgroundImageSource="background.jpg">
+    <Grid>
+        <Grid Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Text="Treaba:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
+                <Label Grid.Row="0" Grid.Column="1" Text="-" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
+                <Label Grid.Row="0" Grid.Column="2" Text="Persoana:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
+
+                <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
+                    <ListView  
+                        ItemsSource="{Binding JobList}"
+            HasUnevenRows="True"
+            SeparatorColor="Black"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedJob}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Job">
+                                <ViewCell>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Grid.Column="0" Text="{Binding JobType}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"></Label>
+                                        <Label Grid.Column="1" Text="-" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"></Label>
+                                        <Label Grid.Column="2" Text="{Binding User}" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"></Label>
+                                    </Grid>
+                                </ViewCell>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Frame>
+            </Grid>
+
+            <BoxView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+
+            <Button Grid.Row="2" Grid.Column="0" Text="Adauga" Command="{Binding AddJobCommand}" BackgroundColor="Black"/>
+            <Button Grid.Row="2" Grid.Column="1" Text="Editeaza" Command="{Binding EditJobCommand}" BackgroundColor="Black"/>
+            <Button Grid.Row="2" Grid.Column="2" Text="Sterge" Command="{Binding DeleteJobCommand}" BackgroundColor="Black"/>
+
+        </Grid>
+    </Grid>
+</ContentPage>

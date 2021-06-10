@@ -42,5 +42,8 @@ namespace Factoriada.Services.Interfaces
         Task<List<BuyList>> GetBuyListFromApartment(Guid apartmentId);
         Task AddOrUpdateProductToBuy(BuyList toBuy);
         Task DeleteToBuy(BuyList selectedProduct);
+        Task<List<Job>> GetJobsByApartment(Guid apartmentDetailId);
+        Task AddOrUpdateJob(Job job);
+        Task DeleteJob(Job selectedJob);
     }
 }

@@ -90,7 +90,7 @@ namespace Factoriada.ViewModels
             PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
                 .Where(x => x.Hidden == false).ToList();
             PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
-                .Where(x => x.Hidden == true).ToList();
+                .Where(x => x.Owner.UserId == ActiveUser.User.UserId && x.Hidden == true).ToList();
 
             _dialogService.HideLoading();
         }
@@ -153,7 +153,7 @@ namespace Factoriada.ViewModels
             _dialogService.ShowLoading();
             await _apartmentService.AddOrUpdateProductToBuy(toBuy);
             PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
-                .Where(x => x.Hidden == true).ToList();
+                .Where(x => x.Owner.UserId == ActiveUser.User.UserId && x.Hidden == true).ToList();
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Produsul a fost adaugat cu succes.", "Succes");
         }
@@ -202,7 +202,7 @@ namespace Factoriada.ViewModels
             await _apartmentService.AddOrUpdateProductToBuy(selectedProduct);
             if (selectedProduct.Hidden)
                 PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
-                    .Where(x => x.Hidden == true).ToList();
+                    .Where(x => x.Owner.UserId == ActiveUser.User.UserId && x.Hidden == true).ToList();
             else
                 PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
                     .Where(x => x.Hidden == false).ToList();
@@ -224,7 +224,7 @@ namespace Factoriada.ViewModels
             await _apartmentService.DeleteToBuy(selectedProduct);
             if (selectedProduct.Hidden)
                 PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
-                    .Where(x => x.Hidden == true).ToList();
+                    .Where(x => x.Owner.UserId == ActiveUser.User.UserId && x.Hidden == true).ToList();
             else
                 PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
                     .Where(x => x.Hidden == false).ToList();

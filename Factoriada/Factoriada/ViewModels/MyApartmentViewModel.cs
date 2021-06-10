@@ -91,7 +91,7 @@ namespace Factoriada.ViewModels
             GoToAnnouncementsCommand = new Command(async () => await _navigationService.PushAsync(new AnnounceView()));
             GoToBillsCommand = new Command(async () => await _navigationService.PushAsync(new BillView()));
             GoToBuyListCommand = new Command(async () => await _navigationService.PushAsync(new BuyListView()));
-            GoToCleanCommand = new Command(async () => await _dialogService.ShowDialog("Nu este implementat.", ""));
+            GoToCleanCommand = new Command(async () => await _navigationService.PushAsync(new ApartmentChoresView()));
             GoToBudgetCommand = new Command(async () => await _navigationService.PushAsync(new BudgetView()));
             GoToChatCommand = new Command(async () => await _navigationService.PushAsync(new ChatView()));
             GoToTimeAwayCommand = new Command(async () => await _navigationService.PushAsync(new TimeAwayView()));
