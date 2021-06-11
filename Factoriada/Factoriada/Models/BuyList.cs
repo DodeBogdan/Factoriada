@@ -10,6 +10,6 @@ namespace Factoriada.Models
         public int Count { get; set; }
         public bool Hidden { get; set; }
         public User Owner { get; set; }
-        public ApartmentDetail ApartmentDetail { get; set; }
+        public Guid ApartmentDetail { get; set; }
     }
 }

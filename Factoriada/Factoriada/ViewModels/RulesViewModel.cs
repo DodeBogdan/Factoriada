@@ -54,7 +54,8 @@ namespace Factoriada.ViewModels
             set
             {
                 _currentRule = value;
-                UserIsOwnerAndSelected = value != null;
+                if (UserIsOwner && value != null)
+                    UserIsOwnerAndSelected = true;
                 OnPropertyChanged();
             }
         }
@@ -91,18 +92,17 @@ namespace Factoriada.ViewModels
         {
             var result = await _dialogService.DisplayPromptAsync("Regula", "Introdu noua regula.");
 
-            _dialogService.ShowLoading();
-
-            var rule = new Rule { RuleId = Guid.NewGuid() };
             if (result == null)
                 return;
-            
-            rule.RuleMessage = result;
+
+            _dialogService.ShowLoading();
+
+            var rule = new Rule {RuleId = Guid.NewGuid(), RuleMessage = result, InsertedDateTime = DateTime.Now};
 
             await _apartmentService.AddRuleToApartment(rule, _apartmentId);
-
             RuleList = await _apartmentService.GetRulesByApartmentId(_apartmentId);
             UserIsOwnerAndSelected = false;
+
             _dialogService.HideLoading();
         }
         private async void EditRule()
@@ -112,10 +112,10 @@ namespace Factoriada.ViewModels
 
             var result = await _dialogService.DisplayPromptAsync("Regula", "Editeaza regula.", placeholder:CurrentRule.RuleMessage);
 
-            _dialogService.ShowLoading();
-
             if (result == null)
                 return;
+
+            _dialogService.ShowLoading();
 
             CurrentRule.RuleMessage = result;
 

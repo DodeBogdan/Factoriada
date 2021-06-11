@@ -9,6 +9,6 @@ namespace Factoriada.Models
         public Guid JobId { get; set; }
         public string JobType { get; set; }
         public string User { get; set; }
-        public ApartmentDetail ApartmentDetail { get; set; }
+        public Guid ApartmentDetail { get; set; }
     }
 }

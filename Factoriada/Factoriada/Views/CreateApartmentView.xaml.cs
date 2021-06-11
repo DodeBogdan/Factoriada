@@ -16,11 +16,5 @@ namespace Factoriada.Views
         {
             InitializeComponent();
         }
-
-        protected override void OnAppearing()
-        {
-            RefreshView.IsRefreshing = true;
-            base.OnAppearing();
-        }
     }
 }

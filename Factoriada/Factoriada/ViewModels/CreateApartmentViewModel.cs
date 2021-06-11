@@ -19,14 +19,12 @@ namespace Factoriada.ViewModels
             };
 
             InitializeCommands();
-            Refresh();
         }
 
         #endregion
 
         #region Private Fields
         private readonly IApartmentService _apartmentService;
-        private bool _isRefreshing;
         private ApartmentDetail _currentApartment;
         private bool _editAddressIsVisible;
         private bool _startEditAddressIsVisible;
@@ -61,15 +59,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-        public bool IsRefreshing
-        {
-            get => _isRefreshing;
-            set
-            {
-                _isRefreshing = value;
-                OnPropertyChanged();
-            }
-        }
 
         public ICommand RefreshCommand { get; set; }
         public ICommand StartEditAddressCommand { get; set; }
@@ -89,6 +78,18 @@ namespace Factoriada.ViewModels
 
         private async void StartEditAddress()
         {
+            if (CurrentApartment.ApartmentName == null)
+            {
+                await _dialogService.ShowDialog("Numele apartamentului trebuie completat.", "Atentie!");
+                return;
+            }
+            
+            if (CurrentApartment.ApartmentName.Length < 3)
+            {
+                await _dialogService.ShowDialog("Numele apartamentului trebuie sa aibe minim 3 caractere.", "Atentie!");
+                return;
+            }
+
             var result = await _dialogService.DisplayAlert("Mod de adaugare a adresei",
                 "Cum doresti adaugarea/editarea adresei?", "Adresa noua", "Adresa curenta");
 
@@ -112,13 +113,17 @@ namespace Factoriada.ViewModels
         {
             try
             {
-                _dialogService.ShowLoading();
+                SaveAddress();
 
+                _dialogService.ShowLoading();
+                
                 await _apartmentService.SaveApartment(CurrentApartment);
 
                 _dialogService.HideLoading();
 
                 await _dialogService.ShowDialog("Apartamentul a fost salvat cu succes.", "Succes");
+
+                App.Current.MainPage = new AppShell();
             }
             catch (Exception ex)
             {
@@ -127,7 +132,7 @@ namespace Factoriada.ViewModels
             }
         }
 
-        private async void SaveAddress()
+        private void SaveAddress()
         {
             try
             {
@@ -136,15 +141,11 @@ namespace Factoriada.ViewModels
                 _apartmentService.TestAddress(CurrentApartment.ApartmentAddress);
 
                 _dialogService.HideLoading();
-
-                _dialogService.ShowToast("Adresa a fost salvata cu succes.");
-
-                EditAddressIsVisible = false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 _dialogService.HideLoading();
-                await _dialogService.ShowDialog(ex.Message, "Atentie!");
+                throw;
             }
         }
 
@@ -152,7 +153,6 @@ namespace Factoriada.ViewModels
         {
             StartEditAddressIsVisible = true;
             EditAddressIsVisible = false;
-            IsRefreshing = false;
         }
 
         #endregion

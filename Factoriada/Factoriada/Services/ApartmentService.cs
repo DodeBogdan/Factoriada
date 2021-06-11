@@ -47,11 +47,8 @@ namespace Factoriada.Services
             await ApiDatabaseService.ServiceClientInstance.SaveApartment(currentApartment);
         }
         #endregion
-
-
         public async Task JoinApartment(User connectedUser, string result)
         {
-
             if (connectedUser.Role.RoleTypeName != "Default")
                 throw new UserException("Acest user este deja intr-un apartament.");
 
@@ -62,12 +59,22 @@ namespace Factoriada.Services
 
             var apartment = new Apartment()
             {
-                ApartmentDetail = apartmentDetail,
+                ApartmentDetail = apartmentDetail.ApartmentDetailId,
                 ApartmentId = Guid.NewGuid(),
                 User = connectedUser
             };
 
-            ApiDatabaseService.ServiceClientInstance.JoinApartment(apartment);
+            var announce = new Announce
+                {   AnnounceId = Guid.NewGuid(),
+                    User = ActiveUser.User,
+                    AnnounceMessage = $"{connectedUser.FullName} s-a alaturat apartamentului.",
+                    InsertedDateTime = DateTime.Now,
+                    ApartmentDetails = apartmentDetail.ApartmentDetailId
+                };
+
+            await ApiDatabaseService.ServiceClientInstance.AddOrUpdateAnnounce(announce);
+
+            await ApiDatabaseService.ServiceClientInstance.JoinApartment(apartment);
         }
 
         #region ApartmentRules
@@ -78,7 +85,7 @@ namespace Factoriada.Services
 
         public async Task AddRuleToApartment(Rule rule, Guid apartmentId)
         {
-            rule.ApartmentDetail = await ApiDatabaseService.ServiceClientInstance.GetApartmentById(apartmentId);
+            rule.ApartmentDetail = (await ApiDatabaseService.ServiceClientInstance.GetApartmentById(apartmentId)).ApartmentDetailId;
 
             await ApiDatabaseService.ServiceClientInstance.UpdateRule(rule);
         }
@@ -107,14 +114,14 @@ namespace Factoriada.Services
 
         public async Task EditAnnounceFromApartment(Announce currentAnnounce)
         {
-            await ApiDatabaseService.ServiceClientInstance.UpdateAnnounce(currentAnnounce);
+            await ApiDatabaseService.ServiceClientInstance.AddOrUpdateAnnounce(currentAnnounce);
         }
 
         public async Task AddAnnounceToApartment(Announce announce, Guid apartmentId)
         {
-            announce.ApartmentDetails = await ApiDatabaseService.ServiceClientInstance.GetApartmentById(apartmentId);
+            announce.ApartmentDetails = (await ApiDatabaseService.ServiceClientInstance.GetApartmentById(apartmentId)).ApartmentDetailId;
 
-            await ApiDatabaseService.ServiceClientInstance.UpdateAnnounce(announce);
+            await ApiDatabaseService.ServiceClientInstance.AddOrUpdateAnnounce(announce);
         }
         #endregion
 
@@ -123,11 +130,10 @@ namespace Factoriada.Services
             var apartment = await ApiDatabaseService.ServiceClientInstance.GetApartmentDetailByUserId(userUserId);
 
             return "Oras: " + apartment.ApartmentAddress.City + ", Strada: " + apartment.ApartmentAddress.Street +
-                   ", Numar: " + apartment.ApartmentAddress.Number + ", Bloc" + apartment.ApartmentAddress.Building +
+                   ", Numar: " + apartment.ApartmentAddress.Number + ", Bloc: " + apartment.ApartmentAddress.Building +
                    ", Scara: " + apartment.ApartmentAddress.Staircase + ", Etaj: " + apartment.ApartmentAddress.Floor +
                    ", Apartament: " + apartment.ApartmentAddress.Apartment;
         }
-
         public async Task<Guid> GetApartmentIdByUser(Guid userUserId)
         {
             var result = await ApiDatabaseService.ServiceClientInstance.GetApartmentDetailByUserId(userUserId);
@@ -155,7 +161,7 @@ namespace Factoriada.Services
 
         public async Task UpdateApartment(ApartmentDetail currentApartment)
         {
-            await ApiDatabaseService.ServiceClientInstance.UpdateApartment(currentApartment);
+            await ApiDatabaseService.ServiceClientInstance.UpdateApartmentDetail(currentApartment);
         }
         #endregion
 
@@ -170,9 +176,9 @@ namespace Factoriada.Services
             await ApiDatabaseService.ServiceClientInstance.SendMessage(chat);
         }
 
-        public Task<List<Reminder>> GetRemindersByApartmentId(Guid apartmentId)
+        public async Task<List<Reminder>> GetRemindersByApartmentId(Guid apartmentId)
         {
-            throw new NotImplementedException();
+           return await ApiDatabaseService.ServiceClientInstance.GetRemindersByApartment(apartmentId);
         }
         #endregion
 
@@ -417,7 +423,39 @@ namespace Factoriada.Services
             await ApiDatabaseService.ServiceClientInstance.DeleteJob(selectedJob);
         }
 
-        #endregion
+        public async Task DeleteReminder(Reminder currentReminder)
+        {
+            await ApiDatabaseService.ServiceClientInstance.DeleteReminder(currentReminder);
+        }
 
+        public async Task AddReminder(Reminder reminder)
+        {
+            await ApiDatabaseService.ServiceClientInstance.AddReminder(reminder);
+        }
+
+        public async Task ChangeOwner(Guid apartmentId, User selectedUser)
+        {
+            var currentApartmentDetail = await ApiDatabaseService.ServiceClientInstance.GetApartmentById(apartmentId);
+
+            var currentApartment =
+                await ApiDatabaseService.ServiceClientInstance.GetApartmentByUserId(selectedUser.UserId);
+
+            var currentOwner = currentApartmentDetail.Owner;
+            
+            await ApiDatabaseService.ServiceClientInstance.ChangeUserRoleTo(currentOwner, "Chirias");
+            await ApiDatabaseService.ServiceClientInstance.ChangeUserRoleTo(selectedUser, "Owner");
+            currentApartment.User = currentOwner;
+            currentApartmentDetail.Owner = selectedUser;
+
+            await ApiDatabaseService.ServiceClientInstance.UpdateApartmentDetail(currentApartmentDetail);
+            await ApiDatabaseService.ServiceClientInstance.UpdateApartment(currentApartment);
+        }
+
+        public async Task<List<TimeAway>> GetTimeAwayByApartment(Guid apartmentDetail)
+        {
+            return await ApiDatabaseService.ServiceClientInstance.GetTimeAwayByApartment(apartmentDetail);
+        }
+
+        #endregion
     }
 }

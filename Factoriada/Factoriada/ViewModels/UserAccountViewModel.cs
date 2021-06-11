@@ -318,6 +318,13 @@ namespace Factoriada.ViewModels
         {
             if (CheckPassword() == false)
                 return;
+
+            if (NewPassword == CurrentUser.Password)
+            {
+                await _dialogService.ShowDialog("Nu poti pune aceeasi parola.", "Atentie!");
+                return;
+            }
+
             try
             {
                 _dialogService.ShowLoading();

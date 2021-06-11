@@ -40,9 +40,9 @@
 
             </StackLayout>
 
-            <Button Command="{Binding LogInCommand}" Grid.Row="3" Grid.Column="0"  Text="Log In" Margin="30" BackgroundColor="Black" BorderColor="Black" BorderWidth="1"/>
+            <Button Command="{Binding LogInCommand}" Grid.Row="3" Grid.Column="1"  Text="Log In" Margin="30" BackgroundColor="Black" BorderColor="Black" BorderWidth="1"/>
 
-            <Button Command="{Binding RegisterCommand}" Grid.Row="3"  Grid.Column="1"  Text="Register" Margin="30" BackgroundColor="Black" BorderColor="Black" BorderWidth="1" />
+            <Button Command="{Binding RegisterCommand}" Grid.Row="3"  Grid.Column="0"  Text="Register" Margin="30" BackgroundColor="Black" BorderColor="Black" BorderWidth="1" />
 
         </Grid>
 </ContentPage>

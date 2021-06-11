@@ -6,8 +6,7 @@ namespace Factoriada.Models
     public class Apartment
     {
         public Guid ApartmentId { get; set; }
-        public ApartmentDetail ApartmentDetail { get; set; }
-
+        public Guid ApartmentDetail { get; set; }
         public User User { get; set; }
     }
 }

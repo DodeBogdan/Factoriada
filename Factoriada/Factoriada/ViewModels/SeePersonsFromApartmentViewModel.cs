@@ -6,6 +6,7 @@ using Factoriada.Models;
 using Factoriada.Services.Interfaces;
 using Factoriada.Utility;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace Factoriada.ViewModels
 {
@@ -26,7 +27,7 @@ namespace Factoriada.ViewModels
         private Guid _apartmentId;
         private List<User> _userList;
         private User _selectedUser;
-        private bool _deleteUserIsVisible;
+        private bool _userIsSelected;
         #endregion
 
         #region Proprieties
@@ -42,12 +43,12 @@ namespace Factoriada.ViewModels
             }
         }
 
-        public bool DeleteUserIsVisible
+        public bool UserIsSelected
         {
-            get => _deleteUserIsVisible;
+            get => _userIsSelected;
             set
             {
-                _deleteUserIsVisible = value;
+                _userIsSelected = value;
                 OnPropertyChanged();
             }
         }
@@ -62,11 +63,11 @@ namespace Factoriada.ViewModels
                 {
                     if (ActiveUser.User.Role.RoleTypeName == "Owner" && value.Role.RoleTypeName != "Owner")
                     {
-                        DeleteUserIsVisible = true;
+                        UserIsSelected = true;
                     }
                     else
                     {
-                        DeleteUserIsVisible = false;
+                        UserIsSelected = false;
                     }
                 }
                 OnPropertyChanged();
@@ -85,6 +86,7 @@ namespace Factoriada.ViewModels
 
         public ICommand AddPersonCommand { get; set; }
         public ICommand DeleteUserCommand { get; set; }
+        public ICommand ChangeOwnerCommand { get; set; }
         #endregion
 
         #region Private Methods
@@ -103,6 +105,7 @@ namespace Factoriada.ViewModels
         {
             DeleteUserCommand = new Command(DeleteUser);
             AddPersonCommand = new Command(AddUser);
+            ChangeOwnerCommand = new Command(ChangeOwner);
         }
 
         private async void DeleteUser()
@@ -111,12 +114,20 @@ namespace Factoriada.ViewModels
             await _apartmentService.RemoveUserFromApartment(SelectedUser);
             UserList = await _apartmentService.GetUsersByApartment(_apartmentId);
             _dialogService.HideLoading();
+
+            await _dialogService.ShowDialog("User-ul a fost sters cu succes.", "Succes");
         }
 
         private async void AddUser()
         {
             var result = await _dialogService.DisplayPromptAsync("Adauga user", "Care este email-ul user-ului?",
                 placeholder: "exemplu@yahoo.com");
+
+            if (string.IsNullOrEmpty(result))
+            {
+                await _dialogService.ShowDialog("Email-ul nu a fost introdus.", "Atentie!");
+                return;
+            }
 
             _dialogService.ShowLoading();
 
@@ -134,6 +145,25 @@ namespace Factoriada.ViewModels
                 _dialogService.HideLoading();
                 await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
+        }
+
+        private async void ChangeOwner()
+        {
+            var result =
+                await _dialogService.DisplayAlert("Schimbare proprietar", "Esti sigur ca vrei sa schimbi owner-ul");
+
+            if (result == false)
+                return;
+
+            _dialogService.ShowLoading();
+            await _apartmentService.ChangeOwner(_apartmentId, SelectedUser);
+            UserList = await _apartmentService.GetUsersByApartment(_apartmentId);
+            ActiveUser.User = await _apartmentService.GetUserByEmail(ActiveUser.User.Email);
+            SelectedUser = null;
+            IsOwner = UserIsSelected = false;
+            _dialogService.HideLoading();
+
+            await _dialogService.ShowDialog("Owner-ul a fost schimbat cu succes.", "Succes");
         }
 
         #endregion

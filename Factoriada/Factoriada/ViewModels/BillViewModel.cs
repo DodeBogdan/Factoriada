@@ -21,21 +21,42 @@ namespace Factoriada.ViewModels
 
         #region Private Fields
         private readonly IApartmentService _apartmentService;
-
-        private Guid _apartmentId = Guid.Empty;
-
+        private Guid _apartmentId;
         private List<Reminder> _reminderList;
         private Reminder _currentReminder;
 
         #endregion
 
         #region Proprieties
+        private bool _isReminderSelected;
+
+        public bool IsReminderSelected
+        {
+            get => _isReminderSelected;
+            set
+            {
+                _isReminderSelected = value;
+                OnPropertyChanged();
+            }
+        }
+
         public Reminder CurrentReminder
         {
             get => _currentReminder;
             set
             {
                 _currentReminder = value;
+                if (value != null)
+                {
+                    if (ActiveUser.User.Role.RoleTypeName == "Owner")
+                    {
+                        IsReminderSelected = true;
+                    }
+                }
+                else
+                {
+                    IsReminderSelected = false;
+                }
                 OnPropertyChanged();
             }
         }
@@ -51,6 +72,7 @@ namespace Factoriada.ViewModels
 
         public ICommand AddBillCommand { get; set; }
         public ICommand SeeBillsCommand { get; set; }
+        public ICommand DeleteReminderCommand { get; set; }
         #endregion
 
         #region Private Methods
@@ -58,12 +80,15 @@ namespace Factoriada.ViewModels
         {
             AddBillCommand = new Command(AddBill);
             SeeBillsCommand = new Command(SeeBills);
+            DeleteReminderCommand = new Command(DeleteReminder);
         }
 
         private async void Initialize()
         {
+            _dialogService.ShowLoading();
             _apartmentId = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
-            //ReminderList = await _apartmentService.GetRemindersByApartmentId(_apartmentId);
+            ReminderList = await _apartmentService.GetRemindersByApartmentId(_apartmentId);
+            _dialogService.HideLoading();
         }
 
         private async void AddBill()
@@ -74,6 +99,16 @@ namespace Factoriada.ViewModels
         private async void SeeBills()
         {
             await _navigationService.PushAsync(new SeeBillsView());
+        }
+
+        private async void DeleteReminder()
+        {
+            _dialogService.ShowLoading();
+            await _apartmentService.DeleteReminder(CurrentReminder);
+            ReminderList = await _apartmentService.GetRemindersByApartmentId(_apartmentId);
+            _dialogService.HideLoading();
+
+            await _dialogService.ShowDialog("Reminder-ul a fost sters cu succes.", "Succes");
         }
         #endregion
     }

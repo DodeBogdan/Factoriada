@@ -20,6 +20,17 @@ namespace Factoriada.ViewModels
             _apartmentService = apartmentService;
             ConnectedUser = ActiveUser.User;
 
+            if (ConnectedUser.Role.RoleTypeName == "Default")
+            {
+                UserHaveApartment = false;
+                UserNotHavingApartment = true;
+            }
+            else
+            {
+                UserNotHavingApartment = false;
+                UserHaveApartment = true;
+            }
+
             InitializeCommands();
         }
 
@@ -30,12 +41,23 @@ namespace Factoriada.ViewModels
         private readonly IApartmentService _apartmentService;
 
         private User _connectedUser = new User();
-        private bool _userType = true;
+        private bool _userNotHavingApartment;
+        private ImageSource _currentUserImage;
+        private bool _userHaveApartment;
 
         #endregion
 
         #region Proprieties
-        private ImageSource _currentUserImage;
+
+        public bool UserHaveApartment
+        {
+            get => _userHaveApartment;
+            set
+            {
+                _userHaveApartment = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ImageSource CurrentUserImage
         {
@@ -47,12 +69,12 @@ namespace Factoriada.ViewModels
             }
         }
 
-        public bool UserType
+        public bool UserNotHavingApartment
         {
-            get => _userType;
+            get => _userNotHavingApartment;
             set
             {
-                _userType = value;
+                _userNotHavingApartment = value;
                 OnPropertyChanged();
             }
         }
@@ -63,7 +85,6 @@ namespace Factoriada.ViewModels
             set
             {
                 _connectedUser = value;
-                UserType = value.Role.RoleTypeName == "Default";
                 if (value.ImagesByte != null)
                 {
                     var stream = new MemoryStream(value.ImagesByte);
@@ -103,6 +124,8 @@ namespace Factoriada.ViewModels
                 await _apartmentService.JoinApartment(ConnectedUser, result);
 
                 await _dialogService.ShowDialog("Ai fost conectat cu succes.", "Succes");
+
+                App.Current.MainPage = new AppShell();
             }
             catch (Exception ex)
             {
@@ -117,8 +140,5 @@ namespace Factoriada.ViewModels
         }
 
         #endregion
-
-
-
     }
 }

@@ -25,6 +25,7 @@ namespace Factoriada.ViewModels
         #region Private Fields
 
         private readonly IApartmentService _apartmentService;
+        private Guid _apartmentDetail;
 
         private DateTime _minimumDateTime;
         private DateTime _startDateTime;
@@ -72,25 +73,33 @@ namespace Factoriada.ViewModels
             set
             {
                 _selectedTimeAway = value;
-                if (value == null)
+                if (value != null)
                 {
-                    IsSelectedTimeAwayToEdit = false;
-                    IsSelectedTimeAwayToDelete = false;
-                }
-                else
-                {
-                    if (value.LeaveFrom.AddDays(3) < DateTime.Now)
+                    if (value.User.UserId == ActiveUser.User.UserId)
                     {
-                        IsSelectedTimeAwayToEdit = false;
-                        IsSelectedTimeAwayToDelete = true;
+                        if (value.LeaveFrom.AddDays(3) < DateTime.Now)
+                        {
+                            IsSelectedTimeAwayToEdit = false;
+                            IsSelectedTimeAwayToDelete = true;
+                        }
+                        else
+                        {
+                            IsSelectedTimeAwayToEdit = true;
+                            IsSelectedTimeAwayToDelete = true;
+                            StartDateTime = value.LeaveFrom;
+                            EndDateTime = value.LeaveTo;
+                        }
                     }
                     else
                     {
-                        IsSelectedTimeAwayToEdit = true;
-                        IsSelectedTimeAwayToDelete = true;
-                        StartDateTime = value.LeaveFrom;
-                        EndDateTime = value.LeaveTo;
+                        IsSelectedTimeAwayToEdit = false;
+                        IsSelectedTimeAwayToDelete = false;
                     }
+                }
+                else
+                {
+                    IsSelectedTimeAwayToEdit = false;
+                    IsSelectedTimeAwayToDelete = false;
                 }
                 OnPropertyChanged();
             }
@@ -161,13 +170,14 @@ namespace Factoriada.ViewModels
                 LeaveFrom = StartDateTime,
                 LeaveTo = EndDateTime,
                 DaysLeft = (EndDateTime - StartDateTime).Days,
-                User = ActiveUser.User
+                User = ActiveUser.User,
+                ApartmentDetail = _apartmentDetail
             };
             try
             {
                 _dialogService.ShowLoading();
                 await _apartmentService.AddOrUpdateTimeAway(timeAway);
-                TimeAwayList = await _apartmentService.GetTimeAwayByUser(ActiveUser.User.UserId);
+                TimeAwayList = await _apartmentService.GetTimeAwayByApartment(_apartmentDetail);
                 _dialogService.HideLoading();
                 await _dialogService.ShowDialog("Plecarea a fost adaugata cu succes.", "Succes");
             }
@@ -193,7 +203,7 @@ namespace Factoriada.ViewModels
             {
                 _dialogService.ShowLoading();
                 await _apartmentService.AddOrUpdateTimeAway(timeAway);
-                TimeAwayList = await _apartmentService.GetTimeAwayByUser(ActiveUser.User.UserId);
+                TimeAwayList = await _apartmentService.GetTimeAwayByApartment(_apartmentDetail);
                 _dialogService.HideLoading();
                 await _dialogService.ShowDialog("Plecarea a fost editata cu succes.", "Succes");
             }
@@ -207,7 +217,7 @@ namespace Factoriada.ViewModels
         {
             _dialogService.ShowLoading();
             await _apartmentService.DeleteTimeAway(SelectedTimeAway);
-            TimeAwayList = await _apartmentService.GetTimeAwayByUser(ActiveUser.User.UserId);
+            TimeAwayList = await _apartmentService.GetTimeAwayByApartment(_apartmentDetail);
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Plecarea a fost stearsa cu succes.", "Succes");
         }
@@ -220,7 +230,8 @@ namespace Factoriada.ViewModels
             MaximumDateTime = DateTime.Now.AddMonths(2);
             StartDateTime = DateTime.Now;
             EndDateTime = MinimDateForMaximumDateTime;
-            TimeAwayList = await _apartmentService.GetTimeAwayByUser(ActiveUser.User.UserId);
+            _apartmentDetail = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
+            TimeAwayList = await _apartmentService.GetTimeAwayByApartment(_apartmentDetail);
 
             _dialogService.HideLoading();
         }

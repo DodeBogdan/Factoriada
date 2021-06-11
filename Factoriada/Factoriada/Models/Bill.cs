@@ -13,7 +13,7 @@ namespace Factoriada.Models
         public DateTime StartDate { get; set; }
         public DateTime DueDate { get; set; }
 
-        public ApartmentDetail ApartmentDetail { get; set; }
+        public Guid ApartmentDetail { get; set; }
 
         public static List<BillType> GetBillTypes()
         {

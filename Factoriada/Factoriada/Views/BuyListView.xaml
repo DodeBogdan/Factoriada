@@ -48,9 +48,9 @@
                                     <ColumnDefinition Width="*"></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
 
-                                <Label Grid.Row="0" Grid.Column="0" Text="Denumire:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
+                            <Label Grid.Row="0" Grid.Column="0" Text="Denumire:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
                                 <Label Grid.Row="0" Grid.Column="1" Text="-" TextColor="Black" FontSize="Medium"/>
-                                <Label  Grid.Row="0" Grid.Column="2" Text="Cantitate:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
+                            <Label  Grid.Row="0" Grid.Column="2" Text="Cantitate:" HorizontalTextAlignment="Center" TextColor="Black" FontSize="Medium"/>
                             </Grid>
                         </ListView.Header>
                         <ListView.ItemTemplate>

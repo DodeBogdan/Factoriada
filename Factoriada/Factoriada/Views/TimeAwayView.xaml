@@ -40,15 +40,16 @@
 
             <Frame Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
                 <ListView  
-            x:Name="TimeAwayList"
-            ItemsSource="{Binding TimeAwayList}"
-            HasUnevenRows="True"
-            SeparatorColor="Black"
-            SelectionMode="Single"
-            SelectedItem="{Binding SelectedTimeAway}">
+                x:Name="TimeAwayList"
+                ItemsSource="{Binding TimeAwayList}"
+                HasUnevenRows="True"
+                SeparatorColor="Black"
+                SelectionMode="Single"
+                SelectedItem="{Binding SelectedTimeAway}">
                     <ListView.Header>
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
@@ -56,9 +57,10 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Text="Data plecare:" FontSize="20" TextColor="Black" HorizontalTextAlignment="Center"></Label>
-                            <Label Grid.Row="0" Grid.Column="1" Text="Data venire:" FontSize="20" TextColor="Black" HorizontalTextAlignment="Center"></Label>
-                            <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource Separator}"></BoxView>
+                            <Label Grid.Row="0" Grid.Column="0" Text="Persoana:" FontSize="20" TextColor="Black" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Row="0" Grid.Column="1" Text="Data plecare:" FontSize="20" TextColor="Black" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Row="0" Grid.Column="2" Text="Data venire:" FontSize="20" TextColor="Black" HorizontalTextAlignment="Center"/>
+                            <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
                         </Grid>
                     </ListView.Header>
                     <ListView.ItemTemplate>
@@ -66,12 +68,14 @@
                             <ViewCell>
                                 <Grid>
                                     <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                         <ColumnDefinition Width="*"></ColumnDefinition>
                                     </Grid.ColumnDefinitions>
 
-                                    <Label Grid.Column="0" Text="{Binding  LeaveFrom, StringFormat='{0:dd MMMM yyyy}'}" HorizontalTextAlignment="Center" FontSize="20" TextColor="Black"></Label>
-                                    <Label Grid.Column="1" Text="{Binding  LeaveTo, StringFormat='{0:dd MMMM yyyy}'}" HorizontalTextAlignment="Center" FontSize="20" TextColor="Black"></Label>
+                                    <Label Grid.Column="0" Text="{Binding  User.FullName}" HorizontalTextAlignment="Center" FontSize="20" TextColor="Black"/>
+                                    <Label Grid.Column="1" Text="{Binding  LeaveFrom, StringFormat='{0:dd MMMM yyyy}'}" HorizontalTextAlignment="Center" FontSize="20" TextColor="Black"/>
+                                    <Label Grid.Column="2" Text="{Binding  LeaveTo, StringFormat='{0:dd MMMM yyyy}'}" HorizontalTextAlignment="Center" FontSize="20" TextColor="Black"/>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

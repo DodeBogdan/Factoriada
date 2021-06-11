@@ -6,6 +6,7 @@ namespace Factoriada.Models
     {
         public Guid RuleId { get; set; }
         public string RuleMessage { get; set; }
-        public ApartmentDetail ApartmentDetail { get; set; }
+        public Guid ApartmentDetail { get; set; }
+        public DateTime InsertedDateTime { get; set; }
     }
 }

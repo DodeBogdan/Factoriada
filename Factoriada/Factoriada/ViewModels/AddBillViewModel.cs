@@ -21,7 +21,7 @@ namespace Factoriada.ViewModels
 
         #region Private Fileds
         private readonly IApartmentService _apartmentService;
-
+        private Guid _apartmentDetail;
         private List<BillType> _billTypes;
         private BillType _selectedBillType;
         private float _billPrice;
@@ -113,7 +113,7 @@ namespace Factoriada.ViewModels
             var bill = new Bill()
             {
                 BillId = Guid.NewGuid(),
-                ApartmentDetail = await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId),
+                ApartmentDetail = _apartmentDetail,
                 BillPrice = BillPrice,
                 DateOfIssue = BillDateOfIssue,
                 StartDate = BillStartDate,
@@ -123,13 +123,30 @@ namespace Factoriada.ViewModels
             };
             try
             {
+                _dialogService.ShowLoading();
+
                 await _apartmentService.AddBill(bill);
+
+                var reminder = new Reminder()
+                {
+                    ReminderId = Guid.NewGuid(),
+                    ApartmentDetail = _apartmentDetail,
+                    Message =
+                        $"A fost adaugata factura la {SelectedBillType} cu data scadenta la data de: {BillDateOfIssue}."
+                };
+
+                await _apartmentService.AddReminder(reminder);
+
+                _dialogService.HideLoading();
 
                 await _dialogService.ShowDialog("Factura a fost adaugata cu succes.", "Succes");
                 Reset();
+
+                await _navigationService.PopAsync();
             }
             catch (Exception ex)
             {
+                _dialogService.HideLoading();
                 await _dialogService.ShowDialog(ex.Message, "Atentie!");
             }
         }
@@ -142,11 +159,14 @@ namespace Factoriada.ViewModels
             SelectedBillType = BillType.None;
         }
 
-        private void Initialize()
+        private async void Initialize()
         {
+            _dialogService.ShowLoading();
             BillTypes = Bill.GetBillTypes();
             SelectedBillType = BillType.Curent;
             BillDateOfIssue = BillDueDate = BillStartDate = DateTime.Parse("01.01.2021");
+            _apartmentDetail = (await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId)).ApartmentDetailId;
+            _dialogService.HideLoading();
         }
         #endregion
     }

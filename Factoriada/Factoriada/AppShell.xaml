@@ -87,11 +87,11 @@
         <ShellContent Route="UserAccountView" ContentTemplate="{DataTemplate local:UserAccountView}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Creeaza Apartament" Icon="ic_account_circle.png" IsVisible="{Binding UserType}">
+    <FlyoutItem Title="Creeaza Apartament" Icon="ic_account_circle.png" IsVisible="{Binding UserNotHavingApartment}">
         <ShellContent Route="CreateApartmentView" ContentTemplate="{DataTemplate local:CreateApartmentView}" />
-    </FlyoutItem> 
-    
-    <FlyoutItem Title="Detalii apartament" Icon="ic_account_circle.png">
+    </FlyoutItem>
+
+    <FlyoutItem Title="Detalii apartament" Icon="ic_account_circle.png" IsVisible="{Binding UserHaveApartment}">
         <ShellContent Route="MyApartmentView" ContentTemplate="{DataTemplate local:MyApartmentView}" />
     </FlyoutItem>
 

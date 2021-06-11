@@ -2,14 +2,15 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Factoriada.Views.UserAccountView"
-             
              xmlns:utility="clr-namespace:Factoriada.Utility;assembly=Factoriada"
              xmlns:viewModels="clr-namespace:Factoriada.ViewModels;assembly=Factoriada"
              utility:ViewModelLocator.AutoWireViewModel="True" 
-             x:DataType="viewModels:UserAccountViewModel">
+             x:DataType="viewModels:UserAccountViewModel"
+             Title ="Contul meu"
+             BackgroundImageSource="background.jpg">
 
     <RefreshView x:Name="RefreshView" RefreshColor="Red" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
-        <Grid>
+        <Grid Padding="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -24,12 +25,9 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="100"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-
-            <Image HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" Grid.RowSpan="11" Grid.ColumnSpan="3"/>
 
             <Frame Margin="0,5,0,0" Padding="0" BorderColor="Black" CornerRadius="90" Grid.Row="0" Grid.Column="1"  IsClippedToBounds="true">
                 <Image Source="{Binding UserImage}" Aspect="AspectFill"></Image>
@@ -41,14 +39,14 @@
             <Entry Margin="50,0,50,0"  Placeholder="Telefon:" Grid.Column="0"  Grid.ColumnSpan="3" Grid.Row="6" HorizontalTextAlignment="Center" IsReadOnly="{Binding IsProfileEditable}" Text="{Binding CurrentUser.PhoneNumber}" Keyboard="Numeric"></Entry>
 
             <Button BackgroundColor="Black" Margin="5,0,0,0" Text="Schimba parola" Grid.Column="0" Grid.Row="9" FontSize="13" IsVisible="{Binding StartEditProfile}" Command="{Binding ChangePasswordCommand}"></Button>
-            <Button BackgroundColor="Black" Margin="0,0,0,0" Text="Editeaza adresa" Grid.Column="1" Grid.Row="9" FontSize="13" HeightRequest="60" Command="{Binding StartEditAddressCommand}" IsVisible="{Binding StartEditProfile}"/>
+            <Button BackgroundColor="Black" Margin="0,0,0,0" Text="Editeaza adresa" Grid.Column="1" Grid.Row="9" FontSize="13" Command="{Binding StartEditAddressCommand}" IsVisible="{Binding StartEditProfile}"/>
 
             <Button BackgroundColor="Black" Margin="5,0,0,0" Text="Schimba poza de profil" Grid.Column="0" Grid.Row="9" FontSize="13" IsVisible="{Binding EndEditProfile}" Command="{Binding ChangeProfilePictureCommand}"></Button>
-            <Button BackgroundColor="Black" Margin="0,0,0,0" Text="Anuleaza" Grid.Column="1" Grid.Row="9" FontSize="13" HeightRequest="60" Command="{Binding CancelProfileEditCommand}" IsVisible="{Binding EndEditProfile}"/>
+            <Button BackgroundColor="Black" Margin="0,0,0,0" Text="Anuleaza" Grid.Column="1" Grid.Row="9" FontSize="13" Command="{Binding CancelProfileEditCommand}" IsVisible="{Binding EndEditProfile}"/>
             <Button BackgroundColor="Black" Margin="0,0,5,0" Grid.Column="2" Grid.Row="9" Text="Editeaza profil" FontSize="13" IsVisible="{Binding StartEditProfile}" Command="{Binding EditProfileCommand}"></Button>
-            <Button BackgroundColor="Black" Margin="0,0,5,0" Grid.Column="2" Grid.Row="9" Text="Salveaza" FontSize="13" IsVisible="{Binding EndEditProfile}" Command="{Binding SaveProfileCommand}" HeightRequest="60"></Button>
+            <Button BackgroundColor="Black" Margin="0,0,5,0" Grid.Column="2" Grid.Row="9" Text="Salveaza" FontSize="13" IsVisible="{Binding EndEditProfile}" Command="{Binding SaveProfileCommand}"></Button>
 
-            <Grid IsVisible="{Binding EditAddressVisible}" Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="11">
+            <Grid IsVisible="{Binding EditAddressVisible}" Grid.ColumnSpan="3" Grid.Column="0" Grid.Row="0" Grid.RowSpan="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -66,8 +64,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="50"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Image HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg" Grid.RowSpan="13" Grid.ColumnSpan="3"/>
@@ -81,13 +79,13 @@
                 <Entry Margin="50,0,50,0" Placeholder="Etaj:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="8" HorizontalTextAlignment="Center" IsReadOnly="{Binding IsUserAddressEditable}" Text="{Binding CurrentUser.Address.Floor}"></Entry>
                 <Entry Margin="50,0,50,0" Placeholder="Apartament:" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="9" HorizontalTextAlignment="Center" IsReadOnly="{Binding IsUserAddressEditable}" Text="{Binding CurrentUser.Address.Apartment}"></Entry>
 
-                <Button BackgroundColor="Black" Margin="5,0,0,0" Text="Anuleaza" Grid.Column="1" Grid.Row="11" FontSize="13" HeightRequest="55"  Command="{Binding CancelEditAddressCommand}"></Button>
+                <Button BackgroundColor="Black" Margin="5,0,0,0" Text="Anuleaza" Grid.Column="1" Grid.Row="12" FontSize="13" HeightRequest="55"  Command="{Binding CancelEditAddressCommand}"></Button>
 
-                <Button BackgroundColor="Black" Margin="0,0,5,0" Grid.Column="2" Grid.Row="11" Text="Editeaza Adresa" FontSize="13" Command="{Binding EditAddressCommand}" IsVisible="{Binding EditAddressIsVisible}" ></Button>
-                <Button BackgroundColor="Black" Margin="0,0,5,0" Grid.Column="2" Grid.Row="11" Text="Salveaza" FontSize="13" Command="{Binding SaveAddressCommand}" IsVisible="{Binding SaveAddressIsVisible}"></Button>
+                <Button BackgroundColor="Black" Margin="0,0,5,0" Grid.Column="2" Grid.Row="12" Text="Editeaza Adresa" FontSize="13" Command="{Binding EditAddressCommand}" IsVisible="{Binding EditAddressIsVisible}" ></Button>
+                <Button BackgroundColor="Black" Margin="0,0,5,0" Grid.Column="2" Grid.Row="12" Text="Salveaza" FontSize="13" Command="{Binding SaveAddressCommand}" IsVisible="{Binding SaveAddressIsVisible}"></Button>
             </Grid>
 
-            <Grid  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="11" IsVisible="{Binding PasswordChangeVisible}">
+            <Grid  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="10" IsVisible="{Binding PasswordChangeVisible}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -101,8 +99,8 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="100"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Image Source="background" Grid.ColumnSpan="3" Grid.RowSpan="9" Aspect="AspectFill" />
@@ -114,8 +112,8 @@
                 <Entry Margin="50,0,50,0" Placeholder="Parola noua:" Text="{Binding NewPassword}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" HorizontalTextAlignment="Center" IsPassword="True"></Entry>
                 <Entry Margin="50,0,50,0" Placeholder="Repeta parola:" Text="{Binding RepeatNewPassword}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5" HorizontalTextAlignment="Center" IsPassword="True"></Entry>
 
-                <Button BackgroundColor="Black" Margin="0,0,5,0" Text="Salveaza" Grid.Column="2" Grid.Row="7" Command="{Binding SavePasswordChangeCommand}"></Button>
-                <Button BackgroundColor="Black" Margin="0,0,5,0" Text="Anuleaza" Grid.Column="1" Grid.Row="7" Command="{Binding CancelPasswordChangeCommand}"></Button>
+                <Button BackgroundColor="Black" Margin="0,0,5,0" Text="Salveaza" Grid.Column="2" Grid.Row="8" Command="{Binding SavePasswordChangeCommand}"></Button>
+                <Button BackgroundColor="Black" Margin="0,0,5,0" Text="Anuleaza" Grid.Column="1" Grid.Row="8" Command="{Binding CancelPasswordChangeCommand}"></Button>
             </Grid>
         </Grid>
     </RefreshView>

@@ -67,10 +67,10 @@ namespace Factoriada.ViewModels
 
         private async void SendMessage()
         {
-            _dialogService.ShowLoading();
-
             if (string.IsNullOrEmpty(ChatEntry))
                 return;
+
+            _dialogService.ShowLoading();
 
             var chat = new Chat()
             {

@@ -46,14 +46,19 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public BuyList PrivateSelectedBuy
         {
             get => _privateSelectedBuy;
             set
             {
                 _privateSelectedBuy = value;
-                IsItemSelected = value != null;
+                if (value != null)
+                    IsItemSelected = true;
+                else
+                {
+                    if (PublicSelectedBuy == null)
+                        IsItemSelected = false;
+                }
                 OnPropertyChanged();
             }
         }
@@ -64,7 +69,13 @@ namespace Factoriada.ViewModels
             set
             {
                 _publicSelectedBuy = value;
-                IsItemSelected = value != null;
+                if (value != null)
+                    IsItemSelected = true;
+                else
+                {
+                    if(PrivateSelectedBuy == null)
+                        IsItemSelected = false;
+                }
                 OnPropertyChanged();
             }
         }
@@ -130,13 +141,16 @@ namespace Factoriada.ViewModels
             var productCount = await _dialogService.DisplayPromptAsync("Adaugare produs", "Numarul de produse: ",
                 placeholder: "Ex: 4", keyboard: Keyboard.Numeric);
 
-            if (productCount == null)
+            if (string.IsNullOrEmpty(productCount))
+            {
+                await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                 return;
+            }
 
             var toBuy = new BuyList()
             {
                 BuyListId = Guid.NewGuid(),
-                ApartmentDetail = _apartmentDetail,
+                ApartmentDetail = _apartmentDetail.ApartmentDetailId,
                 Count = int.Parse(productCount),
                 Owner = ActiveUser.User,
                 Product = productName
@@ -203,7 +217,7 @@ namespace Factoriada.ViewModels
                 var productCount = await _dialogService.DisplayPromptAsync("Adaugare produs", "Numarul de produse: ",
                     placeholder: "Ex: 4", keyboard: Keyboard.Numeric);
 
-                if (productCount == null)
+                if (string.IsNullOrEmpty(productCount))
                 {
                     await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                     return;
@@ -215,11 +229,18 @@ namespace Factoriada.ViewModels
             _dialogService.ShowLoading();
             await _apartmentService.AddOrUpdateProductToBuy(selectedProduct);
             if (selectedProduct.Hidden)
+            {
+                PrivateSelectedBuy = null;
                 PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
                     .Where(x => x.Owner.UserId == ActiveUser.User.UserId && x.Hidden == true).ToList();
+            }
             else
+            {
+                PublicSelectedBuy = null;
                 PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
                     .Where(x => x.Hidden == false).ToList();
+            }
+
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Produsul a fost editat cu succes.", "Succes");
         }
@@ -242,6 +263,9 @@ namespace Factoriada.ViewModels
             else
                 PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
                     .Where(x => x.Hidden == false).ToList();
+
+            PrivateSelectedBuy = PublicSelectedBuy = null;
+
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Produsul a fost sters cu succes.", "Succes");
         }
@@ -259,7 +283,7 @@ namespace Factoriada.ViewModels
                     return PrivateSelectedBuy;
             }
 
-            return PublicSelectedBuy != null ? PublicSelectedBuy : PrivateSelectedBuy ?? null;
+            return PublicSelectedBuy ?? (PrivateSelectedBuy ?? null);
         }
         #endregion
     }

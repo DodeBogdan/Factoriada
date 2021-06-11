@@ -14,7 +14,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -24,11 +23,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" Text="Adauga persoana" BackgroundColor="Black" Command="{Binding AddPersonCommand}" IsVisible="{Binding IsOwner}"></Button>
+        <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalOptions="Center" Text="Adauga persoana" BackgroundColor="Black" Command="{Binding AddPersonCommand}" IsVisible="{Binding IsOwner}"></Button>
 
-        <BoxView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+        <BoxView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource Separator}"></BoxView>
 
-        <Frame Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
+        <Frame Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
             <ListView  
             x:Name="UserList"
             ItemsSource="{Binding UserList}"
@@ -66,8 +65,10 @@
             </ListView>
         </Frame>
 
-        <BoxView Grid.Row="3"  Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+        <BoxView Grid.Row="3"  Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource Separator}"></BoxView>
 
-        <Button Grid.Row="4"  Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Center" Text="Sterge persoana" BackgroundColor="Black" Command="{Binding DeleteUserCommand}" IsVisible="{Binding DeleteUserIsVisible}"/>
+        <Button Grid.Row="4"  Grid.Column="0" HorizontalOptions="Center" Text="Sterge persoana" BackgroundColor="Black" Command="{Binding DeleteUserCommand}" IsVisible="{Binding UserIsSelected}"/>
+        
+        <Button Grid.Row="4"  Grid.Column="1" HorizontalOptions="Center" Text="Seteaza owner" BackgroundColor="Black" Command="{Binding ChangeOwnerCommand}" IsVisible="{Binding UserIsSelected}"/>
     </Grid>
 </ContentPage>

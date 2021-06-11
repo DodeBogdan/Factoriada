@@ -44,9 +44,9 @@ namespace Factoriada.ViewModels
             set
             {
                 _currentAnnounce = value;
-                if(CurrentAnnounce != null)
+                if (CurrentAnnounce != null)
                     UserIsOwnerOrCreator = ActiveUser.User.Role.RoleTypeName == "Owner" ||
-                                           CurrentAnnounce.User.Email == ActiveUser.User.Email; 
+                                           CurrentAnnounce.User.Email == ActiveUser.User.Email;
                 OnPropertyChanged();
             }
         }
@@ -82,20 +82,15 @@ namespace Factoriada.ViewModels
         }
         private async void AddAnnounce()
         {
-            var announce = new Announce()
-            {
-                AnnounceId = Guid.NewGuid(),
-                User = ActiveUser.User
-            };
-
             var result = await _dialogService.DisplayPromptAsync("Anunt", "Introdu noul anunt.");
-
-            _dialogService.ShowLoading();
 
             if (result == null)
                 return;
 
-            announce.AnnounceMessage = result;
+            _dialogService.ShowLoading();
+
+            var announce = new Announce
+            { AnnounceId = Guid.NewGuid(), User = ActiveUser.User, AnnounceMessage = result, InsertedDateTime = DateTime.Now};
 
             await _apartmentService.AddAnnounceToApartment(announce, _apartmentId);
 
@@ -111,10 +106,10 @@ namespace Factoriada.ViewModels
 
             var result = await _dialogService.DisplayPromptAsync("Anunt", "Editeaza anuntul.", placeholder: CurrentAnnounce.AnnounceMessage);
 
-            _dialogService.ShowLoading();
-
             if (result == null)
                 return;
+
+            _dialogService.ShowLoading();
 
             CurrentAnnounce.AnnounceMessage = result;
 
@@ -126,10 +121,10 @@ namespace Factoriada.ViewModels
         }
         private async void DeleteAnnounce()
         {
-            _dialogService.ShowLoading();
-
             if (CurrentAnnounce == null)
                 return;
+
+            _dialogService.ShowLoading();
 
             await _apartmentService.DeleteAnnounce(CurrentAnnounce);
 

@@ -132,7 +132,7 @@ namespace Factoriada.ViewModels
             var job = new Job()
             {
                 JobId = Guid.NewGuid(),
-                ApartmentDetail = _apartmentDetail,
+                ApartmentDetail = _apartmentDetail.ApartmentDetailId,
                 JobType = jobName,
                 User = UserNameList[count - 1],
             };
@@ -151,9 +151,6 @@ namespace Factoriada.ViewModels
 
             var result =
                 await _dialogService.DisplayAlert("Editare job", "Ce doresti sa modifici?", "Job-ul", "Persoana");
-
-            if (result == null)
-                return;
 
             if (result)
             {

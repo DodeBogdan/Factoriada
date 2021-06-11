@@ -45,5 +45,9 @@ namespace Factoriada.Services.Interfaces
         Task<List<Job>> GetJobsByApartment(Guid apartmentDetailId);
         Task AddOrUpdateJob(Job job);
         Task DeleteJob(Job selectedJob);
+        Task DeleteReminder(Reminder currentReminder);
+        Task AddReminder(Reminder reminder);
+        Task ChangeOwner(Guid apartmentId, User selectedUser);
+        Task<List<TimeAway>> GetTimeAwayByApartment(Guid apartmentDetail);
     }
 }

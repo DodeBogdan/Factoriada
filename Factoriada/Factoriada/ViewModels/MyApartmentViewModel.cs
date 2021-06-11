@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows.Input;
 using Factoriada.Models;
 using Factoriada.Services.Interfaces;
 using Factoriada.Utility;
@@ -21,6 +22,7 @@ namespace Factoriada.ViewModels
 
         #region Private Fields
         private readonly IApartmentService _apartmentService;
+        private Guid _currentApartment;
         private string _apartmentAddress;
         private string _token = "";
         private bool _isOwner;
@@ -103,8 +105,6 @@ namespace Factoriada.ViewModels
         {
             _dialogService.ShowLoading();
 
-            ApartmentAddress = await _apartmentService.GetApartmentAddressByUser(ActiveUser.User.UserId);
-            Token = (await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId)).Token;
             if (ActiveUser.User.Role.RoleTypeName == "Owner")
             {
                 IsOwner = true;
@@ -114,19 +114,41 @@ namespace Factoriada.ViewModels
                 IsUser = true;
             }
 
+            _currentApartment = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
+            ApartmentAddress = await _apartmentService.GetApartmentAddressByUser(ActiveUser.User.UserId);
+            Token = (await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId)).Token;
+
             _dialogService.HideLoading();
         }
 
         private async void ExitApartment()
         {
+            var result =
+                await _dialogService.DisplayAlert("Paraseste apartamentul", "Doresti sa parasesti apartamentul?");
+
+            if (result == false)
+                return;
+
             _dialogService.ShowLoading();
             await _apartmentService.RemoveUserFromApartment(ActiveUser.User);
+
+            var announce = new Announce
+                { AnnounceId = Guid.NewGuid(), User = ActiveUser.User, AnnounceMessage = $"{ActiveUser.User.FullName} a parasit apartamentul." , InsertedDateTime = DateTime.Now };
+
+            await _apartmentService.AddAnnounceToApartment(announce, _currentApartment);
+
             _dialogService.HideLoading();
             App.Current.MainPage = new AppShell();
         }
 
         private async void DeleteApartment()
         {
+            var result =
+                await _dialogService.DisplayAlert("Sterge apartamentul", "Doresti sa stergi apartamentul?");
+
+            if (result == false)
+                return;
+
             _dialogService.ShowLoading();
             var apartment = await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId);
             await _apartmentService.DeleteApartment(apartment);

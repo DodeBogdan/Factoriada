@@ -154,7 +154,7 @@ namespace Factoriada.Services
                 ?.Object;
         }
 
-        public async void JoinApartment(Apartment apartment)
+        public async Task JoinApartment(Apartment apartment)
         {
             await ChangeUserRoleTo(apartment.User, "Chirias");
 
@@ -172,20 +172,24 @@ namespace Factoriada.Services
         public async Task<ApartmentDetail> GetApartmentDetailByUserId(Guid userUserId)
         {
             var apartmentDetail = (await _firebase
-                .Child(nameof(ApartmentDetail))
-                .OnceAsync<ApartmentDetail>()).FirstOrDefault(x => x.Object.Owner.UserId == userUserId);
+                    .Child(nameof(ApartmentDetail))
+                    .OnceAsync<ApartmentDetail>())
+                .Select(x => x.Object)
+                .FirstOrDefault(x => x.Owner.UserId == userUserId);
 
             if (apartmentDetail != null)
-                return apartmentDetail.Object;
+                return apartmentDetail;
 
             var apartment = (await _firebase
-                .Child(nameof(Apartment))
-                .OnceAsync<Apartment>()).FirstOrDefault(x => x.Object.User.UserId == userUserId);
+                    .Child(nameof(Apartment))
+                    .OnceAsync<Apartment>())
+                .Select(x => x.Object)
+                .FirstOrDefault(x => x.User.UserId == userUserId);
 
             if (apartment != null)
                 return await _firebase
                     .Child(nameof(ApartmentDetail))
-                    .Child(apartment.Object.ApartmentDetail.ApartmentDetailId.ToString())
+                    .Child(apartment.ApartmentDetail.ToString())
                     .OnceSingleAsync<ApartmentDetail>();
 
             return new ApartmentDetail();
@@ -197,7 +201,8 @@ namespace Factoriada.Services
                     .Child(nameof(Rule))
                     .OnceAsync<Rule>())
                 .Select(x => x.Object)
-                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentId)
+                .Where(x => x.ApartmentDetail == apartmentId)
+                .OrderByDescending(x => x.InsertedDateTime)
                 .ToList();
         }
 
@@ -231,7 +236,8 @@ namespace Factoriada.Services
                     .Child(nameof(Announce))
                     .OnceAsync<Announce>())
                 .Select(x => x.Object)
-                .Where(x => x.ApartmentDetails.ApartmentDetailId == apartmentId)
+                .Where(x => x.ApartmentDetails == apartmentId)
+                .OrderByDescending(x => x.InsertedDateTime)
                 .ToList();
         }
 
@@ -243,7 +249,7 @@ namespace Factoriada.Services
                 .DeleteAsync();
         }
 
-        public async Task UpdateAnnounce(Announce currentAnnounce)
+        public async Task AddOrUpdateAnnounce(Announce currentAnnounce)
         {
             await _firebase
                 .Child(nameof(Announce))
@@ -257,7 +263,8 @@ namespace Factoriada.Services
                     .Child(nameof(BudgetHistory))
                     .OnceAsync<BudgetHistory>())
                 .Select(x => x.Object)
-                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentDetailId)
+                .Where(x => x.ApartmentDetail == apartmentDetailId)
+                .OrderByDescending(x => x.InsertedDateTime)
                 .ToList();
         }
 
@@ -269,11 +276,18 @@ namespace Factoriada.Services
                 .PutAsync(money);
         }
 
-        public async Task UpdateApartment(ApartmentDetail currentApartment)
+        public async Task UpdateApartmentDetail(ApartmentDetail currentApartment)
         {
             await _firebase
                 .Child(nameof(ApartmentDetail))
                 .Child(currentApartment.ApartmentDetailId.ToString())
+                .PutAsync(currentApartment);
+        }
+        public async Task UpdateApartment(Apartment currentApartment)
+        {
+            await _firebase
+                .Child(nameof(Apartment))
+                .Child(currentApartment.ApartmentId.ToString())
                 .PutAsync(currentApartment);
         }
 
@@ -313,7 +327,7 @@ namespace Factoriada.Services
                     .Child(nameof(Bill))
                     .OnceAsync<Bill>())
                 .Select(x => x.Object)
-                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentDetailApartmentDetailId)
+                .Where(x => x.ApartmentDetail == apartmentDetailApartmentDetailId)
                 .ToList();
 
         }
@@ -343,7 +357,7 @@ namespace Factoriada.Services
                     .Child(nameof(Apartment))
                     .OnceAsync<Apartment>())
                 .Select(x => x.Object)
-                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentId)
+                .Where(x => x.ApartmentDetail == apartmentId)
                 .Select(x => x.User)
                 .ToList();
 
@@ -420,7 +434,7 @@ namespace Factoriada.Services
                     .Child(nameof(Apartment))
                     .OnceAsync<Apartment>())
                 .Select(x => x.Object)
-                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartment.ApartmentDetailId)
+                .Where(x => x.ApartmentDetail == apartment.ApartmentDetailId)
                 .ToList();
         }
 
@@ -438,7 +452,7 @@ namespace Factoriada.Services
                     .Child(nameof(BuyList))
                     .OnceAsync<BuyList>())
                 .Select(x => x.Object)
-                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentId)
+                .Where(x => x.ApartmentDetail == apartmentId)
                 .ToList();
         }
 
@@ -464,7 +478,7 @@ namespace Factoriada.Services
                     .Child(nameof(Job))
                     .OnceAsync<Job>())
                 .Select(x => x.Object)
-                .Where(x => x.ApartmentDetail.ApartmentDetailId == apartmentId)
+                .Where(x => x.ApartmentDetail == apartmentId)
                 .ToList();
         }
 
@@ -482,6 +496,42 @@ namespace Factoriada.Services
                 .Child(nameof(Job))
                 .Child(job.JobId.ToString())
                 .DeleteAsync();
+        }
+
+        public async Task<List<Reminder>> GetRemindersByApartment(Guid apartmentId)
+        {
+            return (await _firebase
+                    .Child(nameof(Reminder))
+                    .OnceAsync<Reminder>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentDetail == apartmentId)
+                .ToList();
+        }
+
+        public async Task DeleteReminder(Reminder currentReminder)
+        {
+            await _firebase
+                .Child(nameof(Reminder))
+                .Child(currentReminder.ReminderId.ToString())
+                .DeleteAsync();
+        }
+
+        public async Task AddReminder(Reminder reminder)
+        {
+            await _firebase
+                .Child(nameof(Reminder))
+                .Child(reminder.ReminderId.ToString())
+                .PutAsync(reminder);
+        }
+
+        public async Task<List<TimeAway>> GetTimeAwayByApartment(Guid apartmentDetail)
+        {
+            return (await _firebase
+                    .Child(nameof(TimeAway))
+                    .OnceAsync<TimeAway>())
+                .Select(x => x.Object)
+                .Where(x => x.ApartmentDetail == apartmentDetail)
+                .ToList();
         }
     }
 }
