@@ -49,5 +49,6 @@ namespace Factoriada.Services.Interfaces
         Task AddReminder(Reminder reminder);
         Task ChangeOwner(Guid apartmentId, User selectedUser);
         Task<List<TimeAway>> GetTimeAwayByApartment(Guid apartmentDetail);
+        Task PayBill(Bill selectedBill);
     }
 }

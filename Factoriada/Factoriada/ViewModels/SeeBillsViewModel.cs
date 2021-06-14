@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
 using Factoriada.Models;
 using Factoriada.Popups;
 using Factoriada.Services.Interfaces;
 using Factoriada.Utility;
 using Factoriada.Views;
 using Xamarin.CommunityToolkit.Extensions;
+using Xamarin.Forms;
 
 namespace Factoriada.ViewModels
 {
@@ -16,6 +19,7 @@ namespace Factoriada.ViewModels
             _apartmentService = apartmentService;
 
             Initialize();
+            InitializeCommands();
         }
         #endregion
 
@@ -28,11 +32,48 @@ namespace Factoriada.ViewModels
         private bool _notStartedToPay = true;
         private Bill _selectedBill;
         private bool _startedToPay;
-
+        private List<BillPaidPersons> _billPaidPersonsList;
+        private bool _payButtonIsVisible;
+        private List<string> _payButtonTextList = new List<string>(3);
+        private List<Bill> _copyBillPaidPersonsList;
+        private bool _monthIsDescending = false;
+        private bool _priceIsDescending = false;
         #endregion
 
         #region Proprieties
-        private List<BillPaidPersons> _billPaidPersonsList;
+        private string _payButtonText;
+        private int _index;
+
+        public int Index
+        {
+            get => _index;
+            set
+            {
+                _index = value;
+                if (value >= _payButtonTextList.Count)
+                    _index = 0;
+            }
+        }
+
+        public string PayButtonText
+        {
+            get => _payButtonText;
+            set
+            {
+                _payButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool PayButtonIsVisible
+        {
+            get => _payButtonIsVisible;
+            set
+            {
+                _payButtonIsVisible = value;
+                OnPropertyChanged();
+            }
+        }
 
         public List<BillPaidPersons> BillPaidPersonsList
         {
@@ -86,14 +127,139 @@ namespace Factoriada.ViewModels
             }
         }
 
+        public ICommand PayBillCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
+        public ICommand SortByPaidCommand { get; set; }
+        public ICommand SortByMonthCommand { get; set; }
+        public ICommand SortByPriceCommand { get; set; }
+
         #endregion
 
         #region Private Methods
 
         private async void Initialize()
         {
+            _dialogService.ShowLoading();
+
+            _payButtonTextList.Add("Toate");
+            _payButtonTextList.Add("Platite");
+            _payButtonTextList.Add("Neplatite");
+            Index = 0;
+            PayButtonText = _payButtonTextList[Index];
+
             _apartmentDetail = await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId);
             BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail.ApartmentDetailId);
+            _copyBillPaidPersonsList = BillList;
+
+            
+            _dialogService.HideLoading();
+        }
+
+        private void InitializeCommands()
+        {
+            PayBillCommand = new Command(PayBill);
+            CancelCommand = new Command(Cancel);
+            SortByPaidCommand = new Command(SortByPaid);
+            SortByMonthCommand = new Command(SortByMonth);
+            SortByPriceCommand = new Command(SortByPrice);
+        }
+
+        private void SortByPrice()
+        {
+            if (_priceIsDescending)
+            {
+                BillList = BillList
+                    .OrderByDescending(x => x.BillPrice)
+                    .ToList();
+            }
+            else
+            {
+                BillList = BillList
+                    .OrderBy(x => x.BillPrice)
+                    .ToList();
+            }
+
+            _priceIsDescending = !_priceIsDescending;
+        }
+
+        private void SortByMonth()
+        {
+            if (_monthIsDescending)
+            {
+                BillList = BillList
+                    .OrderByDescending(x => x.DateOfIssue)
+                    .ToList();
+            }
+            else
+            {
+                BillList = BillList
+                    .OrderBy(x => x.DateOfIssue)
+                    .ToList();
+            }
+
+            _monthIsDescending = !_monthIsDescending;
+        }
+
+        private void SortByPaid()
+        {
+            Index++;
+            PayButtonText = _payButtonTextList[Index];
+
+            switch (Index)
+            {
+                case 0:
+                    _dialogService.ShowLoading();
+                    BillList = _copyBillPaidPersonsList;
+                    _dialogService.HideLoading();
+                    break;
+
+                case 1:
+                    _dialogService.ShowLoading();
+                    BillList = _copyBillPaidPersonsList
+                        .Where(x => x.Paid == true).ToList();
+                    _dialogService.HideLoading();
+                    break;
+
+                case 2:
+                    _dialogService.ShowLoading();
+                    BillList = _copyBillPaidPersonsList
+                        .Where(x => x.Paid == false).ToList();
+                    _dialogService.HideLoading();
+                    break;
+            }
+        }
+
+        private async void PayBill()
+        {
+            _dialogService.ShowLoading();
+
+            await _apartmentService.PayBill(SelectedBill);
+            BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail.ApartmentDetailId);
+            _copyBillPaidPersonsList = BillList;
+
+            _dialogService.HideLoading();
+            await _dialogService.ShowDialog("Factura a fost platita cu succes.", "Succes");
+            Cancel();
+        }
+
+        private void Cancel()
+        {
+            NotStartedToPay = true;
+            StartedToPay = false;
+            PayButtonIsVisible = false;
+        }
+
+        private async void ShowDetailsOfBill()
+        {
+            _dialogService.ShowLoading();
+
+            NotStartedToPay = false;
+            StartedToPay = true;
+            BillPaidPersonsList =
+                await _apartmentService.GenerateBillPaidPersons(SelectedBill,
+                    _apartmentDetail.ApartmentDetailId);
+
+            _dialogService.HideLoading();
         }
 
         private async void BillHasBeenChoose()
@@ -102,45 +268,49 @@ namespace Factoriada.ViewModels
             {
                 var result = await App.Current.MainPage.Navigation.ShowPopupAsync(new BillPopup("Paid"));
 
-                if (result == null || result == "Cancel")
+                switch (result)
                 {
-                    SelectedBill = null;
-                    return;
-                }
-
-                if (result == "Delete")
-                {
-                    await _apartmentService.DeleteBill(SelectedBill);
-                    await _dialogService.ShowDialog("Factura a fost stearsa.", "Succes");
-                    BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail.ApartmentDetailId);
-                    SelectedBill = null;
+                    case null:
+                    case "Cancel":
+                        SelectedBill = null;
+                        return;
+                    case "See Details":
+                        ShowDetailsOfBill();
+                        break;
+                    case "Delete":
+                        await _apartmentService.DeleteBill(SelectedBill);
+                        await _dialogService.ShowDialog("Factura a fost stearsa.", "Succes");
+                        BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail.ApartmentDetailId);
+                        _copyBillPaidPersonsList = BillList;
+                        SelectedBill = null;
+                        break;
                 }
             }
             else
             {
                 var result = await App.Current.MainPage.Navigation.ShowPopupAsync(new BillPopup(""));
 
-                if (result == null || result == "Cancel")
+                switch (result)
                 {
-                    SelectedBill = null;
-                    return;
-                }
+                    case null:
+                    case "Cancel":
+                        SelectedBill = null;
+                        return;
+                    case "Pay":
+                        ShowDetailsOfBill();
+                        PayButtonIsVisible = true;
+                        break;
+                    case "Delete":
+                        _dialogService.ShowLoading();
 
-                if (result == "Pay")
-                {
-                    NotStartedToPay = false;
-                    StartedToPay = true;
-                    BillPaidPersonsList =
-                        await _apartmentService.GenerateBillPaidPersons(SelectedBill,
-                            _apartmentDetail.ApartmentDetailId);
-                }
+                        await _apartmentService.DeleteBill(SelectedBill);
+                        await _dialogService.ShowDialog("Factura a fost stearsa.", "Succes");
+                        BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail.ApartmentDetailId);
+                        _copyBillPaidPersonsList = BillList;
+                        SelectedBill = null;
 
-                if (result == "Delete")
-                {
-                    await _apartmentService.DeleteBill(SelectedBill);
-                    await _dialogService.ShowDialog("Factura a fost stearsa.", "Succes");
-                    BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail.ApartmentDetailId);
-                    SelectedBill = null;
+                        _dialogService.HideLoading();
+                        break;
                 }
             }
         }

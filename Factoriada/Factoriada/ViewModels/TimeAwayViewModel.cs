@@ -36,7 +36,6 @@ namespace Factoriada.ViewModels
         private bool _isSelectedTimeAwayToEdit;
         private DateTime _minimDateForMaximumDateTime;
         private bool _isSelectedTimeAwayToDelete;
-
         #endregion
 
         #region Proprieties

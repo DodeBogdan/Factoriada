@@ -188,7 +188,7 @@ namespace Factoriada.Services
         {
             TestBill(bill);
 
-            await ApiDatabaseService.ServiceClientInstance.AddBill(bill);
+            await ApiDatabaseService.ServiceClientInstance.AddOrUpdateBill(bill);
 
         }
 
@@ -454,6 +454,11 @@ namespace Factoriada.Services
         public async Task<List<TimeAway>> GetTimeAwayByApartment(Guid apartmentDetail)
         {
             return await ApiDatabaseService.ServiceClientInstance.GetTimeAwayByApartment(apartmentDetail);
+        }
+
+        public async Task PayBill(Bill selectedBill)
+        {
+            await ApiDatabaseService.ServiceClientInstance.AddOrUpdateBill(selectedBill);
         }
 
         #endregion

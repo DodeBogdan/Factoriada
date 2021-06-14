@@ -19,7 +19,15 @@ namespace Factoriada.Popups
 
             this._result = result;
             if (_result == "Paid")
+            {
                 PayBillButton.IsVisible = false;
+                SeeDetailsButton.IsVisible = true;
+            }
+            else
+            {
+                PayBillButton.IsVisible = true;
+                SeeDetailsButton.IsVisible = false;
+            }
         }
 
         private  string _result;
@@ -39,6 +47,12 @@ namespace Factoriada.Popups
         private void CancelBill(object sender, EventArgs e)
         {
             _result = "Cancel";
+            Dismiss(_result);
+        }
+
+        private void SeeDetails(object sender, EventArgs e)
+        {
+            _result = "See Details";
             Dismiss(_result);
         }
     }

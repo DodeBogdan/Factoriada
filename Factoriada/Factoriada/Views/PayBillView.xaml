@@ -64,8 +64,8 @@
                 </ListView>
             </Frame>
 
-            <Button Grid.Row="7" Grid.Column="0" Text="Plateste"></Button>
-            <Button Grid.Row="7" Grid.Column="1" Text="Anuleaza"></Button>
+            <Button Grid.Row="7" Grid.Column="0" Text="Plateste" Command="{Binding PayBillCommand}" IsVisible="{Binding PayButtonIsVisible}" Margin="5" BackgroundColor="Black"></Button>
+            <Button Grid.Row="7" Grid.Column="1" Text="Anuleaza" Command="{Binding CancelCommand}" Margin="5" BackgroundColor="Black"></Button>
 
         </Grid>
     </Grid>

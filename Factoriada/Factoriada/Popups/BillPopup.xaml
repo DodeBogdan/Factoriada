@@ -15,10 +15,14 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Button x:Name="PayBillButton" Grid.Row="0" Text="Plateste factura" Margin="10" BackgroundColor="Black" Clicked="PayBill"></Button>
-        <Button Grid.Row="1" Text="Sterge factura" Margin="10" BackgroundColor="Black" Clicked="DeleteBill"></Button>
+        <Button x:Name="PayBillButton" Grid.Row="0" Text="Plateste factura" Margin="10" BackgroundColor="Black" Clicked="PayBill"/>
+
+        <Button x:Name="SeeDetailsButton" Grid.Row="0" Text="Vezi detalii" Margin="10" BackgroundColor="Black" Clicked="SeeDetails"/>
+
+        <Button Grid.Row="1" Text="Sterge factura" Margin="10" BackgroundColor="Black" Clicked="DeleteBill"/>
+
         <Button Grid.Row="2" Text="Anuleaza" Margin="10" BackgroundColor="Black"
-          Clicked="CancelBill"></Button>
+          Clicked="CancelBill"/>
 
     </Grid>
 
