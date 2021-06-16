@@ -1,0 +1,45 @@
+# Factoriada
+
+Functionalitati:
+  - Sistem de login / register
+  - Editare profil personal
+      - poti adauga poza
+      - schimbare parola
+      - schimbare adresa, telefon, email
+  - Sistem de creeare a unui apartament
+      - Dupa ce adaugi un nume poti alege daca sa adaugi o adresa noua sau cea a profilului.
+  - Sistem de alaturare intr-un apartament dupa un cod / token
+  
+  - Sistem de detalii apartament
+      - Vizualizare adresa
+      - Vizualizare cod / token
+      - Sistem de reguli in apartament
+          - Doar Owner-ul poate adauga / edita / sterge o regula.
+      - Sistem de anunturi in apartament
+          - Orcine poate adauga / edita / sterge un anunt propriu.
+          - Owner-ul poate edita / sterge orice anunt.
+      - Sistem de cumparaturi
+          - lista de cumparaturi comuna
+          - lista de cumparaturi privata
+      - Sistem de curatenie
+          - se seteaza un task / job / treaba si o persoana care sa il faca. Persoana este aleasa din persoanele din apartament.
+      - Sistem de buget
+          - o persoana poate sa adauge / extraga bani din apartament.
+      - Sistem de timp plecat
+          - O persoana poate sa aleaga cand este plecat din apartmanet
+      - Sistem de chat
+      - Sistem de vazut persoanele din apartament
+          - Owner-ul poate sterge / adauga / schimba gradul unui chirias.
+      - Sistem de sters / iesire din apartament
+      - Sistem de facturi
+          - Poti adauga o factura
+          - Cand se adauga factura se seteaza un reminder
+          - Lista de facturi
+              - Poti sorta facturile dupa:
+                  - Toate
+                  - Platite 
+                  - Neplatite
+                  - Data scadenta
+                  - Pret
+          - Plata factura
+              - In functie de numarul de persoane si timpul stat in apartament, se genereaza o lista cu cat trebuie sa plateasca fiecare persoana.
