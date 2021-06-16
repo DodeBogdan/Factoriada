@@ -94,7 +94,7 @@ namespace Factoriada.ViewModels
         private async void Initialize()
         {
              _dialogService.ShowLoading();
-            _apartmentId = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
+            _apartmentId = ActiveUser.ApartmentGuid.ApartmentDetailId;
             UserList = await _apartmentService.GetUsersByApartment(_apartmentId);
             if (ActiveUser.User.Role.RoleTypeName == "Owner")
                 IsOwner = true;
@@ -139,6 +139,8 @@ namespace Factoriada.ViewModels
                 await _apartmentService.JoinApartment(user, token);
                 UserList = await _apartmentService.GetUsersByApartment(_apartmentId);
                 _dialogService.HideLoading();
+
+                await _dialogService.ShowDialog("Persoana a fost introdusa cu succes..", "Succes!");
             }
             catch (Exception ex)
             {

@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Factoriada.Models;
 using Factoriada.Services.Interfaces;
 using Factoriada.Utility;
+using Factoriada.Views;
 using Xamarin.Forms;
 
 namespace Factoriada.ViewModels
@@ -110,6 +111,21 @@ namespace Factoriada.ViewModels
 
         private async void AddBill()
         {
+            if (SelectedBillType == BillType.Tip)
+            {
+                await _dialogService.ShowDialog("Alege un tip.", "Atentie!");
+                return;
+            }
+
+            if (BillPrice == 0)
+            {
+                var result =
+                    await _dialogService.DisplayAlert("Atentie!", "Pretul facturii este 0. Doresti sa continui?");
+
+                if (result == false)
+                    return;
+            }
+
             var bill = new Bill()
             {
                 BillId = Guid.NewGuid(),
@@ -121,6 +137,10 @@ namespace Factoriada.ViewModels
                 Paid = BillIsPaid,
                 Type = SelectedBillType
             };
+
+            if (bill.BillPrice <= 0)
+                bill.Paid = true;
+
             try
             {
                 _dialogService.ShowLoading();
@@ -132,7 +152,7 @@ namespace Factoriada.ViewModels
                     ReminderId = Guid.NewGuid(),
                     ApartmentDetail = _apartmentDetail,
                     Message =
-                        $"A fost adaugata factura la {SelectedBillType} cu data scadenta la data de: {BillDateOfIssue}."
+                        $"A fost adaugata factura la {SelectedBillType} cu data scadenta la data de: {BillDateOfIssue:d}."
                 };
 
                 await _apartmentService.AddReminder(reminder);
@@ -156,16 +176,16 @@ namespace Factoriada.ViewModels
             BillDateOfIssue = BillDueDate = BillStartDate = DateTime.Parse("01.01.2021");
             BillIsPaid = false;
             BillPrice = 0.0f;
-            SelectedBillType = BillType.None;
+            SelectedBillType = BillType.Tip;
         }
 
-        private async void Initialize()
+        private void Initialize()
         {
             _dialogService.ShowLoading();
             BillTypes = Bill.GetBillTypes();
-            SelectedBillType = BillType.Curent;
+            SelectedBillType = BillType.Tip;
             BillDateOfIssue = BillDueDate = BillStartDate = DateTime.Parse("01.01.2021");
-            _apartmentDetail = (await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId)).ApartmentDetailId;
+            _apartmentDetail = ActiveUser.ApartmentGuid.ApartmentDetailId;
             _dialogService.HideLoading();
         }
         #endregion

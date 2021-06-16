@@ -54,13 +54,12 @@ namespace Factoriada.ViewModels
         private void InitializeCommands()
         {
             SendMessageCommand = new Command(SendMessage);
-
         }
 
         private async void Initialize()
         {
             _dialogService.ShowLoading();
-            _currentApartment = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
+            _currentApartment = ActiveUser.ApartmentGuid.ApartmentDetailId;
             ChatList = await _apartmentService.GetChatByApartmentId(_currentApartment);
             _dialogService.HideLoading();
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using Factoriada.Models;
@@ -176,7 +177,8 @@ namespace Factoriada.ViewModels
             {
                 _dialogService.ShowLoading();
                 await _apartmentService.AddOrUpdateTimeAway(timeAway);
-                TimeAwayList = await _apartmentService.GetTimeAwayByApartment(_apartmentDetail);
+                TimeAwayList.Add(timeAway);
+                TimeAwayList = new List<TimeAway>(TimeAwayList);
                 _dialogService.HideLoading();
                 await _dialogService.ShowDialog("Plecarea a fost adaugata cu succes.", "Succes");
             }
@@ -202,7 +204,15 @@ namespace Factoriada.ViewModels
             {
                 _dialogService.ShowLoading();
                 await _apartmentService.AddOrUpdateTimeAway(timeAway);
-                TimeAwayList = await _apartmentService.GetTimeAwayByApartment(_apartmentDetail);
+                TimeAwayList
+                    .Select(x =>
+                    {
+                        if (x.TimeAwayId == timeAway.TimeAwayId)
+                            x = timeAway;
+
+                        return x;
+                    });
+                TimeAwayList = new List<TimeAway>(TimeAwayList);
                 _dialogService.HideLoading();
                 await _dialogService.ShowDialog("Plecarea a fost editata cu succes.", "Succes");
             }
@@ -216,7 +226,8 @@ namespace Factoriada.ViewModels
         {
             _dialogService.ShowLoading();
             await _apartmentService.DeleteTimeAway(SelectedTimeAway);
-            TimeAwayList = await _apartmentService.GetTimeAwayByApartment(_apartmentDetail);
+            TimeAwayList.Remove(SelectedTimeAway);
+            TimeAwayList = new List<TimeAway>(TimeAwayList);
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Plecarea a fost stearsa cu succes.", "Succes");
         }
@@ -229,7 +240,7 @@ namespace Factoriada.ViewModels
             MaximumDateTime = DateTime.Now.AddMonths(2);
             StartDateTime = DateTime.Now;
             EndDateTime = MinimDateForMaximumDateTime;
-            _apartmentDetail = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
+            _apartmentDetail = ActiveUser.ApartmentGuid.ApartmentDetailId;
             TimeAwayList = await _apartmentService.GetTimeAwayByApartment(_apartmentDetail);
 
             _dialogService.HideLoading();

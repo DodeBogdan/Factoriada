@@ -246,8 +246,10 @@ namespace Factoriada.ViewModels
             var stream = await result.OpenReadAsync();
             UserImage = ImageSource.FromStream(() => stream);
 
+            var shellImage = await result.OpenReadAsync();
+            ((App.Current.MainPage as AppShell).BindingContext as AppShellViewModel).CurrentUserImage = ImageSource.FromStream(() => shellImage);
+
             var bytesStream = await result.OpenReadAsync();
-            var picStream = await result.OpenReadAsync();
 
             using (var memoryStream = new System.IO.MemoryStream())
             {
@@ -270,6 +272,10 @@ namespace Factoriada.ViewModels
             var stream = await result.OpenReadAsync();
 
             UserImage = ImageSource.FromStream(() => stream);
+
+            var shellImage = await result.OpenReadAsync();
+
+            ((App.Current.MainPage as AppShell).BindingContext as AppShellViewModel).CurrentUserImage = ImageSource.FromStream(() => shellImage);
 
             var bytesStream = await result.OpenReadAsync();
 
@@ -295,7 +301,7 @@ namespace Factoriada.ViewModels
             _dialogService.ShowLoading();
 
             await _userService.SaveProfilePicture(CurrentUser);
-
+            
             _dialogService.HideLoading();
         }
         private bool CheckPassword()
@@ -420,6 +426,5 @@ namespace Factoriada.ViewModels
             UserImage = ImageSource.FromStream(() => stream);
         }
         #endregion
-
     }
 }

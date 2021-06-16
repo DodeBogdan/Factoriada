@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 using Factoriada.Models;
@@ -28,7 +29,7 @@ namespace Factoriada.ViewModels
         private readonly IApartmentService _apartmentService;
 
         private List<Bill> _billList;
-        private ApartmentDetail _apartmentDetail;
+        private Guid _apartmentDetail;
         private bool _notStartedToPay = true;
         private Bill _selectedBill;
         private bool _startedToPay;
@@ -141,17 +142,17 @@ namespace Factoriada.ViewModels
         {
             _dialogService.ShowLoading();
 
-            _payButtonTextList.Add("Toate");
             _payButtonTextList.Add("Platite");
             _payButtonTextList.Add("Neplatite");
+            _payButtonTextList.Add("Toate");
+
             Index = 0;
             PayButtonText = _payButtonTextList[Index];
 
-            _apartmentDetail = await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId);
-            BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail.ApartmentDetailId);
+            _apartmentDetail = ActiveUser.ApartmentGuid.ApartmentDetailId;
+            BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail);
             _copyBillPaidPersonsList = BillList;
 
-            
             _dialogService.HideLoading();
         }
 
@@ -234,8 +235,17 @@ namespace Factoriada.ViewModels
             _dialogService.ShowLoading();
 
             await _apartmentService.PayBill(SelectedBill);
-            BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail.ApartmentDetailId);
+            BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail);
             _copyBillPaidPersonsList = BillList;
+
+            var reminder = new Reminder()
+            {
+                ApartmentDetail = _apartmentDetail,
+                Message = $"A fost platita factura la {SelectedBill.Type} in data de {DateTime.Now:d}",
+                ReminderId = Guid.NewGuid()
+            };
+
+            await _apartmentService.AddReminder(reminder);
 
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Factura a fost platita cu succes.", "Succes");
@@ -257,7 +267,7 @@ namespace Factoriada.ViewModels
             StartedToPay = true;
             BillPaidPersonsList =
                 await _apartmentService.GenerateBillPaidPersons(SelectedBill,
-                    _apartmentDetail.ApartmentDetailId);
+                    _apartmentDetail);
 
             _dialogService.HideLoading();
         }
@@ -280,7 +290,7 @@ namespace Factoriada.ViewModels
                     case "Delete":
                         await _apartmentService.DeleteBill(SelectedBill);
                         await _dialogService.ShowDialog("Factura a fost stearsa.", "Succes");
-                        BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail.ApartmentDetailId);
+                        BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail);
                         _copyBillPaidPersonsList = BillList;
                         SelectedBill = null;
                         break;
@@ -305,7 +315,7 @@ namespace Factoriada.ViewModels
 
                         await _apartmentService.DeleteBill(SelectedBill);
                         await _dialogService.ShowDialog("Factura a fost stearsa.", "Succes");
-                        BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail.ApartmentDetailId);
+                        BillList = await _apartmentService.GetBillsByApartment(_apartmentDetail);
                         _copyBillPaidPersonsList = BillList;
                         SelectedBill = null;
 

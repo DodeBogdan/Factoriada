@@ -25,7 +25,7 @@ namespace Factoriada.ViewModels
         #region Private Fields
 
         private readonly IApartmentService _apartmentService;
-        private ApartmentDetail _apartmentDetail;
+        private Guid _apartmentDetail;
         private List<Job> _jobList;
         private List<string> _userNameList;
         private Job _selectedJob;
@@ -86,9 +86,9 @@ namespace Factoriada.ViewModels
         private async void Initialize()
         {
             _dialogService.ShowLoading();
-            _apartmentDetail = await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId);
-            JobList = await _apartmentService.GetJobsByApartment(_apartmentDetail.ApartmentDetailId);
-            UserNameList = (await _apartmentService.GetUsersByApartment(_apartmentDetail.ApartmentDetailId))
+            _apartmentDetail = ActiveUser.ApartmentGuid.ApartmentDetailId;
+            JobList = await _apartmentService.GetJobsByApartment(_apartmentDetail);
+            UserNameList = (await _apartmentService.GetUsersByApartment(_apartmentDetail))
                 .Select(x => x.FullName)
                 .ToList();
             _dialogService.HideLoading();
@@ -103,7 +103,7 @@ namespace Factoriada.ViewModels
 
         private async void AddJob()
         {
-            var jobName = await _dialogService.DisplayPromptAsync("Adauga job", "Numele job-ului:");
+            var jobName = await _dialogService.DisplayPromptAsync("Adaugati job", "Numele job-ului:");
 
             if (jobName == null)
                 return;
@@ -118,7 +118,7 @@ namespace Factoriada.ViewModels
             var number = await _dialogService.DisplayPromptAsync("Adauga job",
                 $"Alege persoana care sa faca job-ul {jobName} din lista: {names}", keyboard: Keyboard.Numeric);
 
-            if (number == null)
+            if (string.IsNullOrEmpty(number))
                 return;
 
             var count = int.Parse(number);
@@ -132,14 +132,15 @@ namespace Factoriada.ViewModels
             var job = new Job()
             {
                 JobId = Guid.NewGuid(),
-                ApartmentDetail = _apartmentDetail.ApartmentDetailId,
+                ApartmentDetail = _apartmentDetail,
                 JobType = jobName,
                 User = UserNameList[count - 1],
             };
 
             _dialogService.ShowLoading();
             await _apartmentService.AddOrUpdateJob(job);
-            JobList = await _apartmentService.GetJobsByApartment(_apartmentDetail.ApartmentDetailId);
+            JobList.Add(job);
+            JobList = new List<Job>(JobList);
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Job-ul a fost adaugat cu succes.", "Succes");
 
@@ -190,7 +191,17 @@ namespace Factoriada.ViewModels
 
             _dialogService.ShowLoading();
             await _apartmentService.AddOrUpdateJob(SelectedJob);
-            JobList = await _apartmentService.GetJobsByApartment(_apartmentDetail.ApartmentDetailId);
+            JobList
+                .Select(x =>
+                {
+                    if (x.JobId == SelectedJob.JobId)
+                        x = SelectedJob;
+
+                    return x;
+                });
+
+            JobList = new List<Job>(JobList);
+
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Job-ul a fost editat cu succes.", "Succes");
         }
@@ -201,7 +212,8 @@ namespace Factoriada.ViewModels
 
             _dialogService.ShowLoading();
             await _apartmentService.DeleteJob(SelectedJob);
-            JobList = await _apartmentService.GetJobsByApartment(_apartmentDetail.ApartmentDetailId);
+            JobList.Remove(SelectedJob);
+            JobList = new List<Job>(JobList);
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Job-ul a fost sters cu succes.", "Succes");
         }

@@ -32,7 +32,7 @@
                     <DataTemplate x:DataType="models:BudgetHistory">
                         <ViewCell>
                             <Grid>
-                                <Label Text="{Binding ShowBudget, StringFormat='{0,N} Ron'}" FontSize="20" TextColor="Black"></Label>
+                                <Label Text="{Binding ShowBudget, StringFormat='{0} Ron'}" FontSize="20" TextColor="Black"></Label>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

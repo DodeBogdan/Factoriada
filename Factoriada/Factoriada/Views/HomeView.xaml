@@ -6,7 +6,8 @@
              xmlns:models="clr-namespace:Factoriada.Models;assembly=Factoriada"
              x:Class="Factoriada.Views.HomeView"
              utility:ViewModelLocator.AutoWireViewModel="True" 
-             x:DataType="viewModels:HomeViewModel">
+             x:DataType="viewModels:HomeViewModel"
+             Title="Home">
 
     <Grid>
 

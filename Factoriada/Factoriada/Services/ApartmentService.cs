@@ -134,7 +134,7 @@ namespace Factoriada.Services
                    ", Scara: " + apartment.ApartmentAddress.Staircase + ", Etaj: " + apartment.ApartmentAddress.Floor +
                    ", Apartament: " + apartment.ApartmentAddress.Apartment;
         }
-        public async Task<Guid> GetApartmentIdByUser(Guid userUserId)
+        public async Task<Guid> GetApartmentDetailIdByUser(Guid userUserId)
         {
             var result = await ApiDatabaseService.ServiceClientInstance.GetApartmentDetailByUserId(userUserId);
 
@@ -189,7 +189,6 @@ namespace Factoriada.Services
             TestBill(bill);
 
             await ApiDatabaseService.ServiceClientInstance.AddOrUpdateBill(bill);
-
         }
 
         public async Task<List<Bill>> GetBillsByApartment(Guid apartmentDetailApartmentDetailId)
@@ -325,6 +324,17 @@ namespace Factoriada.Services
             await TestTimeAway(timeAway);
 
             await ApiDatabaseService.ServiceClientInstance.AddOrUpdateTimeAway(timeAway);
+
+            var announce = new Announce
+            {
+                AnnounceId = Guid.NewGuid(),
+                User = ActiveUser.User,
+                AnnounceMessage = $"{ActiveUser.User.FullName} si-a luat liber din data de {timeAway.LeaveFrom:d} pana in data de {timeAway.LeaveTo:d}.",
+                InsertedDateTime = DateTime.Now,
+                ApartmentDetails = timeAway.ApartmentDetail
+            };
+
+            await ApiDatabaseService.ServiceClientInstance.AddOrUpdateAnnounce(announce);
         }
 
         public async Task DeleteTimeAway(TimeAway timeAway)
@@ -458,7 +468,16 @@ namespace Factoriada.Services
 
         public async Task PayBill(Bill selectedBill)
         {
+            selectedBill.Paid = true;
             await ApiDatabaseService.ServiceClientInstance.AddOrUpdateBill(selectedBill);
+        }
+
+        public string GetApartmentAddress(ApartmentDetail currentApartment)
+        {
+            return "Oras: " + currentApartment.ApartmentAddress.City + ", Strada: " + currentApartment.ApartmentAddress.Street +
+                   ", Numar: " + currentApartment.ApartmentAddress.Number + ", Bloc: " + currentApartment.ApartmentAddress.Building +
+                   ", Scara: " + currentApartment.ApartmentAddress.Staircase + ", Etaj: " + currentApartment.ApartmentAddress.Floor +
+                   ", Apartament: " + currentApartment.ApartmentAddress.Apartment;
         }
 
         #endregion

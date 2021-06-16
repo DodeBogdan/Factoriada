@@ -22,7 +22,7 @@ namespace Factoriada.ViewModels
 
         #region Private Fields
         private readonly IApartmentService _apartmentService;
-        private Guid _currentApartment;
+        private ApartmentDetail _currentApartment;
         private string _apartmentAddress;
         private string _token = "";
         private bool _isOwner;
@@ -114,9 +114,9 @@ namespace Factoriada.ViewModels
                 IsUser = true;
             }
 
-            _currentApartment = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
-            ApartmentAddress = await _apartmentService.GetApartmentAddressByUser(ActiveUser.User.UserId);
-            Token = (await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId)).Token;
+            _currentApartment = ActiveUser.ApartmentGuid;
+            ApartmentAddress = _apartmentService.GetApartmentAddress(_currentApartment);
+            Token = _currentApartment.Token;
 
             _dialogService.HideLoading();
         }
@@ -135,7 +135,7 @@ namespace Factoriada.ViewModels
             var announce = new Announce
                 { AnnounceId = Guid.NewGuid(), User = ActiveUser.User, AnnounceMessage = $"{ActiveUser.User.FullName} a parasit apartamentul." , InsertedDateTime = DateTime.Now };
 
-            await _apartmentService.AddAnnounceToApartment(announce, _currentApartment);
+            await _apartmentService.AddAnnounceToApartment(announce, _currentApartment.ApartmentDetailId);
 
             _dialogService.HideLoading();
             App.Current.MainPage = new AppShell();

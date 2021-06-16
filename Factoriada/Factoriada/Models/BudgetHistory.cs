@@ -16,10 +16,7 @@ namespace Factoriada.Models
         {
             get
             {
-                if (Amount >= 0)
-                    return ($"{User.LastName} {User.FirstName} a adaugat {Amount}");
-                else
-                    return ($"{User.LastName} {User.FirstName} a extras {Amount}");
+                return Amount >= 0 ? $"{User.LastName} {User.FirstName} a adaugat {Amount:F}" : $"{User.LastName} {User.FirstName} a extras {Amount:F}";
             }
         }
     }

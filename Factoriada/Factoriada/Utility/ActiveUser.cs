@@ -9,5 +9,6 @@ namespace Factoriada.Utility
     public static class ActiveUser
     {
         public static User User { get; set; }
+        public static ApartmentDetail ApartmentGuid { get; set; }
     }
 }

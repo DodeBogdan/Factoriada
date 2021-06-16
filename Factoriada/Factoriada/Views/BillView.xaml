@@ -10,6 +10,7 @@
              x:DataType="viewModels:BillViewModel"
              Title="Facturi"
              BackgroundImageSource="background.jpg">
+
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -43,6 +44,6 @@
         </ListView>
         </Frame>
 
-        <Button Grid.Column="1" Grid.Row="2" Text="Sterge reminder" Command="{Binding DeleteReminderCommand}" IsVisible="{Binding IsReminderSelected}" BackgroundColor="Black" Margin="5"/>
+        <Button Grid.Column="1" Grid.Row="2" Text="Sterge anunt" Command="{Binding DeleteReminderCommand}" IsVisible="{Binding IsReminderSelected}" BackgroundColor="Black" Margin="5"/>
     </Grid>
 </ContentPage>

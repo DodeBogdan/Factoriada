@@ -24,11 +24,10 @@ namespace Factoriada.ViewModels
         private Guid _apartmentId;
         private List<Reminder> _reminderList;
         private Reminder _currentReminder;
-
+        private bool _isReminderSelected;
         #endregion
 
         #region Proprieties
-        private bool _isReminderSelected;
 
         public bool IsReminderSelected
         {
@@ -83,10 +82,10 @@ namespace Factoriada.ViewModels
             DeleteReminderCommand = new Command(DeleteReminder);
         }
 
-        private async void Initialize()
+        public async void Initialize()
         {
             _dialogService.ShowLoading();
-            _apartmentId = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
+            _apartmentId = ActiveUser.ApartmentGuid.ApartmentDetailId;
             ReminderList = await _apartmentService.GetRemindersByApartmentId(_apartmentId);
             _dialogService.HideLoading();
         }
@@ -105,7 +104,9 @@ namespace Factoriada.ViewModels
         {
             _dialogService.ShowLoading();
             await _apartmentService.DeleteReminder(CurrentReminder);
-            ReminderList = await _apartmentService.GetRemindersByApartmentId(_apartmentId);
+            ReminderList.Remove(CurrentReminder);
+            ReminderList = new List<Reminder>(ReminderList);
+            CurrentReminder = null;
             _dialogService.HideLoading();
 
             await _dialogService.ShowDialog("Reminder-ul a fost sters cu succes.", "Succes");

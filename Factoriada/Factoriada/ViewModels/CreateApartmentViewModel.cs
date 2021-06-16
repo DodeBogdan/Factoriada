@@ -118,6 +118,7 @@ namespace Factoriada.ViewModels
                 _dialogService.ShowLoading();
                 
                 await _apartmentService.SaveApartment(CurrentApartment);
+                ActiveUser.ApartmentGuid = CurrentApartment;
 
                 _dialogService.HideLoading();
 

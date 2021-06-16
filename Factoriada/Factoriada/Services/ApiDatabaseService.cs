@@ -29,7 +29,7 @@ namespace Factoriada.Services
 
         private ApiDatabaseService()
         {
-            _firebase = new FirebaseClient("https://factoriada-40e0f-default-rtdb.firebaseio.com/");
+            _firebase = new FirebaseClient("https://factoriada-5ee06-default-rtdb.firebaseio.com/");
 
             Initialize();
         }
@@ -202,7 +202,7 @@ namespace Factoriada.Services
                     .OnceAsync<Rule>())
                 .Select(x => x.Object)
                 .Where(x => x.ApartmentDetail == apartmentId)
-                .OrderByDescending(x => x.InsertedDateTime)
+                .OrderBy(x => x.InsertedDateTime)
                 .ToList();
         }
 

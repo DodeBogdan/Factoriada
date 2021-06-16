@@ -18,19 +18,8 @@ namespace Factoriada.ViewModels
         public AppShellViewModel(IDialogService dialogService, INavigationService navigationService, IApartmentService apartmentService) : base(dialogService, navigationService)
         {
             _apartmentService = apartmentService;
-            ConnectedUser = ActiveUser.User;
 
-            if (ConnectedUser.Role.RoleTypeName == "Default")
-            {
-                UserHaveApartment = false;
-                UserNotHavingApartment = true;
-            }
-            else
-            {
-                UserNotHavingApartment = false;
-                UserHaveApartment = true;
-            }
-
+            Initialize();
             InitializeCommands();
         }
 
@@ -103,6 +92,26 @@ namespace Factoriada.ViewModels
 
         #region Private Methods
 
+        private async void Initialize()
+        {
+            _dialogService.ShowLoading();
+
+            ConnectedUser = ActiveUser.User;
+
+            if (ConnectedUser.Role.RoleTypeName == "Default")
+            {
+                UserHaveApartment = false;
+                UserNotHavingApartment = true;
+            }
+            else
+            {
+                UserNotHavingApartment = false;
+                UserHaveApartment = true;
+                ActiveUser.ApartmentGuid = await _apartmentService.GetApartmentByUser(ConnectedUser.UserId);
+            }
+
+            _dialogService.HideLoading();
+        }
         private void InitializeCommands()
         {
             LogOutCommand = new Command(LogOut);
@@ -136,6 +145,7 @@ namespace Factoriada.ViewModels
         private void LogOut()
         {
             ActiveUser.User = new User();
+            ActiveUser.ApartmentGuid = null;
             App.Current.MainPage = new NavigationPage(new LogInView());
         }
 

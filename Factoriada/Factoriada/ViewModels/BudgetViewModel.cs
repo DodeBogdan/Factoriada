@@ -55,7 +55,7 @@ namespace Factoriada.ViewModels
         private async void Initialize()
         {
             _dialogService.ShowLoading();
-            CurrentApartment = await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId);
+            CurrentApartment = ActiveUser.ApartmentGuid;
             BudgetHistoryList = await _apartmentService.GetBudgetHistoryByApartmentId(CurrentApartment.ApartmentDetailId);
             _dialogService.HideLoading();
         }
@@ -64,12 +64,12 @@ namespace Factoriada.ViewModels
         {
             var result = await _dialogService.DisplayPromptAsync("Buget", "Introdu cati bani doresti sa adaugi.", keyboard: Keyboard.Numeric);
 
-            if (result == null)
+            if (string.IsNullOrEmpty(result))
                 return;
 
             if (float.Parse(result) > 500)
             {
-                await _dialogService.ShowDialog("Nu poti adauga mai mult de 500 Ron odata.", "Atentie!");
+                await _dialogService.ShowDialog("Nu poti adauga mai mult de 500 Ron intr-o tranzactie.", "Atentie!");
                 return;
             }
 
@@ -95,7 +95,8 @@ namespace Factoriada.ViewModels
             CurrentApartment.UnspentMoney += money.Amount;
             await _apartmentService.UpdateApartment(CurrentApartment);
 
-            BudgetHistoryList = await _apartmentService.GetBudgetHistoryByApartmentId(CurrentApartment.ApartmentDetailId);
+            BudgetHistoryList.Add(money);
+            BudgetHistoryList = new List<BudgetHistory>(BudgetHistoryList);
             CurrentApartment = CurrentApartment;
 
             _dialogService.HideLoading();

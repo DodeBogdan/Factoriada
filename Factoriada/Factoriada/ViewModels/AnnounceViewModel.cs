@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Input;
 using Factoriada.Models;
 using Factoriada.Services.Interfaces;
@@ -75,7 +76,7 @@ namespace Factoriada.ViewModels
         {
             _dialogService.ShowLoading();
 
-            _apartmentId = await _apartmentService.GetApartmentIdByUser(ActiveUser.User.UserId);
+            _apartmentId = ActiveUser.ApartmentGuid.ApartmentDetailId;
             AnnounceList = await _apartmentService.GetAnnouncesByApartmentId(_apartmentId);
 
             _dialogService.HideLoading();
@@ -94,7 +95,9 @@ namespace Factoriada.ViewModels
 
             await _apartmentService.AddAnnounceToApartment(announce, _apartmentId);
 
-            AnnounceList = await _apartmentService.GetAnnouncesByApartmentId(_apartmentId);
+            AnnounceList.Add(announce);
+            AnnounceList = new List<Announce>(AnnounceList);
+
             UserIsOwnerOrCreator = false;
             _dialogService.HideLoading();
         }
@@ -115,7 +118,18 @@ namespace Factoriada.ViewModels
 
             await _apartmentService.EditAnnounceFromApartment(CurrentAnnounce);
 
-            AnnounceList = await _apartmentService.GetAnnouncesByApartmentId(_apartmentId);
+            AnnounceList
+                .Select(x =>
+                {
+                    if (x.AnnounceId == CurrentAnnounce.AnnounceId)
+                        x.AnnounceMessage = CurrentAnnounce.AnnounceMessage;
+
+                    return x;
+                });
+
+            AnnounceList = new List<Announce>(AnnounceList);
+
+            CurrentAnnounce = null;
             UserIsOwnerOrCreator = false;
             _dialogService.HideLoading();
         }
@@ -128,7 +142,9 @@ namespace Factoriada.ViewModels
 
             await _apartmentService.DeleteAnnounce(CurrentAnnounce);
 
-            AnnounceList = await _apartmentService.GetAnnouncesByApartmentId(_apartmentId);
+            AnnounceList.Remove(CurrentAnnounce);
+
+            CurrentAnnounce = null;
             UserIsOwnerOrCreator = false;
             _dialogService.HideLoading();
         }

@@ -31,7 +31,7 @@ namespace Factoriada.ViewModels
         private List<BuyList> _privateBuyList;
         private BuyList _publicSelectedBuy;
         private BuyList _privateSelectedBuy;
-        private ApartmentDetail _apartmentDetail;
+        private Guid _apartmentDetail;
         private bool _isItemSelected;
         #endregion
 
@@ -111,10 +111,10 @@ namespace Factoriada.ViewModels
         {
             _dialogService.ShowLoading();
 
-            _apartmentDetail = await _apartmentService.GetApartmentByUser(ActiveUser.User.UserId);
-            PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
+            _apartmentDetail = ActiveUser.ApartmentGuid.ApartmentDetailId;
+            PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail))
                 .Where(x => x.Hidden == false).ToList();
-            PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
+            PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail))
                 .Where(x => x.Owner.UserId == ActiveUser.User.UserId && x.Hidden == true).ToList();
 
             _dialogService.HideLoading();
@@ -150,7 +150,7 @@ namespace Factoriada.ViewModels
             var toBuy = new BuyList()
             {
                 BuyListId = Guid.NewGuid(),
-                ApartmentDetail = _apartmentDetail.ApartmentDetailId,
+                ApartmentDetail = _apartmentDetail,
                 Count = int.Parse(productCount),
                 Owner = ActiveUser.User,
                 Product = productName
@@ -169,8 +169,9 @@ namespace Factoriada.ViewModels
             toBuy.Hidden = false;
             _dialogService.ShowLoading();
             await _apartmentService.AddOrUpdateProductToBuy(toBuy);
-            PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
-                .Where(x => x.Hidden == false).ToList();
+            PublicBuyList.Add(toBuy);
+            PublicBuyList = new List<BuyList>(PublicBuyList);
+
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Produsul a fost adaugat cu succes.", "Succes");
         }
@@ -180,8 +181,10 @@ namespace Factoriada.ViewModels
             toBuy.Hidden = true;
             _dialogService.ShowLoading();
             await _apartmentService.AddOrUpdateProductToBuy(toBuy);
-            PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
-                .Where(x => x.Owner.UserId == ActiveUser.User.UserId && x.Hidden == true).ToList();
+
+            PrivateBuyList.Add(toBuy);
+            PrivateBuyList = new List<BuyList>(PrivateBuyList);
+
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Produsul a fost adaugat cu succes.", "Succes");
         }
@@ -231,14 +234,31 @@ namespace Factoriada.ViewModels
             if (selectedProduct.Hidden)
             {
                 PrivateSelectedBuy = null;
-                PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
-                    .Where(x => x.Owner.UserId == ActiveUser.User.UserId && x.Hidden == true).ToList();
+                PrivateBuyList
+                    .Select(x =>
+                    {
+                        if (x.ApartmentDetail == selectedProduct.ApartmentDetail)
+                            x = selectedProduct;
+
+                        return x;
+                    });
+
+                PrivateBuyList = new List<BuyList>(PrivateBuyList);
+
             }
             else
             {
                 PublicSelectedBuy = null;
-                PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
-                    .Where(x => x.Hidden == false).ToList();
+                PublicBuyList
+                    .Select(x =>
+                    {
+                        if (x.ApartmentDetail == selectedProduct.ApartmentDetail)
+                            x = selectedProduct;
+
+                        return x;
+                    });
+                
+                PublicBuyList = new List<BuyList>(PublicBuyList);
             }
 
             _dialogService.HideLoading();
@@ -258,13 +278,17 @@ namespace Factoriada.ViewModels
             _dialogService.ShowLoading();
             await _apartmentService.DeleteToBuy(selectedProduct);
             if (selectedProduct.Hidden)
-                PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
-                    .Where(x => x.Owner.UserId == ActiveUser.User.UserId && x.Hidden == true).ToList();
+            {
+                PrivateBuyList.Remove(selectedProduct);
+                PrivateSelectedBuy = null;
+                PrivateBuyList = new List<BuyList>(PrivateBuyList);
+            }
             else
-                PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail.ApartmentDetailId))
-                    .Where(x => x.Hidden == false).ToList();
-
-            PrivateSelectedBuy = PublicSelectedBuy = null;
+            {
+                PublicBuyList.Remove(selectedProduct);
+                PublicSelectedBuy = null;
+                PublicBuyList = new List<BuyList>(PublicBuyList);
+            }
 
             _dialogService.HideLoading();
             await _dialogService.ShowDialog("Produsul a fost sters cu succes.", "Succes");
@@ -275,7 +299,7 @@ namespace Factoriada.ViewModels
             if (PublicSelectedBuy != null && PrivateSelectedBuy != null)
             {
                 var result = await _dialogService.DisplayAlert("Alege produs",
-                    "Aveti selectate 2 produse. Pe care doresti sa il editezi/stergi", "Public", "Privat");
+                    "Ai selectate 2 produse. Pe care doresti sa il editezi/stergi?", "Public", "Privat");
 
                 if (result)
                     return PublicSelectedBuy;

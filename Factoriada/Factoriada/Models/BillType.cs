@@ -2,7 +2,7 @@
 {
     public enum BillType
     {
-        None = 0,
+        Tip = 0,
         Curent,
         Gaz,
         Intretinere,

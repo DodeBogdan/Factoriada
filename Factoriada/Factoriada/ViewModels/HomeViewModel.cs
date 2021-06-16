@@ -26,7 +26,6 @@ namespace Factoriada.ViewModels
         #region Private Fields
         private bool _isRefreshing;
         #endregion
-
         #region Proprieties
         public bool IsRefreshing
         {
@@ -40,7 +39,6 @@ namespace Factoriada.ViewModels
 
         public ICommand RefreshCommand { get; set; }
         #endregion
-
         #region Private Methods
         private void Refresh()
         {

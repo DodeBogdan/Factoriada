@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
 
         <Button Grid.Row="0" Grid.Column="0" Margin="5" Text="{Binding PayButtonText}" BackgroundColor="Black" Command="{Binding SortByPaidCommand}"></Button>
-        <Button Grid.Row="0" Grid.Column="1" Margin="5" Text="Luna" BackgroundColor="Black" Command="{Binding SortByMonthCommand}"></Button>
+        <Button Grid.Row="0" Grid.Column="1" Margin="5" Text="Data scadenta" BackgroundColor="Black" Command="{Binding SortByMonthCommand}" Padding="1" ></Button>
             <Button Grid.Row="0" Grid.Column="2" Text="Cost" Margin="5" BackgroundColor="Black" Command="{Binding SortByPriceCommand}"></Button>
 
         <Frame Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
