@@ -10,6 +10,13 @@ using Xamarin.Forms;
 
 namespace Factoriada.ViewModels
 {
+    public enum ListTypesEnum
+    {
+        None = 0,
+        Public,
+        Private
+    }
+
     public class BuyListViewModel : ViewModelBase
     {
         #region Constructor
@@ -27,15 +34,75 @@ namespace Factoriada.ViewModels
 
         private readonly IApartmentService _apartmentService;
 
-        private List<BuyList> _publicBuyList;
-        private List<BuyList> _privateBuyList;
+        private List<BuyList> _publicBuyList = new List<BuyList>();
+        private List<BuyList> _privateBuyList = new List<BuyList>();
         private BuyList _publicSelectedBuy;
         private BuyList _privateSelectedBuy;
         private Guid _apartmentDetail;
         private bool _isItemSelected;
+        private bool _publicListIsVisible = true;
+        private bool _privateListIsVisible;
+        private List<ListTypesEnum> _listTypes = new List<ListTypesEnum>();
+        private ListTypesEnum _selectedList = ListTypesEnum.Public;
         #endregion
 
         #region Proprieties
+
+        public ListTypesEnum SelectedList
+        {
+            get => _selectedList;
+            set
+            {
+                _selectedList = value;
+
+                PublicSelectedBuy = PrivateSelectedBuy = new BuyList();
+                IsItemSelected = false;
+                if (value == ListTypesEnum.Public)
+                {
+                    PrivateListIsVisible = false;
+                    PublicListIsVisible = true;
+                    PublicBuyList = new List<BuyList>(PublicBuyList);
+                }
+                else
+                {
+                    PrivateListIsVisible = true;
+                    PublicListIsVisible = false;
+                    PrivateBuyList = new List<BuyList>(PrivateBuyList);
+                }
+                OnPropertyChanged();
+            }
+        }
+
+        public List<ListTypesEnum> ListTypes
+        {
+            get => _listTypes;
+            set
+            {
+                _listTypes = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        public bool PrivateListIsVisible
+        {
+            get => _privateListIsVisible;
+            set
+            {
+                _privateListIsVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool PublicListIsVisible
+        {
+            get => _publicListIsVisible;
+            set
+            {
+                _publicListIsVisible = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool IsItemSelected
         {
@@ -62,7 +129,6 @@ namespace Factoriada.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public BuyList PublicSelectedBuy
         {
             get => _publicSelectedBuy;
@@ -111,7 +177,11 @@ namespace Factoriada.ViewModels
         {
             _dialogService.ShowLoading();
 
+            ListTypes.Add(ListTypesEnum.Public);
+            ListTypes.Add(ListTypesEnum.Private);
+
             _apartmentDetail = ActiveUser.ApartmentGuid.ApartmentDetailId;
+
             PublicBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail))
                 .Where(x => x.Hidden == false).ToList();
             PrivateBuyList = (await _apartmentService.GetBuyListFromApartment(_apartmentDetail))
@@ -129,9 +199,6 @@ namespace Factoriada.ViewModels
 
         private async void AddProductToBuy()
         {
-            var whereToAddProduct = await _dialogService.DisplayAlert("Adaugare produs", "Unde doresti adaugarea produsului:",
-                "Cos public", "Cos personal");
-
             var productName = await _dialogService.DisplayPromptAsync("Adaugare produs", "Denumirea produsului: ",
                 placeholder: "Ex: Lapte");
 
@@ -159,7 +226,7 @@ namespace Factoriada.ViewModels
                 Product = productName
             };
 
-            if (whereToAddProduct)
+            if (SelectedList == ListTypesEnum.Public)
                 AddProductToPublic(toBuy);
             else
             {
@@ -194,7 +261,7 @@ namespace Factoriada.ViewModels
 
         private async void EditProduct()
         {
-            var selectedProduct = await SelectProduct();
+            var selectedProduct = SelectProduct();
 
             if (selectedProduct == null)
             {
@@ -270,7 +337,7 @@ namespace Factoriada.ViewModels
 
         private async void DeleteProduct()
         {
-            var selectedProduct = await SelectProduct();
+            var selectedProduct = SelectProduct();
 
             if (selectedProduct == null)
             {
@@ -297,17 +364,11 @@ namespace Factoriada.ViewModels
             await _dialogService.ShowDialog("Produsul a fost sters cu succes.", "Succes");
         }
 
-        private async Task<BuyList> SelectProduct()
+        private BuyList SelectProduct()
         {
             if (PublicSelectedBuy != null && PrivateSelectedBuy != null)
             {
-                var result = await _dialogService.DisplayAlert("Alege produs",
-                    "Ai selectate 2 produse. Pe care doresti sa il editezi/stergi?", "Public", "Privat");
-
-                if (result)
-                    return PublicSelectedBuy;
-                else
-                    return PrivateSelectedBuy;
+                return SelectedList == ListTypesEnum.Public ? PublicSelectedBuy : PrivateSelectedBuy;
             }
 
             return PublicSelectedBuy ?? (PrivateSelectedBuy ?? null);

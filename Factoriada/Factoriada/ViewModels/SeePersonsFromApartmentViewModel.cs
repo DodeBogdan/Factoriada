@@ -140,7 +140,7 @@ namespace Factoriada.ViewModels
                 UserList = await _apartmentService.GetUsersByApartment(_apartmentId);
                 _dialogService.HideLoading();
 
-                await _dialogService.ShowDialog("Persoana a fost introdusa cu succes..", "Succes!");
+                await _dialogService.ShowDialog("Persoana a fost introdusa cu succes.", "Succes!");
             }
             catch (Exception ex)
             {

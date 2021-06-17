@@ -17,22 +17,21 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+        <Picker Grid.Row="0" Grid.Column="1" Title="Alege lista" TextColor="Black" HorizontalTextAlignment="Center" ItemsSource="{Binding ListTypes}" SelectedItem="{Binding SelectedList}"/>        
+
+            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2">
+            <Frame Grid.Row="1" BackgroundColor="Transparent" BorderColor="Black" HasShadow="True" Padding="0" Margin="2" IsVisible="{Binding PublicListIsVisible}">
                     <ListView  
                         x:Name="PublicList"
                         ItemsSource="{Binding PublicBuyList}"
@@ -72,7 +71,7 @@
                     </ListView>
                 </Frame>
 
-                <Frame  Grid.Row="1" Grid.Column="1" BackgroundColor="Transparent" BorderColor="Black" Padding="0" Margin="2">
+                <Frame  Grid.Row="1" BackgroundColor="Transparent" BorderColor="Black" Padding="0" Margin="2" IsVisible="{Binding PrivateListIsVisible}">
                     <ListView  
                         x:Name="PrivateList"
                         ItemsSource="{Binding PrivateBuyList}"
@@ -113,13 +112,13 @@
                 </Frame>
             </Grid>
 
-            <BoxView Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+            <BoxView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
 
-            <Button Grid.Row="2" Grid.Column="0" Text="Adauga" Command="{Binding AddProductToBuyCommand}" BackgroundColor="Black" />
+            <Button Grid.Row="3" Grid.Column="0" Text="Adauga" Command="{Binding AddProductToBuyCommand}" BackgroundColor="Black" />
 
-            <Button Grid.Row="2" Grid.Column="1" Text="Editeaza" Command="{Binding EditProductCommand}" IsVisible="{Binding IsItemSelected}" BackgroundColor="Black" />
+            <Button Grid.Row="3" Grid.Column="1" Text="Editeaza" Command="{Binding EditProductCommand}" IsVisible="{Binding IsItemSelected}" BackgroundColor="Black" />
 
-        <Button Grid.Row="2" Grid.Column="2" Text="Sterge" Command="{Binding DeleteProductCommand}" IsVisible="{Binding IsItemSelected}"  BackgroundColor="Black" />
+        <Button Grid.Row="3" Grid.Column="2" Text="Sterge" Command="{Binding DeleteProductCommand}" IsVisible="{Binding IsItemSelected}"  BackgroundColor="Black" />
 
     </Grid>
 </ContentPage>

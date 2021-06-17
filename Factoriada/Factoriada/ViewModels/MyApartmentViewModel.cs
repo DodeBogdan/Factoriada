@@ -101,7 +101,7 @@ namespace Factoriada.ViewModels
             GoToExitApartmentCommand = new Command(ExitApartment);
             GoToDeleteApartmentCommand = new Command(DeleteApartment);
         }
-        private async void InitializeAddress()
+        private void InitializeAddress()
         {
             _dialogService.ShowLoading();
 
@@ -143,6 +143,21 @@ namespace Factoriada.ViewModels
 
         private async void DeleteApartment()
         {
+            _dialogService.ShowLoading();
+
+            var numberOfPersons = await _apartmentService.GetUsersByApartment(_currentApartment.ApartmentDetailId);
+
+            _dialogService.HideLoading();
+
+            if (numberOfPersons.Count != 1)
+            {
+                _dialogService.HideLoading();
+                await _dialogService.ShowDialog("Nu poti sterge apartamentul daca mai sunt chiriasi.",
+                    "Atentie!");
+                return;
+            }
+
+
             var result =
                 await _dialogService.DisplayAlert("Sterge apartamentul", "Doresti sa stergi apartamentul?");
 
