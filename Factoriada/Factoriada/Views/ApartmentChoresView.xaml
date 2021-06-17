@@ -21,6 +21,9 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
                 <Grid.ColumnDefinitions>
@@ -65,11 +68,15 @@
                 </Frame>
             </Grid>
 
-            <BoxView Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+            <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="* - Optionale" TextColor="Black"></Label>
+            <Label Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" Text="! - Urgente (de facut in maxim 2 zile)" TextColor="Black"></Label>
+            <Label Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" Text="# - O data pe saptamana" TextColor="Black"></Label>
 
-            <Button Grid.Row="2" Grid.Column="0" Text="Adauga" Command="{Binding AddJobCommand}" BackgroundColor="Black"/>
-            <Button Grid.Row="2" Grid.Column="1" Text="Editeaza" Command="{Binding EditJobCommand}" IsVisible="{Binding IsItemSelected}" BackgroundColor="Black"/>
-            <Button Grid.Row="2" Grid.Column="2" Text="Sterge" Command="{Binding DeleteJobCommand}" IsVisible="{Binding IsItemSelected}" BackgroundColor="Black"/>
+            <BoxView Grid.Row="4"  Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource Separator}"></BoxView>
+
+            <Button Grid.Row="5" Grid.Column="0" Text="Adauga" Command="{Binding AddJobCommand}" BackgroundColor="Black"/>
+            <Button Grid.Row="5" Grid.Column="1" Text="Editeaza" Command="{Binding EditJobCommand}" IsVisible="{Binding IsItemSelected}" BackgroundColor="Black"/>
+            <Button Grid.Row="5" Grid.Column="2" Text="Sterge" Command="{Binding DeleteJobCommand}" IsVisible="{Binding IsItemSelected}" BackgroundColor="Black"/>
 
         </Grid>
     </Grid>

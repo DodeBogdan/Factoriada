@@ -65,7 +65,10 @@ namespace Factoriada.ViewModels
             var result = await _dialogService.DisplayPromptAsync("Buget", "Introdu cati bani doresti sa adaugi.", keyboard: Keyboard.Numeric);
 
             if (string.IsNullOrEmpty(result))
+            {
+                await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                 return;
+            }
 
             if (float.Parse(result) > 500)
             {

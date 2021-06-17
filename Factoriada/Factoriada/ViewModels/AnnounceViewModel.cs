@@ -85,8 +85,17 @@ namespace Factoriada.ViewModels
         {
             var result = await _dialogService.DisplayPromptAsync("Anunt", "Introdu noul anunt.");
 
-            if (result == null)
+            if (string.IsNullOrEmpty(result))
+            {
+                await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                 return;
+            }
+
+            if (result.Length < 5)
+            {
+                await _dialogService.ShowDialog("Un anunt trebuie sa aibe minim 5 caractere!", "Atentie!");
+                return;
+            }
 
             _dialogService.ShowLoading();
 
@@ -109,8 +118,17 @@ namespace Factoriada.ViewModels
 
             var result = await _dialogService.DisplayPromptAsync("Anunt", "Editeaza anuntul.", placeholder: CurrentAnnounce.AnnounceMessage);
 
-            if (result == null)
+            if (string.IsNullOrEmpty(result))
+            {
+                await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                 return;
+            }
+
+            if (result.Length < 5)
+            {
+                await _dialogService.ShowDialog("Un anunt trebuie sa aibe minim 5 caractere!", "Atentie!");
+                return;
+            }
 
             _dialogService.ShowLoading();
 
@@ -143,6 +161,7 @@ namespace Factoriada.ViewModels
             await _apartmentService.DeleteAnnounce(CurrentAnnounce);
 
             AnnounceList.Remove(CurrentAnnounce);
+            AnnounceList = new List<Announce>(AnnounceList);
 
             CurrentAnnounce = null;
             UserIsOwnerOrCreator = false;

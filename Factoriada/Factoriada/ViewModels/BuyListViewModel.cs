@@ -135,8 +135,11 @@ namespace Factoriada.ViewModels
             var productName = await _dialogService.DisplayPromptAsync("Adaugare produs", "Denumirea produsului: ",
                 placeholder: "Ex: Lapte");
 
-            if (productName == null)
+            if (string.IsNullOrEmpty(productName))
+            {
+                await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                 return;
+            }
 
             var productCount = await _dialogService.DisplayPromptAsync("Adaugare produs", "Numarul de produse: ",
                 placeholder: "Ex: 4", keyboard: Keyboard.Numeric);
@@ -207,7 +210,7 @@ namespace Factoriada.ViewModels
                 var productName = await _dialogService.DisplayPromptAsync("Editare produs", "Denumirea produsului: ",
                     placeholder: "Ex: Lapte");
 
-                if (productName == null)
+                if (string.IsNullOrEmpty(productName))
                 {
                     await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                     return;

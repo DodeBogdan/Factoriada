@@ -96,8 +96,18 @@ namespace Factoriada.ViewModels
         {
             var result = await _dialogService.DisplayPromptAsync("Regula", "Introdu noua regula.");
 
-            if (result == null)
+            if (string.IsNullOrEmpty(result))
+            {
+                await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                 return;
+
+            }
+
+            if (result.Length < 5)
+            {
+                await _dialogService.ShowDialog("O regula trebuie sa aibe minim 5 caractere!", "Atentie!");
+                return;
+            }
 
             _dialogService.ShowLoading();
 
@@ -118,8 +128,17 @@ namespace Factoriada.ViewModels
 
             var result = await _dialogService.DisplayPromptAsync("Regula", "Editeaza regula.", placeholder:CurrentRule.RuleMessage);
 
-            if (result == null)
+            if (string.IsNullOrEmpty(result))
+            {
+                await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                 return;
+            }
+
+            if (result.Length < 5)
+            {
+                await _dialogService.ShowDialog("O regula trebuie sa aibe minim 5 caractere!", "Atentie!");
+                return;
+            }
 
             _dialogService.ShowLoading();
 

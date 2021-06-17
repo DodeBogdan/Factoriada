@@ -105,8 +105,11 @@ namespace Factoriada.ViewModels
         {
             var jobName = await _dialogService.DisplayPromptAsync("Adaugati job", "Numele job-ului:");
 
-            if (jobName == null)
+            if (string.IsNullOrEmpty(jobName))
+            {
+                await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                 return;
+            }
 
             var names = new StringBuilder();
             for (var index = 0; index < UserNameList.Count; index++)
@@ -119,7 +122,10 @@ namespace Factoriada.ViewModels
                 $"Alege persoana care sa faca job-ul {jobName} din lista: {names}", keyboard: Keyboard.Numeric);
 
             if (string.IsNullOrEmpty(number))
+            {
+                await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                 return;
+            }
 
             var count = int.Parse(number);
 
@@ -157,8 +163,17 @@ namespace Factoriada.ViewModels
             {
                 var jobName = await _dialogService.DisplayPromptAsync("Editare job", "Numele job-ului:");
 
-                if (jobName == null)
+                if (string.IsNullOrEmpty(jobName))
+                {
+                    await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                     return;
+                }
+
+                if (jobName.Length < 3)
+                {
+                    await _dialogService.ShowDialog("Numele job-ului trebuie sa aiba minim 3 caractere.", "Atentie!");
+                    return;
+                }
 
                 SelectedJob.JobType = jobName;
             }
@@ -174,8 +189,11 @@ namespace Factoriada.ViewModels
                 var number = await _dialogService.DisplayPromptAsync("Editare job",
                     $"Alege persoana care sa faca job-ul {SelectedJob.JobType} din lista: {names}", keyboard: Keyboard.Numeric);
 
-                if (number == null)
+                if (string.IsNullOrEmpty(number))
+                {
+                    await _dialogService.ShowDialog("Nu a fost introdus nimic.", "Atentie!");
                     return;
+                }
 
                 var count = int.Parse(number);
 
