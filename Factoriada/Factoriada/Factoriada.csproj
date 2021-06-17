@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <Version>2.0.0</Version>
+    <Authors>Bogdan Gheorghe Nicolae</Authors>
+    <Company>Dode's Projects.</Company>
   </PropertyGroup>
 
   <ItemGroup>
