@@ -42,9 +42,6 @@ namespace Factoriada.Bootstrap
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<ApartmentService>().As<IApartmentService>();
 
-
-            //General
-
             _container = builder.Build();
         }
 

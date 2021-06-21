@@ -14,12 +14,6 @@ namespace Factoriada.Services
         {
             return UserDialogs.Instance.AlertAsync(message, title, buttonLabel);
         }
-
-        public void ShowToast(string message)
-        {
-            UserDialogs.Instance.Toast(message);
-        }
-
         public void ShowLoading()
         {
             UserDialogs.Instance.ShowLoading("Se incarca.");

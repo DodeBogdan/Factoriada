@@ -79,7 +79,7 @@
     </Shell.FlyoutHeader>
 
         
-    <FlyoutItem Title="Home" Icon="ic_account_circle.png">
+    <FlyoutItem Title="Acasa" Icon="ic_account_circle.png">
         <ShellContent Route="HomeView" ContentTemplate="{DataTemplate local:HomeView}" />
     </FlyoutItem>
 
@@ -100,7 +100,8 @@
               IconImageSource="ic_account_circle.png">
     </MenuItem>
 
-    <MenuItem Text="Logout"
-              Command="{Binding LogOutCommand}">
+    <MenuItem Text="Deconectare"
+              Command="{Binding LogOutCommand}"
+              IconImageSource="ic_account_circle.png">
     </MenuItem>
 </Shell>

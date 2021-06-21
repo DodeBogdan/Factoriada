@@ -214,7 +214,7 @@ namespace Factoriada.Services
                 pricePerDay = 0;
             }
 
-            var test = new List<List<User>>(daysOnMouth);
+            var listOfUsersOnBillPeriod = new List<List<User>>(daysOnMouth);
             var currentDay = selectedBill.StartDate;
             var uninhabitedDays = 0;
 
@@ -261,19 +261,19 @@ namespace Factoriada.Services
                 if (users.Count == 0)
                     uninhabitedDays++;
 
-                test.Add(users);
+                listOfUsersOnBillPeriod.Add(users);
                 currentDay = currentDay.AddDays(1);
             }
 
 
-            foreach (var t in test)
+            foreach (var listOfUserByDay in listOfUsersOnBillPeriod)
             {
-                if(t.Count == 0)
+                if(listOfUserByDay.Count == 0)
                     continue;
                 
-                var moneyPerDayPerPerson = pricePerDay / t.Count;
+                var moneyPerDayPerPerson = pricePerDay / listOfUserByDay.Count;
 
-                foreach (var user in t)
+                foreach (var user in listOfUserByDay)
                 {
                     var p = billPaidPersons
                         .FirstOrDefault(x => x.BillUserPaid.UserId == user.UserId);

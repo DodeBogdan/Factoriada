@@ -106,7 +106,7 @@
                 <Image Source="background" Grid.ColumnSpan="3" Grid.RowSpan="9" Aspect="AspectFill" />
 
                 <Label Text="Schimba parola:" HorizontalTextAlignment="Center" FontSize="24" Grid.ColumnSpan="3"
-                       Grid.Column="0" Grid.Row="1"/>
+                       Grid.Column="0" Grid.Row="1" TextColor="Black"/>
 
                 <Entry Margin="50,0,50,0" Placeholder="Parola veche:" Text="{Binding OldPassword}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="3" HorizontalTextAlignment="Center" IsPassword="True"></Entry>
                 <Entry Margin="50,0,50,0" Placeholder="Parola noua:" Text="{Binding NewPassword}" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="4" HorizontalTextAlignment="Center" IsPassword="True"></Entry>

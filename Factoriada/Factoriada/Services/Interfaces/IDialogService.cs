@@ -9,7 +9,6 @@ namespace Factoriada.Services.Interfaces
     public interface IDialogService
     {
         Task ShowDialog(string message, string title, string buttonLabel = "ok");
-        void ShowToast(string message);
         void ShowLoading();
         void HideLoading();
         Task<string> DisplayPromptAsync(string title, string message, string accept = "OK",

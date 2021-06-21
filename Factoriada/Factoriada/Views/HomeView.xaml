@@ -8,12 +8,32 @@
              utility:ViewModelLocator.AutoWireViewModel="True" 
              x:DataType="viewModels:HomeViewModel"
              Title="Home">
-
     <Grid>
-
         <Image HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Aspect="AspectFill" Source="background.jpg"/>
+        
+        <Grid>
 
-        <Image Source="factoriadaPng.png" Opacity="0.5"></Image>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+
+            <Frame Grid.Column="0" Grid.Row="0" Margin="5,5,0,0" Padding="0" BorderColor="Black"  IsClippedToBounds="true">
+                <Image Source="BogdanGheorghe.png" Aspect="AspectFill"></Image>
+            </Frame>
+
+            <Label Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="0" Text="Prin aplicația făcută de mine, am încercat în primul rând să rezolv toate problemele persoanelor care stau în chirie și să creez o comunicare cât mai ușoară între ei." TextColor="Black" HorizontalTextAlignment="Center" FontSize="20"></Label>
+
+            <Label Grid.Row="1" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" TextColor="Black" Text=" Am reușit să găsesc modalitatea cât mai corectă de plată a facturilor pentru cazul în care o persoană din apartament pleacă un anumit număr de zile pentru ca acea persoană să nu trebuiască să plătească factura împărțită la numărul de persoane din apartament, ci să plătească exact cât a consumat si cât timp s-a folosit de acel serviciu. Am avut în vedere faptul că orice apartament are un set de reguli, reguli care ar trebui definite în momentul în care se ajunge la împărțirea unui apartament cu mai multe persoane. Fiecare persoană având nevoile și preferințele sale, aceștia vor trebui să ajungă la un comun acord pentru a exista o bună înțelegere între locuitorii apartamentului." HorizontalTextAlignment="Center" VerticalTextAlignment="Center" CharacterSpacing="1" FontSize="18"></Label>
+
+        </Grid>
     </Grid>
 </ContentPage>
